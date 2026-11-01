@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ── Flutter: analyze + all tests + goldens (blocking) ──────────
+  app:
+    name: Flutter (analyze · tests · goldens)
+    runs-on: ubuntu-latest
+    defaults:
+      run: { working-directory: hush }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Install Linux desktop deps
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev libstdc++-12-dev liblzma-dev
+      - run: flutter pub get
+      - name: Analyze (zero issues required)
+        run: flutter analyze
+      - name: Tests (unit + widget + 28 goldens)
+        run: flutter test
+      - name: Android release build
+        run: flutter build apk --release
+      - name: Linux release build
+        run: flutter build linux --release
+
+  # ── API: typecheck + coverage gates (blocking) ─────────────────
+  api:
+    name: API (typecheck · tests · coverage gate)
+    runs-on: ubuntu-latest
+    defaults:
+      run: { working-directory: api }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version: latest }
+      - run: bun install
+      - name: Strict typecheck
+        run: bun run typecheck
+      - name: Tests with coverage gate (≥90% total, ≥95% middleware)
+        run: |
+          bun run test:coverage 2>&1 | tee coverage.out
+          grep -Eo '[0-9]+\.[0-9]+%' coverage.out | head -1 >/dev/null
+          bun -e '
+            const out = await Bun.file("coverage.out").text();
+            const total = parseFloat(out.match(/All files\s+\|\s+(\d+\.\d+)/)?.[1] ?? "0");
+            const mw = parseFloat(out.match(/middleware\.ts.*?\|\s+(\d+\.\d+)/)?.[1] ?? "0");
+            console.log(`total=${total}% middleware=${mw}%`);
+            if (total < 90 || mw < 95) {
+              console.error("Coverage gate FAILED");
+              process.exit(1);
+            }
+          '
+
+  # ── Security gates (blocking) ──────────────────────────────────
+  security:
+    name: Security (secret scan · audits)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Gitleaks secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: oven-sh/setup-bun@v2
+        with: { bun-version: latest }
+      - name: API dependency audit (blocks on high/critical)
+        working-directory: api
+        run: |
+          bun audit --audit-level=high
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable }
+      - name: Flutter dependency audit
+        working-directory: hush
+        run: |
+          flutter pub get
+          dart pub audit --exit-code || true   # advisory tool; hard-fail reserved for API deps

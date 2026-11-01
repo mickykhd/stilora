@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hush — Workspace</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container": "#e9edff",
+            "surface-bright": "#f9f9ff",
+            "on-primary-container": "#dad7ff",
+            "primary-fixed-dim": "#c3c0ff",
+            "surface": "#f9f9ff",
+            "secondary": "#0051d5",
+            "surface-variant": "#dce2f7",
+            "on-primary-fixed": "#0f0069",
+            "error": "#ba1a1a",
+            "tertiary-fixed-dim": "#ffb695",
+            "on-primary": "#ffffff",
+            "on-surface": "#141b2b",
+            "outline-variant": "#c7c4d8",
+            "primary-fixed": "#e2dfff",
+            "surface-container-highest": "#dce2f7",
+            "background": "#f9f9ff",
+            "inverse-surface": "#293040",
+            "surface-dim": "#d3daef",
+            "inverse-primary": "#c3c0ff",
+            "on-surface-variant": "#464555",
+            "surface-container-lowest": "#ffffff",
+            "tertiary": "#7e3000",
+            "secondary-container": "#316bf3",
+            "surface-container-low": "#f1f3ff",
+            "secondary-fixed-dim": "#b4c5ff",
+            "on-secondary-container": "#fefcff",
+            "primary": "#3525cd",
+            "outline": "#777587",
+            "inverse-on-surface": "#edf0ff",
+            "on-error-container": "#93000a",
+            "on-secondary-fixed": "#00174b",
+            "tertiary-fixed": "#ffdbcc",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-background": "#141b2b",
+            "on-tertiary-container": "#ffd2be",
+            "error-container": "#ffdad6",
+            "secondary-fixed": "#dbe1ff",
+            "surface-container-high": "#e1e8fd",
+            "on-secondary-fixed-variant": "#003ea8",
+            "primary-container": "#4f46e5",
+            "surface-tint": "#4d44e3",
+            "on-tertiary-fixed-variant": "#7b2f00",
+            "on-secondary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed": "#351000",
+            "tertiary-container": "#a44100"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-md": "1rem",
+            "space-xl": "2.5rem",
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "gutter-mobile": "0.75rem",
+            "space-lg": "1.5rem",
+            "margin-mobile": "1rem",
+            "margin": "2.5rem",
+            "gutter": "1.25rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Geist"],
+            "headline-xl": ["Geist"],
+            "body-md": ["Geist"],
+            "label-md": ["Geist"],
+            "headline-sm": ["Geist"],
+            "label-sm": ["Geist"],
+            "body-sm": ["Geist"],
+            "display-lg": ["Geist"],
+            "headline-lg": ["Geist"],
+            "headline-xl-mobile": ["Geist"]
+          },
+          "fontSize": {
+            "body-lg": ["1.125rem", { "lineHeight": "1.6", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "headline-xl": ["2.5rem", { "lineHeight": "1.15", "letterSpacing": "-0.025em", "fontWeight": "500" }],
+            "body-md": ["0.9375rem", { "lineHeight": "1.55", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "label-md": ["0.875rem", { "lineHeight": "1.2", "letterSpacing": "0em", "fontWeight": "500" }],
+            "headline-sm": ["1.25rem", { "lineHeight": "1.3", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-sm": ["0.6875rem", { "lineHeight": "1.1", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "body-sm": ["0.8125rem", { "lineHeight": "1.45", "letterSpacing": "0em", "fontWeight": "400" }],
+            "display-lg": ["3.5rem", { "lineHeight": "1.1", "letterSpacing": "-0.03em", "fontWeight": "400" }],
+            "headline-lg": ["1.75rem", { "lineHeight": "1.25", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "headline-xl-mobile": ["2rem", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "500" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    body {
+      font-family: 'Geist', sans-serif;
+      background-color: #f9f9ff;
+      color: #141b2b;
+    }
+    /* Minimal scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(199, 196, 216, 0.4);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface h-screen flex flex-col overflow-hidden antialiased selection:bg-surface-container-highest">
+<!-- TOP SHELL / APP BAR (Shared TopNavBar Token Logic) -->
+<header class="flex items-center justify-between px-space-md w-full h-14 border-b border-surface-variant bg-surface-container-lowest flex-shrink-0 z-30">
+<div class="flex items-center space-x-6">
+<div class="flex items-center space-x-2.5">
+<div class="w-6 h-6 rounded-lg bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">grain</span>
+</div>
+<span class="font-headline-sm text-headline-sm font-medium text-on-surface tracking-tight">Hush</span>
+</div>
+<!-- Navigation links from TopNavBar Component -->
+<nav class="hidden md:flex items-center space-x-1 pl-4 border-l border-surface-variant">
+<a class="text-primary font-medium px-3 py-1.5 rounded-lg text-sm transition-colors duration-150 bg-surface-container-low" href="#">Threads</a>
+<a class="text-on-surface-variant font-normal hover:text-on-surface px-3 py-1.5 rounded-lg text-sm transition-colors duration-150" href="#">Catch-up</a>
+</nav>
+</div>
+<!-- Right utility controls & actions -->
+<div class="flex items-center space-x-3">
+<!-- Search Field (Sub-surface minimalist recessed field) -->
+<div class="relative hidden sm:flex items-center flex-shrink-0">
+<span class="material-symbols-outlined absolute left-3 text-outline text-lg">search</span>
+<input class="w-56 pl-9 pr-10 py-1.5 bg-surface-container-low rounded-lg text-body-sm font-body-sm text-on-surface placeholder:text-outline border border-transparent focus:outline-none focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" placeholder="Search or run a command..." type="text"/>
+<div class="absolute right-2.5 flex items-center space-x-0.5 pointer-events-none">
+<span class="px-1.5 py-0.5 rounded bg-surface-container-highest text-label-sm font-label-sm text-on-surface-variant font-mono">⌘K</span>
+</div>
+</div>
+<!-- Trailing icon actions -->
+<div class="flex items-center space-x-1 text-on-surface-variant flex-shrink-0">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-surface-container-low active:opacity-80 transition-colors duration-150" title="Audio Call">
+<span class="material-symbols-outlined text-lg">call</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-surface-container-low active:opacity-80 transition-colors duration-150" title="Notifications">
+<span class="material-symbols-outlined text-lg">notifications_off</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-surface-container-low active:opacity-80 transition-colors duration-150" title="Tune Settings">
+<span class="material-symbols-outlined text-lg">tune</span>
+</button>
+</div>
+<!-- User avatar with status indicator -->
+<div class="pl-2 border-l border-surface-variant flex items-center">
+<div class="relative">
+<img alt="User status and avatar" class="w-7 h-7 rounded-full object-cover ring-1 ring-surface-variant" data-alt="A refined portrait of a creative design lead with soft studio natural lighting, minimalist composition, wearing an indigo linen shirt against a muted Scandinavian interior wall in high definition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8Y7ZCre52D0zbKy5LjfZwCDQmzGaV0MK1blOwq9nKLlY8cC7e_6877QrI2hEVLmFpuGofWVFoxNPva5un01xyxKyudJHkbEXzdfPTePPt_wjM108YTC5emVxrKOpLUSSxswigMC0s6ebYyHGZ3VS3Tu0U5Dkw2KbjWW11qac1yGgu7GAKpEHRLvTHINipnSUBBXkaONwYFa_jwGxeb4L5iWtHfAGWliTMeGY36NU"/>
+<div class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-secondary ring-2 ring-surface-container-lowest"></div>
+</div>
+</div>
+</div>
+</header>
+<!-- MAIN VIEWPORT CONTAINER (Split 2-Pane Architecture) -->
+<div class="flex flex-1 overflow-hidden relative">
+<!-- LEFT PANE: Airy, Single Modern Navigation Shell (Derived from SideNavBar Component) -->
+<aside class="flex flex-col justify-between h-full w-64 border-r border-surface-variant bg-surface-container-low p-space-sm flex-shrink-0 select-none">
+<!-- Top Section: Workspace Switcher & Sections -->
+<div class="flex flex-col space-y-5">
+<!-- Workspace Switcher Button -->
+<button class="w-full flex items-center justify-between p-2 rounded-lg hover:bg-surface-container transition-colors duration-150 group">
+<div class="flex items-center space-x-2.5">
+<div class="w-7 h-7 rounded-md bg-surface-container-highest text-primary flex items-center justify-center font-label-md font-semibold text-xs tracking-tight">
+              SF
+            </div>
+<div class="text-left">
+<div class="font-headline-sm text-sm font-semibold text-on-surface leading-tight">Studio Flow</div>
+<div class="font-body-sm text-xs text-on-surface-variant leading-none flex items-center space-x-1.5 mt-0.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary inline-block"></span>
+<span>6 online</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-on-surface transition-colors duration-150 text-base">unfold_more</span>
+</button>
+<!-- Primary Workspace Action: New Thread -->
+<button class="w-full py-2 px-3 bg-primary text-on-primary rounded-lg text-body-sm font-body-sm font-medium flex items-center justify-center space-x-2 hover:opacity-95 active:opacity-90 transition-all shadow-none">
+<span class="material-symbols-outlined text-base">add</span>
+<span>New Thread</span>
+</button>
+<!-- Navigation Sections -->
+<div class="space-y-4 pt-1">
+<!-- Primary Navigation -->
+<div>
+<div class="px-2 pb-1.5 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline tracking-wider uppercase font-semibold">Workspace</span>
+</div>
+<div class="space-y-0.5">
+<a class="flex items-center space-x-2.5 px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-base text-outline">forum</span>
+<span>Threads</span>
+</a>
+<a class="flex items-center justify-between px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 text-body-sm font-body-sm" href="#">
+<div class="flex items-center space-x-2.5">
+<span class="material-symbols-outlined text-base text-outline">drafts</span>
+<span>Catch-up</span>
+</div>
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+</a>
+</div>
+</div>
+<!-- Channels (Clean Flat Structure, no nested clutter) -->
+<div>
+<div class="px-2 pb-1.5 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline tracking-wider uppercase font-semibold">Channels</span>
+<button class="text-outline hover:text-on-surface transition-colors duration-150">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<div class="space-y-0.5">
+<a class="flex items-center space-x-2.5 px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 text-body-sm font-body-sm" href="#">
+<span class="text-outline font-mono text-sm leading-none">#</span>
+<span>general</span>
+</a>
+<!-- Active channel: design-sync / design -->
+<a class="flex items-center space-x-2.5 px-space-sm py-space-xs bg-surface-container-highest text-primary font-medium rounded-lg text-body-sm font-body-sm" href="#">
+<span class="text-primary font-mono text-sm leading-none">#</span>
+<span>design-sync</span>
+</a>
+<a class="flex items-center space-x-2.5 px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 text-body-sm font-body-sm" href="#">
+<span class="text-outline font-mono text-sm leading-none">#</span>
+<span>product</span>
+</a>
+<a class="flex items-center space-x-2.5 px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 text-body-sm font-body-sm" href="#">
+<span class="text-outline font-mono text-sm leading-none">#</span>
+<span>eng-architecture</span>
+</a>
+</div>
+</div>
+<!-- Direct Messages -->
+<div>
+<div class="px-2 pb-1.5 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline tracking-wider uppercase font-semibold">Direct</span>
+<button class="text-outline hover:text-on-surface transition-colors duration-150">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+<div class="space-y-0.5">
+<a class="flex items-center justify-between px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 text-body-sm font-body-sm" href="#">
+<div class="flex items-center space-x-2.5">
+<div class="relative">
+<span class="material-symbols-outlined text-base text-outline">account_circle</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary absolute -bottom-0.5 -right-0.5"></span>
+</div>
+<span>Sarah Chen</span>
+</div>
+<span class="text-label-sm font-label-sm text-outline">Typing...</span>
+</a>
+<a class="flex items-center space-x-2.5 px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-base text-outline">account_circle</span>
+<span>Marcus Vance</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Drawer: In a Call status card & Global Settings -->
+<div class="space-y-2 pt-3 border-t border-surface-variant">
+<!-- Live Call Miniature Indication inside sidebar -->
+<div class="p-2.5 rounded-lg bg-surface-container flex items-center justify-between">
+<div class="flex items-center space-x-2 overflow-hidden">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+</span>
+<div class="truncate">
+<p class="text-xs font-medium text-on-surface truncate">Audio Space Active</p>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Design Room • 3 in call</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-base">graphic_eq</span>
+</div>
+<a class="flex items-center space-x-2 px-space-sm py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container text-body-sm font-body-sm transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-base text-outline">settings</span>
+<span>Settings</span>
+</a>
+</div>
+</aside>
+<!-- CENTER MAIN PANE: Expansive, Serene Message Stream -->
+<main class="flex-1 flex flex-col h-full bg-surface-bright overflow-hidden relative">
+<!-- ELEGANT FLOATING ACTIVE VOICE PILL -->
+<div class="w-full pt-3 px-space-xl flex justify-center flex-shrink-0 z-20 pointer-events-none">
+<div class="pointer-events-auto flex items-center space-x-3 px-3.5 py-1.5 rounded-full bg-surface-container-lowest border border-surface-variant shadow-sm transition-all duration-200 hover:border-primary-fixed">
+<!-- Audio Activity indicator -->
+<div class="flex items-center space-x-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-body-sm font-body-sm font-medium text-on-surface tracking-tight">Voice: Design Room</span>
+</div>
+<span class="text-outline-variant font-light text-xs">•</span>
+<div class="flex items-center space-x-1.5 flex-shrink-0">
+<div class="flex -space-x-1 overflow-hidden">
+<div class="h-5 px-1.5 rounded-full bg-surface-container-highest text-[10px] font-medium flex items-center justify-center text-primary ring-1 ring-surface-container-lowest flex-shrink-0">SC</div>
+<div class="h-5 px-1.5 rounded-full bg-primary-fixed text-[10px] font-medium flex items-center justify-center text-on-primary-fixed ring-1 ring-surface-container-lowest flex-shrink-0">MV</div>
+<div class="h-5 px-1.5 rounded-full bg-surface-container-low text-[10px] font-medium flex items-center justify-center text-on-surface-variant ring-1 ring-surface-container-lowest flex-shrink-0">You</div>
+</div>
+<span class="text-label-sm font-label-sm text-on-surface-variant whitespace-nowrap">3 people</span>
+</div>
+<div class="h-3 w-px bg-surface-variant mx-1"></div>
+<!-- Quick Controls -->
+<div class="flex items-center space-x-1">
+<button class="p-1 rounded-full text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-150" title="Mute Microphone">
+<span class="material-symbols-outlined text-base">mic</span>
+</button>
+<button class="p-1 rounded-full text-error hover:bg-error-container hover:text-on-error-container transition-colors duration-150" title="Disconnect voice">
+<span class="material-symbols-outlined text-base">call_end</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Channel Context Banner -->
+<div class="px-space-xl py-3 border-b border-surface-variant/40 flex items-center justify-between flex-shrink-0">
+<div class="flex items-baseline space-x-3">
+<h1 class="font-headline-sm text-headline-sm text-on-surface tracking-tight flex items-center space-x-1">
+<span class="text-outline font-normal">#</span>
+<span>design-sync</span>
+</h1>
+<span class="font-body-sm text-body-sm text-outline">Iterating on spatial hierarchy, typography scales &amp; light-mode tranquility.</span>
+</div>
+<div class="flex items-center space-x-2">
+<button class="text-label-md font-label-md text-on-surface-variant hover:text-on-surface flex items-center space-x-1 px-2.5 py-1 rounded-lg hover:bg-surface-container transition-colors duration-150">
+<span class="material-symbols-outlined text-base text-outline">push_pin</span>
+<span>2 Pins</span>
+</button>
+<button class="text-label-md font-label-md text-on-surface-variant hover:text-on-surface flex items-center space-x-1 px-2.5 py-1 rounded-lg hover:bg-surface-container transition-colors duration-150">
+<span class="material-symbols-outlined text-base text-outline">group</span>
+<span>14</span>
+</button>
+</div>
+</div>
+<!-- Message Feed: Generous, airy, clear typographical rhythm -->
+<div class="flex-1 overflow-y-auto px-space-xl py-6 space-y-7">
+<!-- Day Divider -->
+<div class="flex items-center justify-center my-4">
+<div class="h-px bg-surface-variant flex-1"></div>
+<span class="px-3 text-label-sm font-label-sm text-outline tracking-wider uppercase font-semibold">Today</span>
+<div class="h-px bg-surface-variant flex-1"></div>
+</div>
+<!-- Message Item 1 -->
+<article class="flex items-start space-x-4 group transition-colors duration-150 p-2 -mx-2 rounded-xl hover:bg-surface-container-low/60">
+<img alt="Sarah Chen avatar" class="w-10 h-10 rounded-full object-cover ring-1 ring-surface-variant flex-shrink-0 mt-0.5" data-alt="Modern studio headshot portrait of a female software architect with short dark hair in front of an off-white background with soft diffuse light, quiet expression, high resolution Scandinavian aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCw1JByp6Te3ZWK03CmfOW0Cj7XXwI0DYLRMhjphOD-gjxYG2DCWbpcSVx62K4A7SLOCKgIq5n2Gs5X0gtk70GqcMhVUfX1ojwrMyk05T9vMw7dQW_waffMoQg2wQ200yfBddcaZgwd04kDP5gOsQBl4iOu5UJWqOhHhLS9KaqaGrEi2I9s3CXC3mgFZvcaddfrZLjMLT5Dgm7o_BvcO9sY0xyg_knMYIB6j4AJ6jk"/>
+<div class="flex-1 space-y-1">
+<div class="flex items-baseline space-x-2.5">
+<span class="font-headline-sm text-sm font-semibold text-on-surface">Sarah Chen</span>
+<span class="font-body-sm text-xs text-outline">10:42 AM</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container text-label-sm font-label-sm text-primary">Core Design</span>
+</div>
+<div class="font-body-lg text-body-lg text-on-surface leading-relaxed max-w-3xl">
+              I’ve uploaded the revised spatial system for the desktop canvas. Notice how the channel list collapses to a single level instead of deep Discord-like subtrees. Visual breathing room makes hours of continuous work feel effortless.
+            </div>
+<!-- Bento-style Preview Card inside stream -->
+<div class="mt-3.5 p-4 rounded-xl border border-surface-variant bg-surface-container-lowest max-w-2xl flex items-start space-x-4">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-2xl">grid_view</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<h4 class="text-sm font-medium text-on-surface truncate">Flow-Token-Architecture-v3.sketch</h4>
+<span class="text-label-sm font-label-sm text-outline">4.2 MB</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-0.5 line-clamp-1">Updated layout margins, 12-column gutters, and tonal layers.</p>
+<div class="mt-2.5 flex items-center space-x-3">
+<button class="text-xs font-medium text-primary hover:underline flex items-center space-x-1">
+<span class="material-symbols-outlined text-sm">visibility</span>
+<span>Inspect Components</span>
+</button>
+<button class="text-xs font-medium text-on-surface-variant hover:text-on-surface flex items-center space-x-1">
+<span class="material-symbols-outlined text-sm">download</span>
+<span>Download</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</article>
+<!-- Message Item 2 -->
+<article class="flex items-start space-x-4 group transition-colors duration-150 p-2 -mx-2 rounded-xl hover:bg-surface-container-low/60">
+<img alt="Marcus Vance avatar" class="w-10 h-10 rounded-full object-cover ring-1 ring-surface-variant flex-shrink-0 mt-0.5" data-alt="Minimal artistic portrait of a male product designer with spectacles, captured in ambient monochrome sunlight against clean concrete architectural textures, serene and thoughtful gaze." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBltqEHBigTcRXFqL0UCBVnOsUjAglnutiDGeblus5ezmFSPadTbstxJ_XNEvWnFAExjDqQyxYst_Guw6yiH7uEnviGZYW8atK7yVSTh1u4RM4w-r4YDiSQP34PqoNhCfKAzNs9jMsXwxSFkygH8rNofAXMzyPZIZGUNbfZiTikQzPwLoQQhcEZ-QZETunhOxBwPBMP6RCdDTf__-uP_XR_56cYXi0pXiRkNYGCK1Y"/>
+<div class="flex-1 space-y-1">
+<div class="flex items-baseline space-x-2.5">
+<span class="font-headline-sm text-sm font-semibold text-on-surface">Marcus Vance</span>
+<span class="font-body-sm text-xs text-outline">10:48 AM</span>
+</div>
+<div class="font-body-lg text-body-lg text-on-surface leading-relaxed max-w-3xl">
+              Agree entirely. Stripping out the decorative role badges and neon status icons instantly reduces cognitive stress. Let’s jump into the voice room to quickly tune the elevation tokens.
+            </div>
+<!-- Quick reaction chip -->
+<div class="flex items-center space-x-2 pt-1">
+<button class="inline-flex items-center space-x-1.5 px-2 py-0.5 rounded-full border border-surface-variant bg-surface-container-lowest text-xs text-on-surface-variant hover:border-primary-fixed transition-colors">
+<span>✦</span>
+<span class="font-medium text-primary">3</span>
+</button>
+<button class="inline-flex items-center space-x-1 px-1.5 py-0.5 rounded-full text-xs text-outline hover:text-on-surface hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm">add_reaction</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Message Item 3 (Current User) -->
+<article class="flex items-start space-x-4 group transition-colors duration-150 p-2 -mx-2 rounded-xl hover:bg-surface-container-low/60">
+<img alt="Current user avatar" class="w-10 h-10 rounded-full object-cover ring-1 ring-surface-variant flex-shrink-0 mt-0.5" data-alt="Close up contemporary candid portrait of a lead software design technician in a bright daylight loft studio, peaceful neutral expression, soft focus background, editorial quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_Cbj2EeVcdGTfaQ1qtmkJxUz8V_uUmrBHFQPwVVpkE5fknlBKpSwHjLRxvRTGDkfvVcdxtgFezkCoBf5Egbq4o67MprEyL_Am7L1ce9QK1rUIzXUsav9eAEaVOHhgMlkaVM6_95tZ147GfJx3B_Pzp8l8gf59yB5Hu5vUF9mqw2iUH5TopTMrJQDwnGavi54tydj1FqI4QRCHVdBi54kbydsWQyxA8IKuTaofRa0"/>
+<div class="flex-1 space-y-1">
+<div class="flex items-baseline space-x-2.5">
+<span class="font-headline-sm text-sm font-semibold text-on-surface">You</span>
+<span class="font-body-sm text-xs text-outline">10:51 AM</span>
+</div>
+<div class="font-body-lg text-body-lg text-on-surface leading-relaxed max-w-3xl">
+              I’m already in <span class="font-medium text-primary">#Voice: Design Room</span>. The audio capsule floating at the top feels totally unobtrusive. Feel free to join whenever ready.
+            </div>
+</div>
+</article>
+</div>
+<!-- CENTER BOTTOM: Clean Message Input Bar -->
+<div class="p-space-lg pt-2 bg-gradient-to-t from-surface-bright via-surface-bright to-transparent flex-shrink-0">
+<div class="max-w-4xl mx-auto rounded-xl border border-surface-variant bg-surface-container-lowest p-2 focus-within:ring-1 focus-within:ring-primary-container focus-within:border-primary-container transition-all">
+<textarea class="w-full resize-none border-0 bg-transparent p-2 text-body-md font-body-md text-on-surface placeholder:text-outline focus:ring-0 focus:outline-none" placeholder="Write a message to #design-sync..." rows="2"></textarea>
+<div class="flex items-center justify-between pt-1 border-t border-surface-variant/40 px-1">
+<div class="flex items-center space-x-1 text-on-surface-variant">
+<button class="p-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors duration-150" title="Attach file">
+<span class="material-symbols-outlined text-lg">attach_file</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors duration-150" title="Format markdown">
+<span class="material-symbols-outlined text-lg">format_italic</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors duration-150" title="Insert snippet">
+<span class="material-symbols-outlined text-lg">code</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container hover:text-on-surface transition-colors duration-150" title="Emoji">
+<span class="material-symbols-outlined text-lg">mood</span>
+</button>
+</div>
+<div class="flex items-center space-x-2">
+<span class="text-label-sm font-label-sm text-outline hidden sm:inline">Return to send</span>
+<button class="px-3 py-1.5 rounded-lg bg-primary text-on-primary text-body-sm font-body-sm font-medium flex items-center space-x-1.5 hover:opacity-90 active:opacity-80 transition-all shadow-none">
+<span>Send</span>
+<span class="material-symbols-outlined text-sm">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+<p class="text-center text-label-sm font-label-sm text-outline mt-2">Hush Workspace • Focus Mode Enabled</p>
+</div>
+</main>
+</div>
+</body></html>

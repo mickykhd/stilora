@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hush — #design-sync</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-surface-variant": "#464555",
+            "error": "#ba1a1a",
+            "background": "#f9f9ff",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#ffd2be",
+            "primary-fixed-dim": "#c3c0ff",
+            "primary-container": "#4f46e5",
+            "secondary-fixed-dim": "#b4c5ff",
+            "tertiary": "#7e3000",
+            "surface-container-low": "#f1f3ff",
+            "on-primary-container": "#dad7ff",
+            "surface-variant": "#dce2f7",
+            "on-tertiary-fixed-variant": "#7b2f00",
+            "inverse-primary": "#c3c0ff",
+            "on-secondary-fixed": "#00174b",
+            "surface-container-highest": "#dce2f7",
+            "on-secondary": "#ffffff",
+            "surface-tint": "#4d44e3",
+            "secondary-fixed": "#dbe1ff",
+            "outline": "#777587",
+            "on-secondary-container": "#fefcff",
+            "tertiary-container": "#a44100",
+            "on-tertiary": "#ffffff",
+            "on-primary": "#ffffff",
+            "on-background": "#141b2b",
+            "inverse-surface": "#293040",
+            "surface": "#f9f9ff",
+            "tertiary-fixed": "#ffdbcc",
+            "on-surface": "#141b2b",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#e1e8fd",
+            "surface-container": "#e9edff",
+            "secondary": "#0051d5",
+            "surface-dim": "#d3daef",
+            "inverse-on-surface": "#edf0ff",
+            "error-container": "#ffdad6",
+            "secondary-container": "#316bf3",
+            "on-primary-fixed-variant": "#3323cc",
+            "tertiary-fixed-dim": "#ffb695",
+            "on-tertiary-fixed": "#351000",
+            "primary": "#3525cd",
+            "on-error": "#ffffff",
+            "surface-bright": "#f9f9ff",
+            "on-primary-fixed": "#0f0069",
+            "on-secondary-fixed-variant": "#003ea8",
+            "primary-fixed": "#e2dfff",
+            "outline-variant": "#c7c4d8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter": "1.25rem",
+            "margin-mobile": "1rem",
+            "margin": "2.5rem",
+            "space-xs": "0.25rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2.5rem",
+            "gutter-mobile": "0.75rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem"
+          },
+          "fontFamily": {
+            "label-md": ["Geist"],
+            "display-lg": ["Geist"],
+            "headline-lg": ["Geist"],
+            "label-sm": ["Geist"],
+            "body-md": ["Geist"],
+            "headline-sm": ["Geist"],
+            "body-lg": ["Geist"],
+            "headline-xl-mobile": ["Geist"],
+            "headline-xl": ["Geist"],
+            "body-sm": ["Geist"]
+          },
+          "fontSize": {
+            "label-md": ["0.875rem", { "lineHeight": "1.2", "letterSpacing": "0em", "fontWeight": "500" }],
+            "display-lg": ["3.5rem", { "lineHeight": "1.1", "letterSpacing": "-0.03em", "fontWeight": "400" }],
+            "headline-lg": ["1.75rem", { "lineHeight": "1.25", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "label-sm": ["0.6875rem", { "lineHeight": "1.1", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "body-md": ["0.9375rem", { "lineHeight": "1.55", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "headline-sm": ["1.25rem", { "lineHeight": "1.3", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-lg": ["1.125rem", { "lineHeight": "1.6", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "headline-xl-mobile": ["2rem", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "headline-xl": ["2.5rem", { "lineHeight": "1.15", "letterSpacing": "-0.025em", "fontWeight": "500" }],
+            "body-sm": ["0.8125rem", { "lineHeight": "1.45", "letterSpacing": "0em", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 350, 'GRAD' 0, 'opsz' 20;
+    }
+    /* Hide scrollbar for seamless visual tranquility */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased flex justify-center min-h-screen selection:bg-primary-fixed selection:text-primary">
+<!-- Mobile Device Shell Frame -->
+<div class="w-full max-w-md bg-surface flex flex-col h-screen overflow-hidden shadow-2xl relative border-x border-surface-container">
+<!-- Top System Bar / Subtle Status Island -->
+<div class="w-full bg-surface-container-lowest px-6 pt-3 pb-1 flex justify-between items-center text-on-surface-variant font-label-sm text-label-sm select-none">
+<span>09:41</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px]">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[15px]">wifi</span>
+<span class="material-symbols-outlined text-[15px]">battery_full</span>
+</div>
+</div>
+<!-- Header Navigation Section -->
+<header class="bg-surface-container-lowest px-4 py-2.5 flex items-center justify-between border-b border-surface-container shrink-0">
+<div class="flex items-center gap-3 min-w-0">
+<!-- Close / Back Departure Action -->
+<button aria-label="Go back" class="p-1.5 -ml-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-lg">arrow_back</span>
+</button>
+<!-- Channel Identification -->
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-tight truncate"># design-sync</span>
+<!-- Non-intrusive Live Status Pill -->
+<span class="w-1.5 h-1.5 rounded-full bg-primary shrink-0"></span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">spatial hierarchy &amp; light-mode tranquility</span>
+</div>
+</div>
+<!-- Member Avatar Stack & Channel Actions -->
+<div class="flex items-center gap-2 shrink-0">
+<div class="flex -space-x-2 overflow-hidden items-center p-0.5">
+<div class="w-7 h-7 rounded-full ring-2 ring-surface-container-lowest bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close up minimal editorial profile portrait of a woman designer with clean lighting, muted natural tones, neutral background in a serene creative studio environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcfHYkNmbjnvmh2cnTuEFV2TBrpin4wPpuEFFqVISsEoMryRbAegM_0SAUnb6GOPzBpI-mlgBwMdobUgUy_sGQMc2QQEUIhQYrL9D69w5H5_dABxNtUvOoP9qtLXhHGUNQaWiNj3HO-CNYjvKtbMvLuRG3mKUK4RcEqHr9_2UTT7CF8Aqa_IiyqEm2sHPRlG0QGk6S3nsd45ULroymkUP2ZiJJhcgjM-o7576MR40"/>
+</div>
+<div class="w-7 h-7 rounded-full ring-2 ring-surface-container-lowest bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="High contrast thoughtful portrait of a male product architect looking slightly off camera, bathed in soft daylight with scandinavian studio aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASApVooGKhCzW3fA7B22gWVudHRLwXBQno2i_2Xg_MXuLenBrxGNeUu5tn4ngoX5gh4avX_6cnayBB6dZEIiXSepkpgtS4F55Wmvm2O31ChTQVGcXQShCxNVStH5BlgosvJ9lvWtO0KLCsdccKPHEp3Sg0MUjaJychjFlYnqhdlb1s3e5SUAbVgxE4uRDOyrfplkVM_8CL81Kcl6I6dU3Jkyoz9x8mDtSCGlMEGE4"/>
+</div>
+<div class="w-7 h-7 rounded-full ring-2 ring-surface-container-lowest bg-surface-container-highest flex items-center justify-center font-label-sm text-label-sm text-on-surface-variant">
+            +4
+          </div>
+</div>
+<button aria-label="Channel details" class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined text-xl">more_vert</span>
+</button>
+</div>
+</header>
+<!-- Subtle Ambient Voice Pill -->
+<div class="px-4 py-2 bg-surface-container-low/70 border-b border-surface-container shrink-0 flex items-center justify-between backdrop-blur-sm">
+<div class="flex items-center gap-2">
+<div class="relative flex items-center justify-center w-5 h-5 rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[13px] animate-pulse">mic</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md text-on-surface font-medium">Voice: Design Room</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">3 people</span>
+</div>
+</div>
+<button class="font-label-sm text-label-sm text-primary hover:text-primary-container px-2 py-0.5 rounded-full bg-surface-container-lowest hover:bg-surface-container border border-surface-container transition-all">
+        Join
+      </button>
+</div>
+<!-- Main Message Stream Canvas -->
+<main class="flex-1 overflow-y-auto no-scrollbar p-4 space-y-6">
+<!-- Date Divider -->
+<div class="flex items-center justify-center my-2">
+<span class="px-3 py-1 bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm rounded-full border border-surface-container/60">
+          Today
+        </span>
+</div>
+<!-- Message Item 1: Sarah Chen -->
+<div class="flex items-start gap-3 group">
+<div class="w-8 h-8 rounded-full overflow-hidden shrink-0 mt-0.5 border border-surface-container">
+<img class="w-full h-full object-cover" data-alt="Portrait of Sarah Chen, a design director in a sunlit architectural space, wearing neutral linen clothing with tranquil thoughtful expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnAWnVf6uhH_jKguQW096psJzj99JnlFYVMOEqsUbV6PbWA7Q3CMj9LtKtyJP0a98piKnQf5vGeOby-0_kbToeuSAmS0O86FsDNAyo4ff-NuZ4a9CiRYf3gUAOsX9VN8MeRKRamLDW7wxbWwqjvqUXDxIK3O9CuVbIcsp6ZfwUbshq_xiX4GapSiZCq3fppPUOfP9SISB9gp109ZZh5EjnqSO11J23sICzlmJ3Xmk"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Sarah Chen</span>
+<span class="font-body-sm text-body-sm text-outline">10:14 AM</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface space-y-1.5 leading-relaxed">
+<p>I just updated the token hierarchy to reduce contrast exhaustion on extended sessions. Notice how secondary borders now bleed quietly into `#e9edff`.</p>
+</div>
+<!-- Reaction Pills -->
+<div class="flex items-center gap-1.5 mt-2">
+<button class="inline-flex items-center gap-1 px-2 py-0.5 bg-surface-container-low hover:bg-surface-container border border-surface-container rounded-full text-on-surface-variant font-label-sm text-label-sm transition-colors">
+<span>💜</span>
+<span class="font-medium text-on-surface">3</span>
+</button>
+<button class="inline-flex items-center gap-1 px-2 py-0.5 bg-surface-container-low hover:bg-surface-container border border-surface-container rounded-full text-on-surface-variant font-label-sm text-label-sm transition-colors">
+<span>✨</span>
+<span class="font-medium text-on-surface">1</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Message Item 2: Marcus Vance with Inline File Attachment -->
+<div class="flex items-start gap-3 group">
+<div class="w-8 h-8 rounded-full overflow-hidden shrink-0 mt-0.5 border border-surface-container">
+<img class="w-full h-full object-cover" data-alt="Portrait of Marcus Vance, senior systems engineer with structured horn-rim glasses in a serene Scandinavian studio setting with soft indirect ambient light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJnL9kxy8Vkh1tbahP__TRlljhTaVmB8FQFpzykKt8Qedttzjd8X2H8MSFvBXtmT7S4Rw-7YqHUlvWKSIaBh1dxIEGc0G48UZxiMeEaQZuL4on_HDN_2-DKLoVlM4uqpYV4nqwiCoMlsEQfJ8L8itHnLJBISGgpTWi2_i7D_BuCCy85yvCrMCRh8L5cxupbb3rM0oR6-wmRnxIM5vZ0doKHlj-LgmeB4NHH6RY35o"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Marcus Vance</span>
+<span class="font-body-sm text-body-sm text-outline">10:18 AM</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mb-2.5 leading-relaxed">
+            Verified the CSS export. Everything conforms to 8pt geometry cleanly. Pushing the design artifact package below:
+          </p>
+<!-- Inline File Preview Card -->
+<div class="bg-surface-container-lowest rounded-xl p-3 border border-surface-container hover:border-outline-variant transition-colors max-w-sm">
+<div class="flex items-center gap-3">
+<!-- File Icon Badge -->
+<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-primary shrink-0 border border-surface-container">
+<span class="material-symbols-outlined text-xl">description</span>
+</div>
+<!-- File Metadata -->
+<div class="flex-1 min-w-0">
+<h4 class="font-label-md text-label-md text-on-surface font-medium truncate">Flow-Token-Architecture-v3.sketch</h4>
+<p class="font-body-sm text-body-sm text-outline truncate">4.2 MB • Updated just now</p>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="mt-3 pt-2.5 border-t border-surface-container flex items-center justify-end gap-2">
+<button class="px-2.5 py-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg font-label-sm text-label-sm flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[15px]">visibility</span>
+                Inspect
+              </button>
+<button class="px-2.5 py-1 bg-surface-container-low hover:bg-surface-container text-primary rounded-lg font-label-sm text-label-sm flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[15px]">download</span>
+                Download
+              </button>
+</div>
+</div>
+<!-- Minimal Reaction -->
+<div class="flex items-center gap-1.5 mt-2">
+<button class="inline-flex items-center gap-1 px-2 py-0.5 bg-surface-container-low hover:bg-surface-container border border-surface-container rounded-full text-on-surface-variant font-label-sm text-label-sm transition-colors">
+<span>🙌</span>
+<span class="font-medium text-on-surface">2</span>
+</button>
+<button aria-label="Add reaction" class="w-6 h-6 rounded-full hover:bg-surface-container flex items-center justify-center text-outline transition-colors">
+<span class="material-symbols-outlined text-[15px]">add_reaction</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Message Item 3: Direct User Reply / Reflection -->
+<div class="flex items-start gap-3 group">
+<div class="w-8 h-8 rounded-full overflow-hidden shrink-0 mt-0.5 border border-surface-container bg-primary-fixed flex items-center justify-center font-label-md text-label-md text-primary font-medium">
+          AF
+        </div>
+<div class="flex-1 min-w-0">
+<div class="flex items-baseline gap-2 mb-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold">You</span>
+<span class="font-body-sm text-body-sm text-outline">10:22 AM</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface leading-relaxed">
+<p>Inspected the spacing tokens. The rhythm feels balanced and uncluttered. I'll stage this in the preview container before merging.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Docked Minimal Message Input Bar -->
+<footer class="p-3 bg-surface-container-lowest border-t border-surface-container shrink-0">
+<div class="bg-surface-container-low rounded-2xl p-1.5 border border-surface-container focus-within:border-primary focus-within:bg-surface-container-lowest transition-all">
+<!-- Text Input Row -->
+<div class="px-2.5 pt-1.5 pb-1">
+<input class="w-full bg-transparent border-none p-0 text-on-surface placeholder:text-outline font-body-md text-body-md focus:ring-0 focus:outline-none" placeholder="Reply to #design-sync..." type="text"/>
+</div>
+<!-- Input Actions Toolbar -->
+<div class="flex items-center justify-between px-1 pt-1 border-t border-surface-container/40">
+<div class="flex items-center gap-0.5 text-on-surface-variant">
+<button aria-label="Attach file" class="p-1.5 hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+</button>
+<button aria-label="Format bold" class="p-1.5 hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">format_bold</span>
+</button>
+<button aria-label="Insert code block" class="p-1.5 hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">code</span>
+</button>
+<button aria-label="Insert emoji" class="p-1.5 hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px]">sentiment_satisfied</span>
+</button>
+</div>
+<!-- Clean Sleek Send Button -->
+<button aria-label="Send message" class="w-8 h-8 rounded-xl bg-primary hover:bg-primary-container text-on-primary flex items-center justify-center transition-all shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[18px]">arrow_upward</span>
+</button>
+</div>
+</div>
+<!-- iOS Home Indicator Spacing -->
+<div class="w-32 h-1 bg-on-surface-variant/20 rounded-full mx-auto mt-2"></div>
+</footer>
+</div>
+</body></html>

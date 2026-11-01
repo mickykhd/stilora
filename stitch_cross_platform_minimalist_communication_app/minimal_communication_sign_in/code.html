@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hush — Sign In</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container": "#e9edff",
+            "surface-bright": "#f9f9ff",
+            "on-primary-container": "#dad7ff",
+            "primary-fixed-dim": "#c3c0ff",
+            "surface": "#f9f9ff",
+            "secondary": "#0051d5",
+            "surface-variant": "#dce2f7",
+            "on-primary-fixed": "#0f0069",
+            "error": "#ba1a1a",
+            "tertiary-fixed-dim": "#ffb695",
+            "on-primary": "#ffffff",
+            "on-surface": "#141b2b",
+            "outline-variant": "#c7c4d8",
+            "primary-fixed": "#e2dfff",
+            "surface-container-highest": "#dce2f7",
+            "background": "#f9f9ff",
+            "inverse-surface": "#293040",
+            "surface-dim": "#d3daef",
+            "inverse-primary": "#c3c0ff",
+            "on-surface-variant": "#464555",
+            "surface-container-lowest": "#ffffff",
+            "tertiary": "#7e3000",
+            "secondary-container": "#316bf3",
+            "surface-container-low": "#f1f3ff",
+            "secondary-fixed-dim": "#b4c5ff",
+            "on-secondary-container": "#fefcff",
+            "primary": "#3525cd",
+            "outline": "#777587",
+            "inverse-on-surface": "#edf0ff",
+            "on-error-container": "#93000a",
+            "on-secondary-fixed": "#00174b",
+            "tertiary-fixed": "#ffdbcc",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-background": "#141b2b",
+            "on-tertiary-container": "#ffd2be",
+            "error-container": "#ffdad6",
+            "secondary-fixed": "#dbe1ff",
+            "surface-container-high": "#e1e8fd",
+            "on-secondary-fixed-variant": "#003ea8",
+            "primary-container": "#4f46e5",
+            "surface-tint": "#4d44e3",
+            "on-tertiary-fixed-variant": "#7b2f00",
+            "on-secondary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed": "#351000",
+            "tertiary-container": "#a44100"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-md": "1rem",
+            "space-xl": "2.5rem",
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "gutter-mobile": "0.75rem",
+            "space-lg": "1.5rem",
+            "margin-mobile": "1rem",
+            "margin": "2.5rem",
+            "gutter": "1.25rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Geist"],
+            "headline-xl": ["Geist"],
+            "body-md": ["Geist"],
+            "label-md": ["Geist"],
+            "headline-sm": ["Geist"],
+            "label-sm": ["Geist"],
+            "body-sm": ["Geist"],
+            "display-lg": ["Geist"],
+            "headline-lg": ["Geist"],
+            "headline-xl-mobile": ["Geist"]
+          },
+          "fontSize": {
+            "body-lg": ["1.125rem", { "lineHeight": "1.6", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "headline-xl": ["2.5rem", { "lineHeight": "1.15", "letterSpacing": "-0.025em", "fontWeight": "500" }],
+            "body-md": ["0.9375rem", { "lineHeight": "1.55", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "label-md": ["0.875rem", { "lineHeight": "1.2", "letterSpacing": "0em", "fontWeight": "500" }],
+            "headline-sm": ["1.25rem", { "lineHeight": "1.3", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-sm": ["0.6875rem", { "lineHeight": "1.1", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "body-sm": ["0.8125rem", { "lineHeight": "1.45", "letterSpacing": "0em", "fontWeight": "400" }],
+            "display-lg": ["3.5rem", { "lineHeight": "1.1", "letterSpacing": "-0.03em", "fontWeight": "400" }],
+            "headline-lg": ["1.75rem", { "lineHeight": "1.25", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "headline-xl-mobile": ["2rem", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "500" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .subtle-border {
+      border: 1px solid rgba(17, 24, 39, 0.06);
+    }
+    .ambient-halo {
+      box-shadow: 0 20px 40px -15px rgba(17, 24, 39, 0.04);
+    }
+  </style>
+</head>
+<body class="h-full bg-surface text-on-surface antialiased flex flex-col justify-between selection:bg-surface-container-highest">
+<!-- Header Anchor / Quiet Brand Bar -->
+<header class="w-full flex items-center justify-between px-space-xl py-space-lg">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded-lg bg-surface-container-highest flex items-center justify-center border border-surface-variant/40">
+<span class="material-symbols-outlined text-primary" data-icon="grain" style="font-size: 18px;">grain</span>
+</div>
+<span class="font-headline-sm text-headline-sm font-semibold tracking-tight text-on-surface">Hush</span>
+</div>
+<div class="flex items-center gap-space-md">
+<span class="font-body-sm text-body-sm text-on-surface-variant hidden sm:inline">Need a workspace?</span>
+<a class="font-label-md text-label-md text-primary hover:text-primary-container transition-colors duration-150" href="#">Create account</a>
+</div>
+</header>
+<!-- Central Sanctuary / Auth Canvas -->
+<main class="flex-1 flex items-center justify-center px-margin-mobile md:px-margin py-space-lg">
+<div class="w-full max-w-[420px] bg-surface-container-lowest subtle-border rounded-xl p-space-xl ambient-halo transition-all duration-200">
+<!-- Logo Mark and Heading -->
+<div class="flex flex-col items-center text-center mb-space-xl">
+<div class="w-10 h-10 rounded-xl bg-surface-container-low border border-surface-variant/60 flex items-center justify-center mb-space-md">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="grain">grain</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight font-medium">Welcome back</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">Enter your details to access your workspace</p>
+</div>
+<!-- Sign In Method Tabs (Unified across desktop & mobile: Magic Link / Password / Scan QR) -->
+<div class="flex p-0.5 bg-surface-container-low rounded-lg subtle-border mb-space-lg">
+<button class="flex-1 py-1.5 px-space-sm rounded-md font-label-md text-label-md bg-surface-container-lowest text-on-surface shadow-xs transition-all flex items-center justify-center gap-1.5" id="tab-magic-btn" onclick="switchMode('magic')" type="button">
+<span class="material-symbols-outlined text-base" data-icon="mail">mail</span>
+          Magic Link
+        </button>
+<button class="flex-1 py-1.5 px-space-sm rounded-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1.5" id="tab-password-btn" onclick="switchMode('password')" type="button">
+<span class="material-symbols-outlined text-base" data-icon="key">key</span>
+          Password
+        </button>
+<button class="flex-1 py-1.5 px-space-sm rounded-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1.5" id="tab-qr-btn" onclick="switchMode('qr')" type="button">
+<span class="material-symbols-outlined text-base" data-icon="qr_code_2">qr_code_2</span>
+          Scan QR
+        </button>
+</div>
+<!-- Magic Link View -->
+<div class="space-y-space-md" id="view-magic">
+<button class="w-full flex items-center justify-center gap-2 py-2 px-space-sm rounded-lg subtle-border bg-surface-container-lowest hover:bg-surface-container-low font-label-md text-label-md text-on-surface transition-colors duration-150" type="button">
+<svg class="w-4 h-4" viewbox="0 0 24 24">
+<path d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" fill="#4285F4"></path>
+<path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z" fill="#34A853"></path>
+<path d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z" fill="#FBBC05"></path>
+<path d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" fill="#EA4335"></path>
+</svg>
+            Continue with Google
+          </button>
+<!-- Minimal Whisper Divider -->
+<div class="relative my-space-md flex items-center justify-center">
+<div class="w-full border-t border-surface-variant/70"></div>
+<span class="bg-surface-container-lowest px-space-sm font-label-sm text-label-sm text-outline uppercase tracking-wider">or email</span>
+</div>
+<form class="space-y-space-md" onsubmit="event.preventDefault();">
+<!-- Input Field: Recessed Scandinavian aesthetic -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5" for="work-email">Work email</label>
+<div class="relative">
+<input class="w-full rounded-lg bg-surface-container-low border border-transparent px-space-sm py-2 text-body-md font-body-md text-on-surface placeholder-outline focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all duration-150" id="work-email" placeholder="name@company.com" type="email"/>
+</div>
+</div>
+<!-- Primary Submit CTA -->
+<button class="w-full py-2.5 px-space-md rounded-lg bg-primary-container hover:opacity-95 text-on-primary font-label-md text-label-md flex items-center justify-center gap-space-xs transition-opacity duration-150" type="submit">
+<span id="btn-text">Send magic link</span>
+<span class="material-symbols-outlined text-base" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+</div>
+<!-- Password View -->
+<div class="hidden space-y-space-md" id="view-password">
+<form class="space-y-space-md" onsubmit="event.preventDefault();">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5" for="pwd-email">Work email</label>
+<input class="w-full rounded-lg bg-surface-container-low border border-transparent px-space-sm py-2 text-body-md font-body-md text-on-surface placeholder-outline focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all duration-150" id="pwd-email" placeholder="name@company.com" type="email"/>
+</div>
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<label class="block font-label-md text-label-md text-on-surface" for="password">Password</label>
+<a class="font-label-sm text-label-sm text-outline hover:text-primary transition-colors" href="#">Forgot?</a>
+</div>
+<input class="w-full rounded-lg bg-surface-container-low border border-transparent px-space-sm py-2 text-body-md font-body-md text-on-surface placeholder-outline focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all duration-150" id="password" placeholder="••••••••••••" type="password"/>
+</div>
+<button class="w-full py-2.5 px-space-md rounded-lg bg-primary-container hover:opacity-95 text-on-primary font-label-md text-label-md flex items-center justify-center gap-space-xs transition-opacity duration-150" type="submit">
+<span>Sign in</span>
+<span class="material-symbols-outlined text-base" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+</div>
+<!-- QR Fast Sign-in View -->
+<div class="hidden flex flex-col items-center text-center pt-space-xs space-y-space-md animate-in fade-in duration-200" id="view-qr">
+<div class="p-4 bg-surface-container-lowest subtle-border rounded-xl flex items-center justify-center relative group">
+<!-- Pristine Scalable Minimal QR Pattern -->
+<div class="w-48 h-48 bg-surface-container-low rounded-lg p-2.5 flex flex-col justify-between">
+<div class="flex justify-between">
+<div class="w-12 h-12 border-4 border-on-surface rounded-md p-1.5 flex items-center justify-center">
+<div class="w-5 h-5 bg-on-surface rounded-xs"></div>
+</div>
+<div class="flex gap-1">
+<div class="w-3 h-3 bg-on-surface rounded-xs"></div>
+<div class="w-3 h-3 bg-on-surface rounded-xs"></div>
+</div>
+<div class="w-12 h-12 border-4 border-on-surface rounded-md p-1.5 flex items-center justify-center">
+<div class="w-5 h-5 bg-on-surface rounded-xs"></div>
+</div>
+</div>
+<div class="flex justify-between items-center px-1">
+<div class="grid grid-cols-3 gap-1">
+<div class="w-2.5 h-2.5 bg-on-surface rounded-xs"></div>
+<div class="w-2.5 h-2.5 bg-transparent"></div>
+<div class="w-2.5 h-2.5 bg-on-surface rounded-xs"></div>
+</div>
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-base" data-icon="bolt">bolt</span>
+</div>
+<div class="grid grid-cols-2 gap-1">
+<div class="w-2.5 h-2.5 bg-on-surface rounded-xs"></div>
+<div class="w-2.5 h-2.5 bg-on-surface rounded-xs"></div>
+</div>
+</div>
+<div class="flex justify-between items-end">
+<div class="w-12 h-12 border-4 border-on-surface rounded-md p-1.5 flex items-center justify-center">
+<div class="w-5 h-5 bg-on-surface rounded-xs"></div>
+</div>
+<div class="flex gap-1.5 pb-1">
+<div class="w-3 h-3 bg-on-surface rounded-xs"></div>
+<div class="w-3 h-3 bg-on-surface rounded-xs"></div>
+<div class="w-3 h-3 bg-on-surface rounded-xs"></div>
+</div>
+<div class="w-8 h-8 bg-surface-container-high rounded-md flex items-center justify-center">
+<div class="w-3.5 h-3.5 bg-on-surface rounded-xs"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-1">
+<p class="font-body-sm text-body-sm text-on-surface font-medium">Scan with your mobile app</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Open Hush &gt; Settings &gt; Quick Link</p>
+</div>
+<div class="flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+          Expiring in 01:58
+        </div>
+</div>
+<!-- Trust Footer within Card -->
+<div class="mt-space-lg pt-space-md border-t border-surface-variant/50 flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[15px] text-outline" data-icon="lock">lock</span>
+<span>Encrypted in transit &amp; at rest</span>
+</div>
+<div class="flex items-center gap-1 font-label-sm text-label-sm text-outline">
+<span class="material-symbols-outlined text-[15px]" data-icon="schedule">schedule</span>
+<span>SSO Ready</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Quiet Scandinavian Meta Footer -->
+<footer class="w-full py-space-md px-space-xl flex flex-col sm:flex-row items-center justify-between gap-space-xs text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex items-center gap-space-md">
+<a class="hover:text-on-surface transition-colors" href="#">Privacy</a>
+<a class="hover:text-on-surface transition-colors" href="#">Terms</a>
+<a class="hover:text-on-surface transition-colors" href="#">System Status</a>
+</div>
+<div class="flex items-center gap-2 text-outline">
+<span>Hush · v1.0</span>
+</div>
+</footer>
+<script>
+    function switchMode(mode) {
+      const modes = ['magic', 'password', 'qr'];
+      const baseInactive = "flex-1 py-1.5 px-space-sm rounded-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1.5";
+      const baseActive = "flex-1 py-1.5 px-space-sm rounded-md font-label-md text-label-md bg-surface-container-lowest text-on-surface shadow-xs transition-all flex items-center justify-center gap-1.5";
+
+      modes.forEach(m => {
+        const btn = document.getElementById('tab-' + m + '-btn');
+        const view = document.getElementById('view-' + m);
+        if (!btn || !view) return;
+        if (m === mode) {
+          btn.className = baseActive;
+          view.classList.remove('hidden');
+        } else {
+          btn.className = baseInactive;
+          view.classList.add('hidden');
+        }
+      });
+    }
+  </script>
+</body></html>
