@@ -127,108 +127,44 @@
 <!-- Exact Brand Name Casing Anchor -->
 <span class="font-headline-sm text-headline-sm font-semibold tracking-tight text-on-surface mb-space-xs">Hush</span>
 <h1 class="font-headline-xl-mobile text-headline-xl-mobile text-on-surface font-medium tracking-tight">Welcome back</h1>
-<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs max-w-xs">Enter your workspace credentials to restore your continuous focus stream.</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-xs max-w-xs">Sign in with your email and password to restore your continuous focus stream.</p>
 </header>
 <!-- Interactive Authentication Core Card -->
 <section class="w-full my-space-lg bg-surface-container-lowest border border-surface-variant/30 rounded-xl p-space-lg">
-<!-- Seamless Segmented Method Switcher -->
-<nav aria-label="Authentication modes" class="flex p-space-xs bg-surface-container-low rounded-lg mb-space-lg">
-<button class="flex-1 py-1.5 rounded text-center font-label-md text-label-md bg-surface-container-lowest text-primary shadow-sm transition-all duration-150" id="tab-magic" onclick="setMode('magic')" type="button">
-          Magic Link
-        </button>
-<button class="flex-1 py-1.5 rounded text-center font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all duration-150" id="tab-password" onclick="setMode('password')" type="button">
-          Password
-        </button>
-<button class="flex-1 py-1.5 rounded text-center font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all duration-150" id="tab-qr" onclick="setMode('qr')" type="button">
-          Scan QR
-        </button>
-</nav>
-<!-- Form Content: Magic Link Flow -->
-<div class="space-y-space-md" id="view-magic">
+<!-- Single auth method: email + password (our own database — no third-party OAuth) -->
+<div class="space-y-space-md">
 <div class="space-y-1.5">
-<label class="block font-label-sm text-label-sm uppercase text-on-surface-variant tracking-wider" for="work-email">Work Email</label>
+<label class="block font-label-sm text-label-sm uppercase text-on-surface-variant tracking-wider" for="work-email">Email</label>
 <div class="relative flex items-center">
 <span class="material-symbols-outlined absolute left-3 text-outline text-lg pointer-events-none" data-icon="alternate_email">alternate_email</span>
-<input autocomplete="email" class="w-full pl-10 pr-3 py-2.5 bg-surface-container-low border border-transparent rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline/70 focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container focus:outline-none transition-all duration-150" id="work-email" inputmode="email" placeholder="alex@flowstudio.design" type="email"/>
+<input autocomplete="username" class="w-full pl-10 pr-3 py-2.5 bg-surface-container-low border border-transparent rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline/70 focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container focus:outline-none transition-all duration-150" id="work-email" inputmode="email" placeholder="alex@studio.design" type="email"/>
 </div>
-</div>
-<button class="w-full py-3 px-4 bg-primary-container hover:opacity-90 active:opacity-80 text-on-secondary rounded-lg font-label-md text-label-md transition-all duration-150 flex items-center justify-center gap-2" type="button">
-<span>Send magic link</span>
-<span class="material-symbols-outlined text-base" data-icon="arrow_forward">arrow_forward</span>
-</button>
-</div>
-<!-- Form Content: Password Flow (Initially Hidden) -->
-<div class="space-y-space-md hidden" id="view-password">
-<div class="space-y-1.5">
-<label class="block font-label-sm text-label-sm uppercase text-on-surface-variant tracking-wider" for="pwd-email">Email Address</label>
-<input class="w-full px-3 py-2.5 bg-surface-container-low border border-transparent rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline/70 focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container focus:outline-none transition-all duration-150" id="pwd-email" placeholder="name@organization.com" type="email"/>
 </div>
 <div class="space-y-1.5">
 <div class="flex justify-between items-center">
 <label class="block font-label-sm text-label-sm uppercase text-on-surface-variant tracking-wider" for="account-pwd">Password</label>
 <a class="font-body-sm text-body-sm text-secondary hover:underline" href="#">Forgot?</a>
 </div>
-<input class="w-full px-3 py-2.5 bg-surface-container-low border border-transparent rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline/70 focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container focus:outline-none transition-all duration-150" id="account-pwd" placeholder="••••••••••••" type="password"/>
+<input autocomplete="current-password" class="w-full px-3 py-2.5 bg-surface-container-low border border-transparent rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline/70 focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container focus:outline-none transition-all duration-150" id="account-pwd" placeholder="••••••••••••" type="password"/>
 </div>
-<button class="w-full py-3 px-4 bg-primary-container hover:opacity-90 active:opacity-80 text-on-secondary rounded-lg font-label-md text-label-md transition-all duration-150" type="button">
-          Authenticate
-        </button>
-</div>
-<!-- Form Content: QR Authenticator View (Initially Hidden) -->
-<div class="hidden flex flex-col items-center text-center py-2 space-y-space-md" id="view-qr">
-<div class="w-40 h-40 bg-surface-container-low rounded-xl border border-surface-variant flex items-center justify-center relative p-3">
-<span class="material-symbols-outlined text-outline/60 text-7xl" data-icon="qr_code_scanner">qr_code_scanner</span>
-<div class="absolute inset-x-4 top-2 h-0.5 bg-primary/40 animate-pulse"></div>
-</div>
-<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs">Open Hush Desktop Settings → Devices to link instantly without credentials.</p>
-</div>
-<!-- Subtle Divider -->
-<div class="relative my-space-lg flex items-center justify-center">
-<div class="absolute inset-0 flex items-center">
-<div class="w-full border-t border-surface-variant/40"></div>
-</div>
-<span class="relative px-3 bg-surface-container-lowest font-label-sm text-label-sm uppercase tracking-wider text-outline">or continue via</span>
-</div>
-<!-- Minimal Social Logins -->
-<div class="grid grid-cols-1 gap-space-sm">
-<button class="flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border border-surface-variant/50 hover:bg-surface-container-low transition-colors duration-150 font-label-md text-label-md text-on-surface" type="button">
-<svg aria-hidden="true" class="w-4 h-4" viewbox="0 0 24 24">
-<path d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z" fill="#4285F4"></path>
-<path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z" fill="#34A853"></path>
-<path d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.97 0 12s.45 3.82 1.25 5.42l4.03-3.15z" fill="#FBBC05"></path>
-<path d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" fill="#EA4335"></path>
-</svg>
-<span>Google</span>
+<button class="w-full py-3 px-4 bg-primary-container hover:opacity-90 active:opacity-80 text-on-secondary rounded-lg font-label-md text-label-md transition-all duration-150 flex items-center justify-center gap-2" type="button">
+<span>Sign in</span>
+<span class="material-symbols-outlined text-base" data-icon="arrow_forward">arrow_forward</span>
 </button>
+<p class="text-center font-body-sm text-body-sm text-outline">New here? Your account is created with your workspace.</p>
 </div>
 </section>
 <!-- Bottom Contextual Footer & Security Assurance -->
 <footer class="flex flex-col items-center text-center space-y-space-md pt-space-xs">
 <div class="font-body-md text-body-md text-on-surface-variant">
-        Need a workspace? 
+        Need an account?
         <a class="text-primary font-medium hover:underline ml-1" href="#">Create account</a>
 </div>
 <!-- Trust Metadata Badge -->
 <div class="inline-flex items-center gap-1.5 py-1 px-3 bg-surface-container-low rounded-full border border-surface-variant/40">
 <span class="material-symbols-outlined text-outline text-xs" data-icon="lock" style="font-variation-settings: 'FILL' 1;">lock</span>
-<span class="font-label-sm text-label-sm text-outline-variant font-medium text-on-surface-variant">Encrypted in transit &amp; at rest • SSO Ready</span>
+<span class="font-label-sm text-label-sm text-outline-variant font-medium text-on-surface-variant">Encrypted in transit &amp; at rest</span>
 </div>
 </footer>
 </main>
-<script>
-    function setMode(mode) {
-      const modes = ['magic', 'password', 'qr'];
-      modes.forEach(m => {
-        const btn = document.getElementById('tab-' + m);
-        const view = document.getElementById('view-' + m);
-        if (m === mode) {
-          btn.className = "flex-1 py-1.5 rounded text-center font-label-md text-label-md bg-surface-container-lowest text-primary shadow-sm transition-all duration-150";
-          view.classList.remove('hidden');
-        } else {
-          btn.className = "flex-1 py-1.5 rounded text-center font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all duration-150";
-          view.classList.add('hidden');
-        }
-      });
-    }
-  </script>
 </body></html>

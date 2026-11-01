@@ -16,8 +16,9 @@ manual parts are for a human on real hardware.
 
 ## 2. Manual E2E flows (Maestro scripts or hand-run)
 
-- [ ] Magic link → email → OTP fallback screen → verify → workspace opens
-- [ ] Google sign-in round trip
+- [ ] Sign in with email + password → workspace opens
+- [ ] Wrong password → inline error, no session
+- [ ] Create account (email + password + workspace name) → lands signed in
 - [ ] Open channel → send message → appears (and in a 2nd client instantly)
 - [ ] Edit / delete message (author only; non-author blocked)
 - [ ] Thread: open from "N replies" → reply → count updates

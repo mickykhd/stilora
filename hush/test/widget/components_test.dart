@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hush/src/data/repositories.dart';
 import 'package:hush/src/models/models.dart';
-import 'package:hush/src/screens/otp_screen.dart';
 import 'package:hush/src/state/providers.dart';
 import 'package:hush/src/theme/aura_theme.dart';
 import 'package:hush/src/theme/motion.dart';
@@ -236,37 +235,6 @@ void main() {
       await tester.tap(find.text('Second'));
       await tester.pump(const Duration(milliseconds: 300));
       expect(weightOf('Second'), FontWeight.w600);
-    });
-  });
-
-  group('OtpScreen', () {
-    testWidgets('auto-advances digits and verifies on completion',
-        (tester) async {
-      final container = ProviderContainer();
-      addTearDown(container.dispose);
-      await tester.pumpWidget(UncontrolledProviderScope(
-        container: container,
-        child: MaterialApp(
-          theme: AuraTheme.light(),
-          home: const OtpScreen(),
-        ),
-      ));
-      await _settle(tester);
-
-      // Type one digit per box; auto-advance moves focus forward.
-      final fields = find.byType(TextField);
-      expect(fields, findsNWidgets(6));
-      for (var i = 0; i < 6; i++) {
-        await tester.enterText(fields.at(i), '${i + 1}');
-        await tester.pump(const Duration(milliseconds: 50));
-      }
-      await tester.pump(const Duration(milliseconds: 900));
-
-      expect(container.read(signedInProvider), isTrue);
-
-      // Unmount so the resend timer is cancelled via dispose.
-      await tester.pumpWidget(const SizedBox());
-      await tester.pump(const Duration(milliseconds: 1100));
     });
   });
 

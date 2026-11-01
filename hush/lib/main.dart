@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import 'src/screens/otp_screen.dart';
 import 'src/screens/sign_in_screen.dart';
 import 'src/screens/workspace_shell.dart';
 import 'src/state/providers.dart';
@@ -64,21 +63,18 @@ class HushApp extends ConsumerWidget {
   }
 }
 
-/// Routes between sign-in → OTP → workspace with a crossfade so auth
-/// transitions feel continuous (no jarring screen swaps).
+/// Crossfades between sign-in → workspace so the auth transition feels
+/// continuous (no jarring screen swaps).
 class _AuthGate extends ConsumerWidget {
   const _AuthGate();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final signedIn = ref.watch(signedInProvider);
-    final otpTarget = ref.watch(magicLinkSentToProvider);
 
     final child = signedIn
         ? const WorkspaceShell(key: ValueKey('shell'))
-        : otpTarget != null
-            ? const OtpScreen(key: ValueKey('otp'))
-            : const SignInScreen(key: ValueKey('signin'));
+        : const SignInScreen(key: ValueKey('signin'));
 
     // Global auth crossfade lives in AnimatedSwitcher below.
     return AnimatedSwitcher(

@@ -4,8 +4,8 @@
  *  - Database: PGlite (Postgres compiled to WASM) via drizzle's pglite driver.
  *    The REAL migration SQL runs against it on every createTestApp(), so the
  *    suite also proves the migrations work on a clean Postgres.
- *  - Auth: the real Better Auth magic-link flow over HTTP; the sender is
- *    captured in-process (src/auth/auth.ts inbox) — no email, no network.
+ *  - Auth: the real Better Auth email+password flow over HTTP — accounts are
+ *    created in-process against PGlite; no email, no network, no OAuth.
  *  - Realtime: MemoryBus.  Voice: injected fakes.  Storage: local no-op.
  *
  * Env is set at module load, BEFORE any src module that reads it is imported;
@@ -26,8 +26,6 @@ export const TEST_ENV: Record<string, string> = {
   DATABASE_URL: "postgres://hush@localhost:5432/hush",
   BETTER_AUTH_SECRET: "test-secret-must-be-at-least-32-chars!!",
   BETTER_AUTH_URL: "http://localhost:3000",
-  GOOGLE_CLIENT_ID: "test-google-client-id",
-  GOOGLE_CLIENT_SECRET: "test-google-client-secret",
   ALLOWED_ORIGINS: "http://localhost:5173",
   TRUST_PROXY: "true",
   // Generous defaults; ratelimit.test.ts overrides them per app instance.
@@ -73,9 +71,6 @@ export async function createTestApp(
 
   const { MemoryBus } = await import("../src/events/bus");
   const bus = new MemoryBus();
-
-  const { clearMagicLinkInbox } = await import("../src/auth/auth");
-  clearMagicLinkInbox();
 
   let closed = false;
 
@@ -225,32 +220,36 @@ function extractSessionCookie(res: Response): string | null {
   return null;
 }
 
-/** Complete the real magic-link flow end-to-end (captured link, no network). */
+/**
+ * Create an account and return its session — the real email+password flow
+ * over HTTP (no network beyond the local app). If the account already
+ * exists (same fixture reused across tests), fall back to sign-in with the
+ * same credentials.
+ */
+const TEST_PASSWORD = "test-password-123";
+
 export async function signIn(
   t: TestApp,
   email: string,
   name?: string,
 ): Promise<SignedInUser> {
-  const { takeMagicLink } = await import("../src/auth/auth");
-
-  const startRes = await req(t, "/api/auth/sign-in/magic-link", {
+  const signUpRes = await req(t, "/api/auth/sign-up/email", {
     method: "POST",
-    body: { email, name: name ?? email.split("@")[0], callbackURL: "/" },
+    body: { email, password: TEST_PASSWORD, name: name ?? email.split("@")[0] },
   });
-  if (!startRes.ok) {
-    throw new Error(`magic link sign-in failed: ${startRes.status} ${await startRes.text()}`);
+
+  let cookie = extractSessionCookie(signUpRes);
+  if (!cookie) {
+    // Account already exists → sign in with email + password instead.
+    const signInRes = await req(t, "/api/auth/sign-in/email", {
+      method: "POST",
+      body: { email, password: TEST_PASSWORD },
+    });
+    cookie = extractSessionCookie(signInRes);
   }
-
-  const link = takeMagicLink(email);
-  if (!link) throw new Error(`no magic link captured for ${email}`);
-
-  const verifyRes = await t.app.request(link.url, {
-    headers: { "x-forwarded-for": newIp() },
-  });
-  const cookie = extractSessionCookie(verifyRes);
   if (!cookie) {
     throw new Error(
-      `no session cookie after magic-link verify (status ${verifyRes.status}): ${await verifyRes.text()}`,
+      `no session cookie after email/password auth (sign-up ${signUpRes.status}): ${await signUpRes.text()}`,
     );
   }
 

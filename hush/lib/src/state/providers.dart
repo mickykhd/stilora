@@ -14,11 +14,9 @@ final workspaceRepositoryProvider = Provider<WorkspaceRepository>(
 final connectionProvider =
     StateProvider<AppConnection>((ref) => AppConnection.online);
 
-/// Auth session — Phase 4 swaps this for Better Auth session lookup.
+/// Auth session — Phase 4 swaps this for the Better Auth session lookup
+/// (POST /api/auth/sign-in/email against our own API).
 final signedInProvider = StateProvider<bool>((ref) => false);
-
-/// Magic-link sent state (drives the OTP/link-pending screen).
-final magicLinkSentToProvider = StateProvider<String?>((ref) => null);
 
 /// Onboarding: workspace created during signup flow.
 final onboardedWorkspaceProvider = StateProvider<String?>((ref) => null);

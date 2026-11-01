@@ -25,7 +25,7 @@ One Flutter codebase ships to **Android, Linux, and Windows**.
 | Design system | [`aura/DESIGN.md`](aura/DESIGN.md) — single source of truth | $0 |
 | API | **Bun 1.4 + Hono** on Vercel Functions | $0 (Hobby) |
 | Database | **Neon Postgres** + Drizzle ORM | $0 |
-| Auth | **Better Auth** — magic link + Google | $0 |
+| Auth | **Better Auth** — email + password (our own DB, no third-party OAuth) | $0 |
 | Realtime | **Ably** free tier (typing, presence, voice state) | $0 |
 | Voice/video | **LiveKit Cloud** free tier + Open Relay TURN | $0 |
 | Storage | S3-compatible signed uploads (R2/MinIO) | $0 |

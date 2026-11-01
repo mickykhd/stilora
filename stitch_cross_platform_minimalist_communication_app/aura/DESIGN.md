@@ -304,8 +304,7 @@ voice/video stage.
 
 Required by v1 (built in Flutter):
 
-- Onboarding / create-workspace
-- OTP code fallback (email deep-link miss)
+- Onboarding / account creation (email + password + workspace name)
 - Thread view ("18 replies" / pins destination)
 - Direct-message conversation
 - Search results (⌘K)
