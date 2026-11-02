@@ -88,3 +88,19 @@ jobs:
         run: |
           flutter pub get
           dart pub audit --exit-code || true   # advisory tool; hard-fail reserved for API deps
+
+  # Windows host: run the non-golden Dart suite on a real Windows machine.
+  # (Goldens are Linux-rendered references and are platform-sensitive, so
+  # unit + widget tests are the Windows-appropriate slice.)
+  windows:
+    name: Windows (unit + widget tests)
+    runs-on: windows-latest
+    defaults:
+      run: { working-directory: stilora }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: stable, cache: true }
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test test/unit test/widget
