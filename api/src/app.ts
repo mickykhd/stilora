@@ -11,12 +11,20 @@
  * and by src/main.ts when producing the bundle).
  */
 import { Hono } from "hono";
+// Pre-bundled app (bun build via vercel.json#buildCommand) — static so the
+// function evaluates exactly one self-contained module at load.
+import handler from "./app.bundle.mjs";
 
 // The `hono` value import exists solely so Vercel's framework detector
 // recognizes this file as the hono entrypoint; the type reference marks
 // it as intentionally used for the strict no-unused-locals check.
 export type VercelHonoEntryMarker = typeof Hono;
 
-export default (request: Request, server?: unknown) =>
-  import("./app.bundle.mjs").then((m) => m.default(request, server));
+const entry = (request: Request, server?: unknown) => handler(request, server);
+
+// Vercel's launcher switches to Web-fetch mode ONLY when the default
+// export carries `.fetch`; a bare function is invoked as Node (req,res)
+// (returns ignored → hung invocations). See the launcher warning in the
+// docs: "export a fetch function".
+export default Object.assign(entry, { fetch: entry });
 

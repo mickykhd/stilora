@@ -9,5 +9,6 @@ import { createApp } from "./create-app";
 import { loadConfig } from "./config";
 
 const app = createApp({ config: loadConfig() });
+
 const handler = Object.assign(app.fetch, { fetch: app.fetch });
 export default handler;
