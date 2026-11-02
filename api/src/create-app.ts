@@ -197,16 +197,3 @@ export function createApp(deps: CreateAppDeps = {}): Hono<AppEnv> {
 
   return app;
 }
-
-/**
- * Vercel entry shim (framework preset: `src/app.ts` must default-export
- * the handler — see vercel.com/docs/frameworks/backend/elysia).
- *
- * The real application is pre-bundled to src/app.bundle.mjs by
- * vercel.json#buildCommand (bun build inlines ALL dependencies into one
- * file). Vercel's file tracer only has to copy that single file — its
- * node_modules pruning previously dropped 500+ better-auth chunks.
- * The dynamic import is a literal, so the tracer follows it.
- */
-export default (request: Request, server?: unknown) =>
-  import("./app.bundle.mjs").then((m) => m.default(request, server));
