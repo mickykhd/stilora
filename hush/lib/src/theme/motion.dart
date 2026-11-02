@@ -152,7 +152,13 @@ class _StaggeredListState extends State<_StaggeredList>
         ),
       ));
     }
-    return Column(mainAxisSize: MainAxisSize.min, children: items);
+    return widget.axis == Axis.vertical
+        ? Column(mainAxisSize: MainAxisSize.min, children: items)
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: items,
+          );
   }
 }
 

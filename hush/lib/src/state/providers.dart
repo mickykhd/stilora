@@ -68,12 +68,45 @@ final activeChannelProvider = StateProvider<Channel?>((ref) => null);
 /// Currently opened DM conversation.
 final activeDmProvider = StateProvider<DmConversation?>((ref) => null);
 
-/// Messages for the active channel.
-final messagesProvider = FutureProvider.autoDispose<List<Message>>((ref) {
-  final channel = ref.watch(activeChannelProvider);
-  if (channel == null) return Future.value(const []);
-  return ref.watch(workspaceRepositoryProvider).messages(channel.id);
-});
+/// Messages for the active channel — mutable notifier so reactions and
+/// sent messages update optimistically (server-confirmed in Phase 4).
+class MessagesNotifier extends AsyncNotifier<List<Message>> {
+  @override
+  Future<List<Message>> build() async {
+    final channel = ref.watch(activeChannelProvider);
+    if (channel == null) return const [];
+    return ref.watch(workspaceRepositoryProvider).messages(channel.id);
+  }
+
+  Future<void> append(Message m) async {
+    state = AsyncData([...?state.valueOrNull, m]);
+  }
+
+  void toggleReaction(String id, String emoji) {
+    final list = state.valueOrNull;
+    if (list == null) return;
+    state = AsyncData([
+      for (final m in list)
+        m.id == id
+            ? m.copyWith(reactions: _toggleReaction(m.reactions, emoji))
+            : m,
+    ]);
+  }
+
+  static List<Reaction> _toggleReaction(List<Reaction> rs, String emoji) {
+    final i = rs.indexWhere((r) => r.emoji == emoji);
+    if (i == -1) return [...rs, Reaction(emoji: emoji, count: 1, mine: true)];
+    final toggled = rs[i].toggled();
+    if (toggled.count <= 0) {
+      return [...rs]..removeAt(i);
+    }
+    return [...rs]..[i] = toggled;
+  }
+}
+
+final messagesProvider =
+    AsyncNotifierProvider<MessagesNotifier, List<Message>>(
+        MessagesNotifier.new);
 
 /// Thread replies for the opened thread.
 final threadProvider = FutureProvider.autoDispose.family<List<Message>, String>(

@@ -113,6 +113,7 @@ abstract final class MockData {
       author: sarah,
       timeLabel: '10:42 AM',
       label: 'Core Design',
+      replyCount: 18,
       text:
           'I’ve uploaded the revised spatial system for the desktop canvas. Notice how the channel list collapses to a single level instead of deep Discord-like subtrees. Visual breathing room makes hours of continuous work feel effortless.',
       attachment: const Attachment(

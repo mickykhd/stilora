@@ -131,14 +131,17 @@ void main() {
               width: size.$1,
               height: size.$2,
               dark: dark);
+          // Fake-time flush: permission checks use timeout fallbacks whose
+          // timers must resolve before capture (instant in fake clock).
+          await tester.pump(const Duration(seconds: 15));
           await expectLater(
             find.byType(VoiceStageScreen),
             matchesGoldenFile(
                 'goldens/voice_${label}_${dark ? 'dark' : 'light'}.png'),
           );
-          // Unmount, then flush the orphaned permission-delay timer.
+          // Unmount, then flush any orphaned permission-delay timers.
           await tester.pumpWidget(const SizedBox());
-          await tester.pump(const Duration(milliseconds: 1100));
+          await tester.pump(const Duration(seconds: 15));
         });
       }
     }

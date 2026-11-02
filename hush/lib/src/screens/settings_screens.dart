@@ -14,17 +14,22 @@ import 'secondary_screens.dart';
 /// Profile · Notifications · Workspace · Members · Audio & Video ·
 /// Appearance · Security.
 class SettingsScreen extends ConsumerStatefulWidget {
-  const SettingsScreen({super.key});
+  const SettingsScreen({super.key, this.initialSection = 4});
 
-  static void push(BuildContext context) =>
-      Navigator.of(context).push(AuraPage<void>(child: const SettingsScreen()).createRoute(context));
+  /// 0 Profile · 1 Notifications · 2 Workspace · 3 Members ·
+  /// 4 Audio & Video · 5 Appearance · 6 Security
+  final int initialSection;
+
+  static void push(BuildContext context, {int initialSection = 4}) =>
+      Navigator.of(context).push(AuraPage<void>(
+          child: SettingsScreen(initialSection: initialSection)).createRoute(context));
 
   @override
   ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  int _section = 4; // opens on Audio & Video (matches mockup)
+  late int _section = widget.initialSection; // Audio & Video by default
 
   static const _sections = [
     (Icons.person_outline, 'Profile'),
@@ -1024,11 +1029,12 @@ class _AppearanceSection extends ConsumerWidget {
 
 // ── Security ─────────────────────────────────────────────────────
 
-class _SecuritySection extends StatelessWidget {
+/// Security section needs refs for sign-out, so it's a Consumer.
+class _SecuritySection extends ConsumerWidget {
   const _SecuritySection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final scheme = ColorScheme.of(context);
     return AuraEntrance.staggered(
       step: const Duration(milliseconds: 60),
@@ -1074,7 +1080,11 @@ class _SecuritySection extends StatelessWidget {
                   style: Aura.bodyMd.copyWith(color: Aura.error)),
             ),
             OutlinedButton(
-              onPressed: () {},
+              onPressed: () {
+                // Real sign-out: drops the session and returns to sign-in.
+                ref.read(signedInProvider.notifier).state = false;
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
               style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Aura.error),
                   foregroundColor: Aura.error),
@@ -1126,6 +1136,7 @@ class MobileListTab extends ConsumerWidget {
     required this.onDmSelected,
     required this.onSearch,
     required this.onCompose,
+    this.onActivity,
   });
 
   final bool dmMode;
@@ -1133,6 +1144,7 @@ class MobileListTab extends ConsumerWidget {
   final ValueChanged<DmConversation> onDmSelected;
   final VoidCallback onSearch;
   final VoidCallback onCompose;
+  final VoidCallback? onActivity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -1182,6 +1194,11 @@ class MobileListTab extends ConsumerWidget {
                   IconButton(
                       onPressed: onSearch,
                       icon: const Icon(Icons.search)),
+                  IconButton(
+                    onPressed: onActivity,
+                    icon: const Icon(Icons.notifications_none),
+                    tooltip: 'Notifications',
+                  ),
                   AuraPressable(
                     onTap: onCompose,
                     child: Container(
@@ -1710,7 +1727,8 @@ class MobileSettingsTab extends StatelessWidget {
                       title: Text(label, style: Aura.labelMd),
                       trailing: Icon(Icons.chevron_right,
                           size: 18, color: scheme.outline),
-                      onTap: () => SettingsScreen.push(context),
+                      onTap: () =>
+                          SettingsScreen.push(context, initialSection: i),
                     ),
                     if (i < 6)
                       Divider(
