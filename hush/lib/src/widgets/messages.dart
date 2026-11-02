@@ -68,13 +68,16 @@ class AttachmentCard extends StatelessWidget {
                           .copyWith(color: scheme.onSurfaceVariant)),
                 ],
                 const SizedBox(height: Aura.spaceSm),
-                Row(children: [
-                  _LinkAction(icon: Icons.visibility, label: 'Inspect Components',
-                      color: scheme.primary, onTap: () {}),
-                  const SizedBox(width: Aura.spaceMd),
-                  _LinkAction(icon: Icons.download, label: 'Download',
-                      color: scheme.onSurfaceVariant, onTap: () {}),
-                ]),
+                Wrap(
+                  spacing: Aura.spaceMd,
+                  runSpacing: Aura.spaceSm,
+                  children: [
+                    _LinkAction(icon: Icons.visibility, label: 'Inspect Components',
+                        color: scheme.primary, onTap: () {}),
+                    _LinkAction(icon: Icons.download, label: 'Download',
+                        color: scheme.onSurfaceVariant, onTap: () {}),
+                  ],
+                ),
               ],
             ),
           ),

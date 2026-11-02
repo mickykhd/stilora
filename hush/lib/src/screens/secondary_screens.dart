@@ -109,17 +109,14 @@ class _VoiceStageScreenState extends ConsumerState<VoiceStageScreen> {
   }
 
   Future<void> _requestPermissions() async {
-    // On desktop, permission_handler has no mic API — treat as granted.
-    try {
-      final mic = await Permission.microphone.request();
-      await Permission.camera.request();
-      if (!mounted) return;
-      setState(() => _micGranted = mic.isGranted);
-    } catch (_) {
-      if (!mounted) return;
-      setState(() => _micGranted = true);
-    }
-    await Future<void>.delayed(const Duration(milliseconds: 900));
+    // Never let a stuck permission dialog hang the stage: check status
+    // first (no dialog when already granted), request with timeouts, and
+    // default to granted when the platform has no permission API (desktop).
+    final mic = await _ensure(Permission.microphone);
+    await _ensure(Permission.camera); // requested for completeness
+    if (!mounted) return;
+    setState(() => _micGranted = mic.isGranted);
+    await Future<void>.delayed(const Duration(milliseconds: 600));
     if (!mounted) return;
     setState(() => _connecting = false);
     _callTimer = Timer.periodic(const Duration(seconds: 1), (t) {
@@ -129,6 +126,22 @@ class _VoiceStageScreenState extends ConsumerState<VoiceStageScreen> {
       }
       setState(() => _seconds++);
     });
+  }
+
+  Future<PermissionStatus> _ensure(Permission p) async {
+    try {
+      final current = await p.status.timeout(const Duration(seconds: 3));
+      if (current.isGranted) return current;
+      return await p.request().timeout(const Duration(seconds: 5));
+    } catch (_) {
+      // No permission API (desktop) or a hung dialog → be permissive;
+      // real denial still arrives as a fast response on supported targets.
+      try {
+        return await p.status.timeout(const Duration(seconds: 2));
+      } catch (_) {
+        return PermissionStatus.granted;
+      }
+    }
   }
 
   @override
@@ -256,24 +269,31 @@ class _VoiceStageScreenState extends ConsumerState<VoiceStageScreen> {
               ),
             ),
             const SizedBox(height: Aura.spaceMd),
-            // Participant tiles
+            // Participant tiles (horizontal scroll — never overflows)
             Expanded(
               child: _connecting
                   ? const Center(
                       child: CircularProgressIndicator(strokeWidth: 2))
-                  : AuraEntrance.staggered(
-                      axis: Axis.horizontal,
-                      step: const Duration(milliseconds: 70),
-                      children: [
-                        for (final p in room.participants)
-                          _ParticipantTile(
-                            user: p,
-                            speaking: room.speakingIds.contains(p.id),
-                            muted:
-                                p.id == 'u_you' ? room.muted : p.presence ==
-                                    UserPresence.idle,
-                          ),
-                      ],
+                  : Center(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: AuraEntrance.staggered(
+                          axis: Axis.horizontal,
+                          step: const Duration(milliseconds: 70),
+                          children: [
+                            for (final p in room.participants)
+                              _ParticipantTile(
+                                user: p,
+                                speaking:
+                                    room.speakingIds.contains(p.id),
+                                muted: p.id == 'u_you'
+                                    ? room.muted
+                                    : p.presence == UserPresence.idle,
+                              ),
+                          ],
+                        ),
+                      ),
                     ),
             ),
             const SizedBox(height: Aura.spaceMd),
@@ -918,12 +938,17 @@ class MembersSheet extends ConsumerWidget {
       minChildSize: 0.3,
       maxChildSize: 0.92,
       builder: (context, scrollController) => Container(
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: scheme.surfaceContainerLowest,
           borderRadius:
               const BorderRadius.vertical(top: Radius.circular(Aura.radiusXl)),
         ),
-        child: Column(children: [
+        // Material required: ListTile paints ink/splash on its nearest
+        // Material ancestor — a bare decorated Container hides them.
+        child: Material(
+          color: scheme.surfaceContainerLowest,
+          child: Column(children: [
           Padding(
             padding: const EdgeInsets.all(Aura.spaceMd),
             child: Row(children: [
@@ -974,7 +999,8 @@ class MembersSheet extends ConsumerWidget {
               ),
             ),
           ),
-        ]),
+          ]),
+        ),
       ),
     );
   }
@@ -1114,8 +1140,10 @@ class _NewThreadSheetState extends ConsumerState<NewThreadSheet> {
     setState(() => _creating = true);
     await Future<void>.delayed(const Duration(milliseconds: 600));
     if (!mounted) return;
+    // Capture the messenger BEFORE popping — the sheet's context dies on pop.
+    final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).maybePop();
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    messenger.showSnackBar(SnackBar(
       content: Text(switch (_tab) {
         0 => 'Channel #${_name.text.trim()} created',
         1 => 'Thread started',
@@ -1140,7 +1168,10 @@ class _NewThreadSheetState extends ConsumerState<NewThreadSheet> {
             Aura.spaceLg, MediaQuery.viewInsetsOf(context).bottom > 0
                 ? Aura.spaceLg
                 : Aura.spaceXl),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
+        // Material: ListTile (DM tab) needs it to paint ink/splash.
+        child: Material(
+          color: scheme.surfaceContainerLowest,
+          child: Column(mainAxisSize: MainAxisSize.min, children: [
           Container(
             width: 36, height: 4,
             decoration: BoxDecoration(
@@ -1219,7 +1250,8 @@ class _NewThreadSheetState extends ConsumerState<NewThreadSheet> {
                     }),
             ),
           ),
-        ]),
+          ]),
+        ),
       ),
     );
   }

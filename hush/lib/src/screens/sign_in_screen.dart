@@ -485,6 +485,9 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
     if (!mounted) return;
     ref.read(onboardedWorkspaceProvider.notifier).state = _name.text.trim();
     ref.read(signedInProvider.notifier).state = true;
+    // The onboarding route sits ON TOP of the auth gate — pop it so the
+    // workspace (revealed underneath) becomes visible.
+    Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
   @override

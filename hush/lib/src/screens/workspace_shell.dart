@@ -161,6 +161,8 @@ class _WorkspaceShellState extends ConsumerState<WorkspaceShell> {
                                       SearchScreen.push(context),
                                   onCompose: () =>
                                       NewThreadSheet.show(context),
+                                  onActivity: () =>
+                                      ActivityScreen.push(context),
                                 ),
                 ),
               ),
@@ -354,10 +356,9 @@ class _CenterPane extends ConsumerWidget {
                               message: m,
                               onOpenThread: () =>
                                   onOpenThread?.call(m),
-                              onReact: (r) {
-                                // Optimistic local toggle demo:
-                                // handled by repository in Phase 4.
-                              },
+                              onReact: (r) => ref
+                                  .read(messagesProvider.notifier)
+                                  .toggleReaction(m.id, r.emoji),
                             ),
                         ],
                       ),
@@ -375,8 +376,8 @@ class _CenterPane extends ConsumerWidget {
               final id =
                   ref.read(activeChannelProvider)?.id ?? 'c_design';
               try {
-                await repo.sendMessage(id, text);
-                ref.invalidate(messagesProvider);
+                final sent = await repo.sendMessage(id, text);
+                await ref.read(messagesProvider.notifier).append(sent);
               } catch (_) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
