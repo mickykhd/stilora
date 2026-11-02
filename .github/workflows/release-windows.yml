@@ -1,0 +1,42 @@
+name: Release builds
+
+# Builds the Windows package and attaches it to the GitHub Release.
+# (Windows cannot be cross-compiled from Linux/macOS — CI builds it on
+# windows-latest, per Flutter's desktop support matrix.)
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to upload to (e.g. v1.0.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    name: Windows x64 build → attach to release
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Build Windows release
+        run: flutter build windows --release
+
+      - name: Package as zip
+        shell: pwsh
+        run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath hush-windows-x64.zip -Force
+
+      - name: Upload to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ inputs.tag }}" hush-windows-x64.zip --clobber
