@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/repositories.dart';
 import '../state/providers.dart';
 import '../theme/motion.dart';
 import '../theme/tokens.dart';
@@ -47,10 +48,16 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       _error = null;
       _submitting = true;
     });
-    // Phase 4: POST /api/auth/sign-in/email against our own API.
-    await Future<void>.delayed(const Duration(milliseconds: 600));
+    // Live backend: POST /api/auth/sign-in/email (session cookie stored
+    // by the repository). Mock backend validates the same rules locally.
+    final repo = ref.read(workspaceRepositoryProvider);
+    final problem = await repo.signIn(email, password);
     if (!mounted) return;
     setState(() => _submitting = false);
+    if (problem != null) {
+      setState(() => _error = problem);
+      return;
+    }
     ref.read(signedInProvider.notifier).state = true;
   }
 
@@ -481,9 +488,28 @@ class _OnboardingFlowState extends ConsumerState<OnboardingFlow> {
       _error = null;
       _busy = true;
     });
-    await Future<void>.delayed(const Duration(milliseconds: 700));
+    // Live backend: create the account, then the first workspace — both
+    // against our own API (mock backend performs the same two steps locally).
+    final repo = ref.read(workspaceRepositoryProvider);
+    final email2 = email;
+    final password2 = password;
+    final workspaceName = _name.text.trim();
+    String? problem;
+    try {
+      problem = await repo.signUp(email2, password2, 'You');
+      if (problem == null) await repo.createWorkspace(workspaceName);
+    } on RepositoryException catch (e) {
+      problem = e.message;
+    } catch (_) {
+      problem = 'Something went wrong — please try again.';
+    }
     if (!mounted) return;
-    ref.read(onboardedWorkspaceProvider.notifier).state = _name.text.trim();
+    setState(() => _busy = false);
+    if (problem != null) {
+      setState(() => _error = problem);
+      return;
+    }
+    ref.read(onboardedWorkspaceProvider.notifier).state = workspaceName;
     ref.read(signedInProvider.notifier).state = true;
     // The onboarding route sits ON TOP of the auth gate — pop it so the
     // workspace (revealed underneath) becomes visible.

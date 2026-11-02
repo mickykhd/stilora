@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../models/models.dart';
+import 'api_mappers.dart';
 import 'mock_data.dart';
 
 /// Simulated-latency repository interfaces.
@@ -20,8 +21,19 @@ class RepositoryException implements Exception {
 }
 
 abstract class WorkspaceRepository {
+  // ── Auth (email + password against our own API) ───────────────
+  /// Returns null on success, or a friendly error message.
+  Future<String?> signIn(String email, String password);
+  Future<String?> signUp(String email, String password, String name);
+  /// Restores a persisted session (false → show sign-in).
+  Future<bool> restoreSession();
+  Future<void> signOut();
+
+  // ── Data ──────────────────────────────────────────────────────
   Future<Workspace> currentWorkspace();
+  Future<Workspace> createWorkspace(String name);
   Future<List<Channel>> channels();
+  Future<Channel> createChannel(String name, {String topic});
   Future<List<DmConversation>> conversations();
   Future<List<UserProfile>> members();
   Future<List<Message>> messages(String channelId);
@@ -54,10 +66,41 @@ class MockWorkspaceRepository implements WorkspaceRepository {
   }
 
   @override
+  Future<String?> signIn(String email, String password) async {
+    await Future<void>.delayed(latency);
+    if (!email.contains('@')) return 'Enter a valid email address.';
+    if (password.length < 8) return 'Password must be at least 8 characters.';
+    return null;
+  }
+
+  @override
+  Future<String?> signUp(String email, String password, String name) async =>
+      signIn(email, password);
+
+  @override
+  Future<bool> restoreSession() async => false;
+
+  @override
+  Future<void> signOut() async {}
+
+  @override
   Future<Workspace> currentWorkspace() => _gate(() => MockData.workspace);
 
   @override
+  Future<Workspace> createWorkspace(String name) => _gate(() => Workspace(
+        id: 'w_local',
+        name: name,
+        initials: ApiMappers.initials(name),
+        onlineCount: 1,
+      ));
+
+  @override
   Future<List<Channel>> channels() => _gate(() => MockData.channels);
+
+  @override
+  Future<Channel> createChannel(String name, {String topic = ''}) =>
+      _gate(() => Channel(
+          id: 'c_${name.hashCode}', name: name, topic: topic));
 
   @override
   Future<List<DmConversation>> conversations() => _gate(() => MockData.dms);

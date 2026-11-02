@@ -210,7 +210,7 @@ class DmConversation extends Equatable {
   List<Object?> get props => [id, peer, preview, unread];
 }
 
-enum ActivityKind { mention, reply, reaction, invite, voice }
+enum ActivityKind { mention, reply, reaction, pin, invite, voice }
 
 class ActivityItem extends Equatable {
   const ActivityItem({

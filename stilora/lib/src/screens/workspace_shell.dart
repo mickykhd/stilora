@@ -312,15 +312,16 @@ class _CenterPane extends ConsumerWidget {
                   ),
                 ]),
               ),
-              if (channel != null) ...[
+              if (channel != null && channel.pinCount > 0) ...[
                 AuraChip('${channel.pinCount} Pins', icon: Icons.push_pin),
                 const SizedBox(width: Aura.spaceSm),
+              ],
+              if (channel != null && channel.memberCount > 0)
                 InkWell(
                   onTap: onOpenMembers,
                   child: AuraChip('${channel.memberCount}',
                       icon: Icons.group_outlined),
                 ),
-              ],
             ]),
           ),
         Divider(color: scheme.outlineVariant.withValues(alpha: 0.4)),

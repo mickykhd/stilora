@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../data/mock_data.dart';
+import '../data/repositories.dart';
 import '../models/models.dart';
 import '../state/providers.dart';
 import '../theme/motion.dart';
@@ -919,6 +920,7 @@ class _ActivityIcon extends StatelessWidget {
       ActivityKind.reply => Icons.reply,
       ActivityKind.reaction => Icons.emoji_emotions_outlined,
       ActivityKind.invite => Icons.person_add_alt,
+      ActivityKind.pin => Icons.push_pin,
       ActivityKind.voice => Icons.graphic_eq,
     };
     return Container(
@@ -1154,7 +1156,23 @@ class _NewThreadSheetState extends ConsumerState<NewThreadSheet> {
   Future<void> _create() async {
     if (_tab == 0 && _name.text.trim().isEmpty) return;
     setState(() => _creating = true);
-    await Future<void>.delayed(const Duration(milliseconds: 600));
+    try {
+      if (_tab == 0) {
+        // Real channel: create via the API, then refresh the sidebar.
+        await ref.read(workspaceRepositoryProvider).createChannel(
+            _name.text.trim(),
+            topic: _topic.text.trim());
+        ref.invalidate(channelsProvider);
+      } else {
+        await Future<void>.delayed(const Duration(milliseconds: 600));
+      }
+    } on RepositoryException catch (e) {
+      if (!mounted) return;
+      setState(() => _creating = false);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message)));
+      return;
+    }
     if (!mounted) return;
     // Capture the messenger BEFORE popping — the sheet's context dies on pop.
     final messenger = ScaffoldMessenger.of(context);

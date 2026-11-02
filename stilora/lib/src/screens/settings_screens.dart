@@ -1080,10 +1080,14 @@ class _SecuritySection extends ConsumerWidget {
                   style: Aura.bodyMd.copyWith(color: Aura.error)),
             ),
             OutlinedButton(
-              onPressed: () {
-                // Real sign-out: drops the session and returns to sign-in.
+              onPressed: () async {
+                // Real sign-out: revoke server session, drop local cookie,
+                // and return to sign-in.
+                await ref.read(workspaceRepositoryProvider).signOut();
                 ref.read(signedInProvider.notifier).state = false;
-                Navigator.of(context).popUntil((route) => route.isFirst);
+                if (context.mounted) {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                }
               },
               style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Aura.error),
@@ -1283,73 +1287,76 @@ class MobileListTab extends ConsumerWidget {
                     ),
                   ),
                 const SizedBox(height: Aura.spaceLg),
-                // Featured thread card
-                Row(children: [
-                  Text('FEATURED THREAD',
-                      style: Aura.labelSm
-                          .copyWith(color: scheme.outline)),
-                  const Spacer(),
-                  Text('View thread',
-                      style: Aura.labelMd
-                          .copyWith(color: scheme.primary)),
-                ]),
-                const SizedBox(height: Aura.spaceSm),
-                AuraCard(
-                  padding: const EdgeInsets.all(Aura.spaceMd),
-                  onTap: () {
-                    final list = channels.valueOrNull;
-                    if (list != null && list.length > 1) {
-                      onChannelSelected(list[1]);
-                    }
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(children: [
-                        Text('# ',
-                            style: Aura.labelMd
-                                .copyWith(color: scheme.primary)),
-                        Text('design-sync',
-                            style: Aura.labelMd.copyWith(
-                                color: scheme.primary,
-                                fontWeight: FontWeight.w600)),
-                        const Spacer(),
-                        Text('14m ago',
-                            style: Aura.bodySm
-                                .copyWith(color: scheme.outline)),
-                      ]),
-                      const SizedBox(height: Aura.spaceSm),
-                      Text('Scandinavian Spacing Tokens & Calm Architecture',
-                          style: Aura.headlineSm.copyWith(fontSize: 17)),
-                      const SizedBox(height: Aura.spaceSm),
-                      Text(
-                        'Sarah Chen: “Consolidated all margins to 1.25rem gutters. Eliminating colored badge…',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: Aura.bodyMd
-                            .copyWith(color: scheme.onSurfaceVariant),
-                      ),
-                      const SizedBox(height: Aura.spaceMd),
-                      Row(children: [
-                        AuraChip('SC MV +4'),
-                        const Spacer(),
-                        Icon(Icons.chat_bubble_outline,
-                            size: 14, color: scheme.outline),
-                        const SizedBox(width: 4),
-                        Text('18 replies',
-                            style: Aura.labelSm
-                                .copyWith(color: scheme.onSurfaceVariant)),
-                        const SizedBox(width: Aura.spaceMd),
-                        const Icon(Icons.favorite_border,
-                            size: 14, color: Aura.primary),
-                        const SizedBox(width: 4),
-                        Text('9',
-                            style: Aura.labelSm
-                                .copyWith(color: Aura.primary)),
-                      ]),
-                    ],
+                // Featured channel — first real channel from the data layer
+                // (hidden entirely when the workspace has no channels; no
+                // fabricated stats, ever).
+                if ((channels.valueOrNull?.isNotEmpty) ?? false) ...[
+                  Row(children: [
+                    Text('FEATURED CHANNEL',
+                        style: Aura.labelSm
+                            .copyWith(color: scheme.outline)),
+                    const Spacer(),
+                    Text('View channel',
+                        style: Aura.labelMd
+                            .copyWith(color: scheme.primary)),
+                  ]),
+                  const SizedBox(height: Aura.spaceSm),
+                  AuraCard(
+                    padding: const EdgeInsets.all(Aura.spaceMd),
+                    onTap: () {
+                      final list = channels.valueOrNull;
+                      if (list != null && list.isNotEmpty) {
+                        onChannelSelected(list.first);
+                      }
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(children: [
+                          Text('# ',
+                              style: Aura.labelMd
+                                  .copyWith(color: scheme.primary)),
+                          Flexible(
+                            child: Text(
+                              channels.valueOrNull!.first.name,
+                              overflow: TextOverflow.ellipsis,
+                              style: Aura.labelMd.copyWith(
+                                  color: scheme.primary,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          const Spacer(),
+                          if (channels
+                              .valueOrNull!
+                              .first
+                              .lastActivityLabel
+                              .isNotEmpty)
+                            Text(channels.valueOrNull!.first.lastActivityLabel,
+                                style: Aura.bodySm
+                                    .copyWith(color: scheme.outline)),
+                        ]),
+                        const SizedBox(height: Aura.spaceSm),
+                        Text(
+                          channels.valueOrNull!.first.topic.isNotEmpty
+                              ? channels.valueOrNull!.first.topic
+                              : 'A quiet channel — say the first hello.',
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Aura.headlineSm.copyWith(fontSize: 17),
+                        ),
+                        const SizedBox(height: Aura.spaceMd),
+                        Row(children: [
+                          if (channels.valueOrNull!.first.memberCount > 0)
+                            AuraChip(
+                                '${channels.valueOrNull!.first.memberCount} members'),
+                          const Spacer(),
+                          Icon(Icons.arrow_forward,
+                              size: 16, color: scheme.primary),
+                        ]),
+                      ],
+                    ),
                   ),
-                ),
+                ],
               ],
             ),
             const SizedBox(height: Aura.spaceLg),

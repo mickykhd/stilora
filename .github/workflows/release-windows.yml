@@ -32,7 +32,7 @@ jobs:
 
       - name: Build Windows release
         working-directory: stilora
-        run: flutter build windows --release
+        run: flutter build windows --release --dart-define=API_BASE_URL=https://stilora-api.vercel.app
         env:
           # Some plugins build in separate vcxproj scopes — pass the
           # deprecation silence flag straight to MSVC as well (STL1011).

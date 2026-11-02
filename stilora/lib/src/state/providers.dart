@@ -1,13 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/http_repository.dart';
 import '../data/mock_data.dart';
 import '../data/repositories.dart';
 import '../models/models.dart';
 
 /// ── Repository binding ──────────────────────────────────────────
-/// Phase 3: mock. Phase 4: override with the HTTP implementation.
+/// Release builds pass `--dart-define=API_BASE_URL=https://…` and talk
+/// to the live Bun/Hono backend; debug/test builds (no define) run the
+/// in-memory mock repository so suites stay hermetic.
+const apiBaseUrl = String.fromEnvironment('API_BASE_URL');
+final bool kLiveBackend = apiBaseUrl.isNotEmpty;
+
 final workspaceRepositoryProvider = Provider<WorkspaceRepository>(
-  (ref) => MockWorkspaceRepository(),
+  (ref) => kLiveBackend
+      ? HttpWorkspaceRepository(apiBaseUrl)
+      : MockWorkspaceRepository(),
 );
 
 /// Global connection status — drives the offline banner.
