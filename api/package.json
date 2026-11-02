@@ -20,6 +20,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@better-auth/telemetry": "1.7.15",
     "@livekit/protocol": "^1.53.1",
     "better-auth": "^1.7.15",
     "drizzle-orm": "^0.45.0",
@@ -33,5 +34,8 @@
     "bun-types": "^1.2.0",
     "drizzle-kit": "^0.31.0",
     "typescript": "^5.7.0"
+  },
+  "patchedDependencies": {
+    "@better-auth/telemetry@1.7.15": "patches/@better-auth%2Ftelemetry@1.7.15.patch"
   }
 }

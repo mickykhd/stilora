@@ -74,7 +74,7 @@ export async function createTestApp(
 
   let closed = false;
 
-  const { createApp } = await import("../src/app");
+  const { createApp } = await import("../src/create-app");
   const voiceMode = options.voice ?? true;
   const app = createApp({
     config,

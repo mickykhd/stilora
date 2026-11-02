@@ -5,3 +5,6 @@ node_modules/
 dist/
 coverage/
 .DS_Store
+.vercel
+.env*
+src/app.bundle.mjs

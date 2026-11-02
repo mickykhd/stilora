@@ -6,7 +6,7 @@
  *    exactly what Vercel's Bun runtime expects (see vercel.json).
  *  - `startServer()` — local HTTP server used by `bun src/index.ts` / dev.
  */
-import { createApp } from "./app";
+import { createApp } from "./create-app";
 import { loadConfig } from "./config";
 
 export const config = loadConfig();
