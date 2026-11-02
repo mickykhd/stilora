@@ -33,6 +33,10 @@ jobs:
       - name: Build Windows release
         working-directory: hush
         run: flutter build windows --release
+        env:
+          # Some plugins build in separate vcxproj scopes — pass the
+          # deprecation silence flag straight to MSVC as well (STL1011).
+          CL: /D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS
 
       - name: Package as zip
         shell: pwsh
