@@ -65,8 +65,7 @@ void main() {
   Future<void> signIn(WidgetTester t) async {
     await launch(t);
     await expectVisible(t, find.text('Welcome back'));
-    await t.enterText(
-        find.widgetWithText(TextField, 'you@studio.design'), email);
+    await enterTextAt(t, 0, email);
     await t.enterText(find.byType(TextField).last, password);
     await unfocus(t);
     await t.tap(find.text('Sign in'));

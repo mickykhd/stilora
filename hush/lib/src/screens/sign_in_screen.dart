@@ -20,7 +20,7 @@ class SignInScreen extends ConsumerStatefulWidget {
 }
 
 class _SignInScreenState extends ConsumerState<SignInScreen> {
-  final _email = TextEditingController(text: 'you@studio.design');
+  final _email = TextEditingController();
   final _password = TextEditingController();
   bool _submitting = false;
   String? _error;

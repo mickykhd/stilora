@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../data/mock_data.dart';
 import '../models/models.dart';
 import '../state/providers.dart';
 import '../theme/motion.dart';
@@ -70,7 +71,6 @@ class AuraTopBar extends ConsumerWidget {
           const SizedBox(width: Aura.spaceSm),
           AuraAvatar(
             initials: workspace?.initials ?? 'YO',
-            imageUrl: MockAvatar.you,
             size: 28,
             presence: 0,
           ),
@@ -78,10 +78,6 @@ class AuraTopBar extends ConsumerWidget {
       ),
     );
   }
-}
-
-abstract final class MockAvatar {
-  static const you = 'https://i.pravatar.cc/96?img=47';
 }
 
 class _TopTabs extends StatefulWidget {
@@ -242,7 +238,7 @@ class AuraSideNav extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scheme = ColorScheme.of(context);
     final workspace =
-        ref.watch(workspaceProvider).valueOrNull ?? MockDataFallback.workspace;
+        ref.watch(workspaceProvider).valueOrNull ?? MockData.workspace;
     final channels = ref.watch(channelsProvider);
     final dms = ref.watch(conversationsProvider);
     final voice = ref.watch(voiceRoomProvider);
@@ -416,10 +412,6 @@ class AuraSideNav extends ConsumerWidget {
   }
 }
 
-abstract final class MockDataFallback {
-  static final workspace =
-      Workspace(id: 'w', name: 'Studio Flow', initials: 'SF', onlineCount: 6);
-}
 
 class _NavRow extends StatefulWidget {
   const _NavRow({

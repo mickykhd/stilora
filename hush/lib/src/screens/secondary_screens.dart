@@ -4,12 +4,12 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../data/mock_data.dart';
 import '../models/models.dart';
 import '../state/providers.dart';
 import '../theme/motion.dart';
 import '../theme/tokens.dart';
 import '../widgets/messages.dart';
-import '../widgets/navigation.dart';
 import '../widgets/primitives.dart';
 
 /// ── Thread view ("N replies") ───────────────────────────────────
@@ -1059,7 +1059,7 @@ class ProfileScreen extends StatelessWidget {
                         UserPresence.offline => 'Offline',
                       }),
                   Divider(color: scheme.outlineVariant.withValues(alpha: 0.5)),
-                  _ProfileRow(label: 'Workspace', value: 'Studio Flow'),
+                  _ProfileRow(label: 'Workspace', value: MockData.workspace.name),
                 ]),
               ),
               const SizedBox(height: Aura.spaceLg),
@@ -1220,7 +1220,6 @@ class _NewThreadSheetState extends ConsumerState<NewThreadSheet> {
                         contentPadding: EdgeInsets.zero,
                         leading: AuraAvatar(
                             initials: 'SC',
-                            imageUrl: MockAvatar.you,
                             size: 36),
                         title: const Text('Sarah Chen'),
                         subtitle: Text('Start a direct conversation',

@@ -8,7 +8,6 @@ abstract final class MockData {
     name: 'You',
     handle: 'you',
     initials: 'YO',
-    avatarUrl: 'https://i.pravatar.cc/96?img=47',
     presence: UserPresence.online,
     role: MemberRole.admin,
   );
@@ -18,7 +17,6 @@ abstract final class MockData {
     name: 'Sarah Chen',
     handle: 'sarah',
     initials: 'SC',
-    avatarUrl: 'https://i.pravatar.cc/96?img=44',
     presence: UserPresence.online,
     role: MemberRole.owner,
   );
@@ -28,7 +26,6 @@ abstract final class MockData {
     name: 'Marcus Vance',
     handle: 'marcus',
     initials: 'MV',
-    avatarUrl: 'https://i.pravatar.cc/96?img=12',
     presence: UserPresence.idle,
     role: MemberRole.member,
   );

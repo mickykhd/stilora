@@ -266,7 +266,6 @@ class _CenterPane extends ConsumerWidget {
                   ),
                   AuraAvatar(
                     initials: 'SC',
-                    imageUrl: MockAvatar.you,
                     size: 26,
                     presence: 0,
                   ),
