@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:stilora/main.dart';
 import 'package:stilora/src/screens/secondary_screens.dart';
+import 'package:stilora/src/screens/sign_in_screen.dart';
 import 'package:stilora/src/widgets/messages.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -62,6 +64,36 @@ void main() {
     await wait(t, 900); // entrance animations
   }
 
+  /// Mobile shell has a bottom nav with exact label 'Channels';
+  /// the desktop shell instead shows the uppercase sidebar section
+  /// ('CHANNELS') — exact-match case sensitivity distinguishes them.
+  bool hasBottomNav(WidgetTester t) =>
+      find.text('Channels').evaluate().isNotEmpty;
+
+  /// Shell-ready assertion that works on both layouts.
+  Future<void> expectShellReady(WidgetTester t) async {
+    await expectVisible(t, find.text('design-sync'));
+    if (hasBottomNav(t)) {
+      expect(find.byIcon(Icons.edit), findsOneWidget); // compose action
+      expect(find.byIcon(Icons.search), findsOneWidget);
+    } else {
+      expect(find.text('New Thread'), findsOneWidget); // sidebar CTA
+      // Sidebar DIRECT section proves shell content on desktop at any width.
+      expect(find.text('Sarah Chen'), findsWidgets);
+    }
+  }
+
+  /// Scroll a finder into view when it has a Scrollable ancestor;
+  /// no-op otherwise (720px desktop windows hide below-fold content).
+  Future<void> ensureVisibleSafe(WidgetTester t, Finder f) async {
+    try {
+      await t.ensureVisible(f);
+      await t.pump(const Duration(milliseconds: 350));
+    } catch (_) {
+      // No scrollable ancestor — already visible or fixed layout.
+    }
+  }
+
   Future<void> signIn(WidgetTester t) async {
     await launch(t);
     await expectVisible(t, find.text('Welcome back'));
@@ -69,13 +101,26 @@ void main() {
     await t.enterText(find.byType(TextField).last, password);
     await unfocus(t);
     await t.tap(find.text('Sign in'));
-    await expectVisible(t, find.text('Channels'), timeoutMs: 10000);
+    await expectShellReady(t);
     await wait(t, 700);
   }
 
   Future<void> openTab(WidgetTester t, String label) async {
-    // Bottom-nav label — the page title often shares the same text.
-    await t.tap(find.text(label).last);
+    if (!hasBottomNav(t)) {
+      // Desktop: sidebar navigation (topbar hosts Threads/Catch-up too,
+      // so .last picks the sidebar entry further down the tree).
+      switch (label) {
+        case 'Channels':
+          return; // channel list is always visible on desktop
+        case 'Voice':
+          return; // voice opens via the floating capsule (caller handles)
+        default:
+          await t.tap(find.text(label).last);
+      }
+    } else {
+      // Bottom-nav label — the page title often shares the same text.
+      await t.tap(find.text(label).last);
+    }
     await wait(t, 700);
   }
 
@@ -97,17 +142,16 @@ void main() {
       await tester.tap(find.text('Sign in'));
       await expectVisible(tester, find.text('Enter a valid email address.'));
 
-      // Valid credentials → workspace opens.
+      // Valid credentials → workspace opens (layout-aware).
       await enterTextAt(tester, 0, email);
       await enterTextAt(tester, 1, password);
       await tester.tap(find.text('Sign in'));
-      await expectVisible(tester, find.text('Channels'), timeoutMs: 10000);
+      await expectVisible(tester, find.text('design-sync'),
+          timeoutMs: 10000);
       await wait(tester, 800);
 
-      // Shell sanity: mobile workspace content present.
-      expect(find.text('design-sync'), findsWidgets);
-      expect(find.byIcon(Icons.edit), findsOneWidget); // compose action
-      expect(find.byIcon(Icons.search), findsOneWidget);
+      // Shell sanity for the current layout.
+      await expectShellReady(tester);
     });
   });
 
@@ -200,6 +244,7 @@ void main() {
       }
 
       // Thread: open from the "18 replies" chip.
+      await ensureVisibleSafe(tester, find.text('18 replies'));
       await tester.tap(find.text('18 replies'));
       await expectVisible(tester, find.text('Thread'));
       await expectVisible(tester,
@@ -219,11 +264,19 @@ void main() {
       await expectVisible(
           tester, find.textContaining('Reply to #design-sync'));
 
-      // Members sheet → open a profile.
-      await tester.tap(find.byIcon(Icons.more_vert).last);
-      await expectVisible(tester, find.text('Members'));
-      await expectVisible(tester, find.text('Priya Raman')); // list data
-      await tester.tap(find.text('Priya Raman'));
+      // Members → open a profile (layout-aware entry).
+      if (hasBottomNav(tester)) {
+        await tester.tap(find.byIcon(Icons.more_vert).last);
+        await expectVisible(tester, find.text('Members'));
+        await expectVisible(tester, find.text('Priya Raman')); // list data
+        await ensureVisibleSafe(tester, find.text('Priya Raman'));
+        await tester.tap(find.text('Priya Raman'));
+      } else {
+        // Desktop 3-pane shows members in the right context pane.
+        await expectVisible(tester, find.text('Priya Raman'));
+        await ensureVisibleSafe(tester, find.text('Priya Raman'));
+        await tester.tap(find.text('Priya Raman'));
+      }
       await expectVisible(tester, find.text('@priya'));
       expect(find.text('Member'), findsWidgets);
       await tester.tap(find.byIcon(Icons.arrow_back).last);
@@ -238,35 +291,60 @@ void main() {
 
       // Threads tab → DM list → open Sarah → conversation view.
       await openTab(tester, 'Threads');
-      await expectVisible(tester, find.text('DIRECT MESSAGES'));
-      await tester.tap(find.text('Sarah Chen').last);
+      await expectVisible(tester,
+          hasBottomNav(tester) ? find.text('DIRECT MESSAGES') : find.text('DIRECT'));
+      // Desktop: right-pane lists Sarah too — .first is the sidebar DM row.
+      await tester.tap(hasBottomNav(tester)
+          ? find.text('Sarah Chen').last
+          : find.text('Sarah Chen').first);
       await expectVisible(tester, find.textContaining('Reply to Sarah Chen'));
-      await tester.tap(find.byIcon(Icons.arrow_back).last);
-      await wait(tester, 600); // let the pop transition settle
-      await wait(tester, 500);
+      if (hasBottomNav(tester)) {
+        await tester.tap(find.byIcon(Icons.arrow_back).last);
+        await wait(tester, 600); // let the pop transition settle
+        await wait(tester, 500);
+      }
 
-      // Channels tab → search screen with results.
+      // Search: mobile pushes a screen; desktop opens the ⌘K palette.
       await openTab(tester, 'Channels');
-      await tester.tap(find.byIcon(Icons.search));
-      await expectVisible(tester, find.textContaining('Search across every channel'));
-      await tester.enterText(find.byType(TextField).first, 'design');
-      await expectVisible(tester, find.text('design-sync'));
-      await tester.tap(find.byIcon(Icons.arrow_back).last);
-      await wait(tester, 600); // let the pop transition settle
-      await wait(tester, 500);
+      if (hasBottomNav(tester)) {
+        await tester.tap(find.byIcon(Icons.search));
+        await expectVisible(tester, find.textContaining('Search across every channel'));
+        await tester.enterText(find.byType(TextField).first, 'design');
+        await expectVisible(tester, find.text('design-sync'));
+        await tester.tap(find.byIcon(Icons.arrow_back).last);
+        await wait(tester, 600); // let the pop transition settle
+        await wait(tester, 500);
+      } else {
+        await tester.tap(find.text('Search or run a command…'));
+        await wait(tester, 500);
+        await tester.enterText(find.byType(TextField).first, 'design');
+        await expectVisible(tester, find.text('design-sync'));
+        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+        await wait(tester, 700);
+      }
 
-      // Compose sheet → create channel → snackbar confirms.
-      await tester.tap(find.byIcon(Icons.edit));
+      // Compose sheet: sidebar button on desktop, compose icon on mobile.
+      await tester.tap(hasBottomNav(tester)
+          ? find.byIcon(Icons.edit)
+          : find.text('New Thread'));
       await expectVisible(tester, find.text('New channel'));
-      await tester.enterText(find.byType(TextField).first, 'quiet-launch');
+      // The sheet sits above the shell, so its fields are the LAST in the
+      // tree: [..., sheet name, sheet topic] → name is length-2.
+      final sheetFields = find.byType(TextField);
+      await tester.enterText(
+          sheetFields.at(sheetFields.evaluate().length - 2), 'quiet-launch');
       await unfocus(tester);
       await tester.tap(find.text('Create channel'));
       await expectVisible(
           tester, find.text('Channel #quiet-launch created'));
       await wait(tester, 800);
 
-      // Notifications/activity feed via the header bell.
-      await tester.tap(find.byIcon(Icons.notifications_none));
+      // Notifications/activity: header bell on mobile, Catch-up on desktop.
+      if (hasBottomNav(tester)) {
+        await tester.tap(find.byIcon(Icons.notifications_none));
+      } else {
+        await tester.tap(find.text('Catch-up').last); // sidebar entry
+      }
       await expectVisible(tester,
           find.textContaining('mentioned you in', findRichText: true));
       await tester.tap(find.text('Mark all read'));
@@ -281,10 +359,17 @@ void main() {
     testWidgets('stage controls work end to end', (tester) async {
       await signIn(tester);
 
-      // Voice tab → open stage.
+      // Voice entry: bottom-nav tab (mobile) or floating capsule (desktop).
       await openTab(tester, 'Voice');
-      await expectVisible(tester, find.text('Open stage'));
-      await tester.tap(find.text('Open stage'));
+      if (hasBottomNav(tester)) {
+        await expectVisible(tester, find.text('Open stage'));
+        await tester.tap(find.text('Open stage'));
+      } else {
+        // Capsule lives inside the channel pane — before a channel is open
+        // the always-present desktop entry is the sidebar audio card.
+        await expectVisible(tester, find.text('Audio Space Active'));
+        await tester.tap(find.text('Audio Space Active'));
+      }
 
       // Staged diagnosis: did the stage route open at all?
       var stageOpen = false;
@@ -328,10 +413,16 @@ void main() {
       await tester.tap(find.byTooltip('Stop sharing'));
       await expectVisible(tester, find.byTooltip('Share screen'));
 
-      // Leave → back on Voice tab, room reports disconnected.
+      // Leave → back to shell; mobile shows the disconnected Voice tab.
       await tester.tap(find.text('Leave'));
-      await expectVisible(tester, find.text('Not connected'));
-      await expectVisible(tester, find.text('Join room'));
+      await wait(tester, 700); // let the stage pop transition finish
+      if (hasBottomNav(tester)) {
+        await expectVisible(tester, find.text('Not connected'));
+        await expectVisible(tester, find.text('Join room'));
+      } else {
+        await expectVisible(tester, find.text('design-sync'));
+        expect(find.text('Voice: Design Room'), findsNothing); // capsule gone
+      }
     });
   });
 
@@ -374,28 +465,41 @@ void main() {
       await openTab(tester, 'Settings');
       await tester.tap(find.text('Security'));
       await expectVisible(tester, find.text('Encrypted in transit & at rest'));
+      await ensureVisibleSafe(tester, find.text('Sign out'));
       await tester.tap(find.text('Sign out'));
       await expectVisible(tester, find.text('Welcome back'));
 
       // Onboarding: validation then account creation completes the loop.
+      await ensureVisibleSafe(tester, find.text('Create account').last);
       await tester.tap(find.text('Create account').last);
       await expectVisible(tester, find.text('Create your account'));
-      await enterTextAt(tester, 0, 'new@stilora.dev');
-      await enterTextAt(tester, 1, 'short');
-      await enterTextAt(tester, 2, 'QA Workspace');
+      // Scope to the onboarding route — the sign-in route below it also
+      // hosts TextFields, which shifts global indexes between layouts.
+      final onboardEmail =
+          find.descendant(of: find.byType(OnboardingFlow), matching: find.byType(TextField)).at(0);
+      final onboardPassword =
+          find.descendant(of: find.byType(OnboardingFlow), matching: find.byType(TextField)).at(1);
+      final onboardName =
+          find.descendant(of: find.byType(OnboardingFlow), matching: find.byType(TextField)).at(2);
+      await tester.enterText(onboardEmail, 'new@stilora.dev');
+      await tester.enterText(onboardPassword, 'short');
+      await tester.enterText(onboardName, 'QA Workspace');
+      await ensureVisibleSafe(tester, find.text('Create account').last);
       await tester.tap(find.text('Create account').last);
       await expectVisible(
           tester, find.text('Password must be at least 8 characters.'));
 
-      await enterTextAt(tester, 1, password);
+      await tester.enterText(onboardPassword, password);
       await unfocus(tester);
+      await ensureVisibleSafe(tester, find.text('Create account').last);
       await tester.tap(find.text('Create account').last);
       // Manual poll with diagnostics on failure.
       var landed = false;
       for (var i = 0; i < 100 && !landed; i++) {
         await Future<void>.delayed(const Duration(milliseconds: 100));
         await tester.pump();
-        landed = find.text('Channels').evaluate().isNotEmpty;
+        landed = find.text('Channels').evaluate().isNotEmpty ||
+            find.text('New Thread').evaluate().isNotEmpty;
       }
       if (!landed) {
         final fields = find.byType(TextField).evaluate();

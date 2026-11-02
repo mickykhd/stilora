@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -109,9 +110,24 @@ class _VoiceStageScreenState extends ConsumerState<VoiceStageScreen> {
   }
 
   Future<void> _requestPermissions() async {
-    // Never let a stuck permission dialog hang the stage: check status
-    // first (no dialog when already granted), request with timeouts, and
-    // default to granted when the platform has no permission API (desktop).
+    // Runtime mic/camera permissions only exist on mobile OSes — desktop
+    // platforms rely on system settings, so never block the stage there.
+    if (!Platform.isAndroid && !Platform.isIOS) {
+      if (!mounted) return;
+      setState(() => _micGranted = true);
+      setState(() => _connecting = false);
+      _callTimer = Timer.periodic(const Duration(seconds: 1), (t) {
+        if (!mounted) {
+          t.cancel();
+          return;
+        }
+        setState(() => _seconds++);
+      });
+      return;
+    }
+    // Mobile: never let a stuck permission dialog hang the stage: check
+    // status first (no dialog when already granted), request with timeouts,
+    // and default to granted when the platform API misbehaves.
     final mic = await _ensure(Permission.microphone);
     await _ensure(Permission.camera); // requested for completeness
     if (!mounted) return;

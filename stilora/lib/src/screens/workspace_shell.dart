@@ -404,28 +404,34 @@ class _FeedSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.all(Aura.spaceXl),
-        child: AuraEntrance.staggered(
-          step: const Duration(milliseconds: 70),
+        child: ListView(
+          // Scrollable so skeleton rows never overflow short (desktop)
+          // feed panes — same rows, bounded by available height.
           children: [
-            for (final w in [0.3, 0.8, 0.65, 0.9, 0.5])
-              Padding(
-                padding: const EdgeInsets.only(bottom: Aura.spaceLg),
-                child: Row(children: [
-                  const SkeletonBlock(width: 40, height: 40, radius: 999),
-                  const SizedBox(width: Aura.spaceMd),
-                  Expanded(
-                    child: Column(children: [
-                      SkeletonBlock(width: 120, height: 12),
-                      const SizedBox(height: 8),
-                      SkeletonBlock(width: double.infinity, height: 14),
-                      const SizedBox(height: 6),
-                      SkeletonBlock(
-                          width: MediaQuery.sizeOf(context).width * w,
-                          height: 14),
-                    ]),
-                  ),
-                ]),
-              ),
+            AuraEntrance.staggered(
+            step: const Duration(milliseconds: 70),
+            children: [
+              for (final w in [0.3, 0.8, 0.65, 0.9, 0.5])
+                Padding(
+                  padding: const EdgeInsets.only(bottom: Aura.spaceLg),
+                  child: Row(children: [
+                    const SkeletonBlock(width: 40, height: 40, radius: 999),
+                    const SizedBox(width: Aura.spaceMd),
+                    Expanded(
+                      child: Column(children: [
+                        SkeletonBlock(width: 120, height: 12),
+                        const SizedBox(height: 8),
+                        SkeletonBlock(width: double.infinity, height: 14),
+                        const SizedBox(height: 6),
+                        SkeletonBlock(
+                            width: MediaQuery.sizeOf(context).width * w,
+                            height: 14),
+                      ]),
+                    ),
+                  ]),
+                ),
+            ],
+            ),
           ],
         ),
       );
