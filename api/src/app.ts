@@ -197,3 +197,19 @@ export function createApp(deps: CreateAppDeps = {}): Hono<AppEnv> {
 
   return app;
 }
+
+/**
+ * Shared application instance for Vercel's Hono framework preset.
+ *
+ * Vercel auto-detects the `hono` dependency and points its Bun launcher
+ * at `src/app.js` — the launcher consumes the module's DEFAULT export,
+ * which must be a request handler. We expose `app.fetch` in a shape that
+ * works whether the launcher invokes it directly or reads `.fetch`
+ * (Object.assign returns the same function, so both are identical).
+ *
+ * `loadConfig()` runs against the process environment; in tests the env
+ * is fully prepared before any `src/` module is imported (tests/helpers).
+ */
+const sharedApp = createApp({ config: loadConfig() });
+const handler = Object.assign(sharedApp.fetch, { fetch: sharedApp.fetch });
+export default handler;
