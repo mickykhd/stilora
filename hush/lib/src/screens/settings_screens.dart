@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/models.dart';
+import '../data/mock_data.dart';
 import '../state/providers.dart';
 import '../theme/motion.dart';
 import '../theme/tokens.dart';
-import '../widgets/navigation.dart';
 import '../widgets/primitives.dart';
 import 'secondary_screens.dart';
 
@@ -307,22 +307,22 @@ class _ProfileSection extends StatelessWidget {
         const _SectionHeader(
           eyebrow: 'Preferences',
           title: 'Your profile',
-          subtitle: 'How you appear across Studio Flow.',
+          subtitle: 'How you appear across your workspace.',
         ),
         AuraCard(
           child: Row(children: [
             AuraAvatar(
-                initials: 'YO',
-                imageUrl: 'https://i.pravatar.cc/96?img=47',
+                initials: MockData.you.initials,
                 size: 64,
-                presence: 0),
+                presence: MockData.you.presence.index),
             const SizedBox(width: Aura.spaceLg),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('You', style: Aura.headlineSm),
-                  Text('@you • Admin',
+                  Text(MockData.you.name, style: Aura.headlineSm),
+                  Text(
+                      '@${MockData.you.handle} • ${MockData.you.roleLabel}',
                       style: Aura.bodySm
                           .copyWith(color: scheme.onSurfaceVariant)),
                 ],
@@ -495,12 +495,12 @@ class _WorkspaceSection extends StatelessWidget {
           const _SectionHeader(
             eyebrow: 'Preferences',
             title: 'Workspace',
-            subtitle: 'Name, invite code, and defaults for Studio Flow.',
+            subtitle: 'Name, invite code, and defaults for your workspace.',
           ),
           _SettingCard(
             title: 'Workspace name',
             child: const TextField(
-                decoration: InputDecoration(hintText: 'Studio Flow')),
+                decoration: InputDecoration(hintText: 'e.g. Workspace name')),
           ),
           const SizedBox(height: Aura.spaceMd),
           _SettingCard(
@@ -1150,7 +1150,7 @@ class MobileListTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scheme = ColorScheme.of(context);
     final workspace =
-        ref.watch(workspaceProvider).valueOrNull ?? MockDataFallback.workspace;
+        ref.watch(workspaceProvider).valueOrNull ?? MockData.workspace;
     final channels = ref.watch(channelsProvider);
     final dms = ref.watch(conversationsProvider);
     final room = ref.watch(voiceRoomProvider);
