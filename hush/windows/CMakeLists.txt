@@ -2,6 +2,11 @@
 cmake_minimum_required(VERSION 3.14)
 project(hush LANGUAGES CXX)
 
+# MSVC in VS2026+ hard-errors (STL1011) on <experimental/coroutine>, which
+# some Flutter plugin Windows implementations still include. Silence it so
+# plugins compile until they migrate to C++20 <coroutine>.
+add_compile_definitions(_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS)
+
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
 set(BINARY_NAME "hush")
