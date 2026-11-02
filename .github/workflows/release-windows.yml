@@ -27,14 +27,16 @@ jobs:
           cache: true
 
       - name: Flutter pub get
+        working-directory: hush
         run: flutter pub get
 
       - name: Build Windows release
+        working-directory: hush
         run: flutter build windows --release
 
       - name: Package as zip
         shell: pwsh
-        run: Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath hush-windows-x64.zip -Force
+        run: Compress-Archive -Path hush/build/windows/x64/runner/Release/* -DestinationPath hush-windows-x64.zip -Force
 
       - name: Upload to release
         env:
