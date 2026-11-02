@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hush — Audio &amp; Video Preferences</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container": "#e9edff",
+            "surface-bright": "#f9f9ff",
+            "on-primary-container": "#dad7ff",
+            "primary-fixed-dim": "#c3c0ff",
+            "surface": "#f9f9ff",
+            "secondary": "#0051d5",
+            "surface-variant": "#dce2f7",
+            "on-primary-fixed": "#0f0069",
+            "error": "#ba1a1a",
+            "tertiary-fixed-dim": "#ffb695",
+            "on-primary": "#ffffff",
+            "on-surface": "#141b2b",
+            "outline-variant": "#c7c4d8",
+            "primary-fixed": "#e2dfff",
+            "surface-container-highest": "#dce2f7",
+            "background": "#f9f9ff",
+            "inverse-surface": "#293040",
+            "surface-dim": "#d3daef",
+            "inverse-primary": "#c3c0ff",
+            "on-surface-variant": "#464555",
+            "surface-container-lowest": "#ffffff",
+            "tertiary": "#7e3000",
+            "secondary-container": "#316bf3",
+            "surface-container-low": "#f1f3ff",
+            "secondary-fixed-dim": "#b4c5ff",
+            "on-secondary-container": "#fefcff",
+            "primary": "#3525cd",
+            "outline": "#777587",
+            "inverse-on-surface": "#edf0ff",
+            "on-error-container": "#93000a",
+            "on-secondary-fixed": "#00174b",
+            "tertiary-fixed": "#ffdbcc",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-background": "#141b2b",
+            "on-tertiary-container": "#ffd2be",
+            "error-container": "#ffdad6",
+            "secondary-fixed": "#dbe1ff",
+            "surface-container-high": "#e1e8fd",
+            "on-secondary-fixed-variant": "#003ea8",
+            "primary-container": "#4f46e5",
+            "surface-tint": "#4d44e3",
+            "on-tertiary-fixed-variant": "#7b2f00",
+            "on-secondary": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed": "#351000",
+            "tertiary-container": "#a44100"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-md": "1rem",
+            "space-xl": "2.5rem",
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "gutter-mobile": "0.75rem",
+            "space-lg": "1.5rem",
+            "margin-mobile": "1rem",
+            "margin": "2.5rem",
+            "gutter": "1.25rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Geist"],
+            "headline-xl": ["Geist"],
+            "body-md": ["Geist"],
+            "label-md": ["Geist"],
+            "headline-sm": ["Geist"],
+            "label-sm": ["Geist"],
+            "body-sm": ["Geist"],
+            "display-lg": ["Geist"],
+            "headline-lg": ["Geist"],
+            "headline-xl-mobile": ["Geist"]
+          },
+          "fontSize": {
+            "body-lg": ["1.125rem", { "lineHeight": "1.6", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "headline-xl": ["2.5rem", { "lineHeight": "1.15", "letterSpacing": "-0.025em", "fontWeight": "500" }],
+            "body-md": ["0.9375rem", { "lineHeight": "1.55", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "label-md": ["0.875rem", { "lineHeight": "1.2", "letterSpacing": "0em", "fontWeight": "500" }],
+            "headline-sm": ["1.25rem", { "lineHeight": "1.3", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "label-sm": ["0.6875rem", { "lineHeight": "1.1", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "body-sm": ["0.8125rem", { "lineHeight": "1.45", "letterSpacing": "0em", "fontWeight": "400" }],
+            "display-lg": ["3.5rem", { "lineHeight": "1.1", "letterSpacing": "-0.03em", "fontWeight": "400" }],
+            "headline-lg": ["1.75rem", { "lineHeight": "1.25", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "headline-xl-mobile": ["2rem", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+      font-size: 1.25rem;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    input[type=range] {
+      -webkit-appearance: none;
+      background: transparent;
+    }
+    input[type=range]:focus {
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 4px;
+      cursor: pointer;
+      background: #dce2f7;
+      border-radius: 9999px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      height: 14px;
+      width: 14px;
+      border-radius: 50%;
+      background: #4f46e5;
+      cursor: pointer;
+      -webkit-appearance: none;
+      margin-top: -5px;
+      box-shadow: 0 0 0 2px #ffffff;
+      transition: transform 0.15s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    /* Mic live visualizer animation bars */
+    @keyframes pulseMeter {
+      0%, 100% { height: 16%; opacity: 0.4; }
+      50% { height: 85%; opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface antialiased min-h-screen overflow-x-hidden font-body-md text-body-md selection:bg-surface-container selection:text-primary">
+<!-- Desktop App Shell Container -->
+<div class="flex h-screen w-screen overflow-hidden">
+<!-- Shared Component: SideNavBar -->
+<aside class="flex flex-col justify-between h-full p-space-sm w-64 border-r border-surface-variant bg-surface-container-low shrink-0 select-none">
+<div class="flex flex-col gap-space-md">
+<!-- Workspace Header -->
+<div class="flex items-center gap-3 px-space-sm py-2">
+<div class="w-8 h-8 rounded-lg bg-surface-container-highest flex items-center justify-center font-headline-sm text-headline-sm font-semibold text-primary">
+            SF
+          </div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface tracking-tight leading-snug">Studio Flow</span>
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">6 online</span>
+</div>
+</div>
+</div>
+<!-- CTA: New Thread -->
+<button class="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:opacity-95 transition-opacity">
+<span class="material-symbols-outlined text-[1.1rem]">add</span>
+<span>New Thread</span>
+</button>
+<!-- Channels & People Navigation Tabs -->
+<nav class="flex flex-col gap-0.5 mt-1">
+<span class="px-space-sm py-1 font-label-sm text-label-sm text-outline tracking-wider uppercase">Channels</span>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 px-space-sm py-space-xs rounded-lg flex items-center gap-2.5" href="#">
+<span class="material-symbols-outlined text-outline">tag</span>
+<span class="font-body-md text-body-md">general</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 px-space-sm py-space-xs rounded-lg flex items-center gap-2.5" href="#">
+<span class="material-symbols-outlined text-outline">tag</span>
+<span class="font-body-md text-body-md">design-sync</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 px-space-sm py-space-xs rounded-lg flex items-center gap-2.5" href="#">
+<span class="material-symbols-outlined text-outline">tag</span>
+<span class="font-body-md text-body-md">eng-architecture</span>
+</a>
+<span class="px-space-sm pt-4 pb-1 font-label-sm text-label-sm text-outline tracking-wider uppercase">Direct</span>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 px-space-sm py-space-xs rounded-lg flex items-center gap-2.5" href="#">
+<span class="material-symbols-outlined text-outline">account_circle</span>
+<span class="font-body-md text-body-md">Sarah Chen</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors duration-150 px-space-sm py-space-xs rounded-lg flex items-center gap-2.5" href="#">
+<span class="material-symbols-outlined text-outline">account_circle</span>
+<span class="font-body-md text-body-md">Marcus Vance</span>
+</a>
+</nav>
+</div>
+<!-- SideNav Footer Actions (Active: Settings) -->
+<div class="flex flex-col gap-1 border-t border-surface-variant pt-3">
+<a class="text-on-surface-variant hover:text-on-surface px-space-sm py-space-xs rounded-lg flex items-center justify-between transition-colors" href="#">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-outline" data-weight="fill" style="font-variation-settings: 'FILL' 1;">mic</span>
+<span class="font-body-md text-body-md">Audio Space Active</span>
+</div>
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+</a>
+<!-- Semantic Active Navigation Lock: Settings is active destination -->
+<a class="bg-surface-container-highest text-primary font-medium rounded-lg px-space-sm py-space-xs flex items-center gap-2.5" href="#">
+<span class="material-symbols-outlined text-primary" data-weight="fill" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Workspace Canvas (Light Background & TopNavBar) -->
+<div class="flex-1 flex flex-col h-full overflow-hidden bg-background">
+<!-- Shared Component: TopNavBar -->
+<header class="flex items-center justify-between px-space-md w-full h-14 border-b border-surface-variant bg-surface-container-lowest shrink-0">
+<!-- Brand & Nav Cluster -->
+<div class="flex items-center gap-6">
+<span class="font-headline-sm text-headline-sm font-semibold tracking-tight text-on-surface">Hush</span>
+<nav class="hidden md:flex items-center gap-4">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md" href="#">Threads</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md" href="#">Catch-up</a>
+</nav>
+</div>
+<!-- Trailing Actions & Search Bar on Right -->
+<div class="flex items-center gap-3 flex-shrink-0">
+<div class="relative hidden sm:flex items-center flex-shrink-0">
+<span class="material-symbols-outlined text-outline absolute left-3 text-[1.1rem]">search</span>
+<input class="bg-surface-container-low border-0 text-on-surface placeholder:text-outline text-body-sm font-body-sm pl-9 pr-3 py-1.5 rounded-lg w-44 focus:ring-1 focus:ring-primary focus:bg-surface-container-lowest transition-all" placeholder="Search workspace..." type="text"/>
+</div>
+<div class="flex items-center gap-1 border-l border-surface-variant pl-2 flex-shrink-0">
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors duration-150" title="Audio Call">
+<span class="material-symbols-outlined">call</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors duration-150" title="Mute notifications">
+<span class="material-symbols-outlined">notifications_off</span>
+</button>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-primary bg-surface-container-highest transition-colors duration-150" title="Preferences">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+<!-- User avatar -->
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-surface-variant flex items-center justify-center text-primary font-label-md text-label-md ml-1" title="User status and avatar">
+            AS
+          </div>
+</div>
+</header>
+<!-- Sub-Workspace Content: Settings Overlay Sheet -->
+<main class="flex-1 overflow-y-auto px-space-xl py-8 flex justify-center">
+<div class="w-full max-w-4xl flex flex-col gap-8">
+<!-- Sheet Header Bar -->
+<div class="flex items-start justify-between border-b border-surface-variant pb-6">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest font-semibold">Preferences</span>
+<span class="text-outline-variant font-label-sm">•</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">System Audio &amp; Video Subsystem</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg font-medium text-on-surface tracking-tight">Audio &amp; Video Devices</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">
+                Configure input clarity, echo suppression, audio monitoring, and optical framing with uncompressed zero-latency preview.
+              </p>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+                Hardware Synced
+              </span>
+<button class="w-9 h-9 rounded-lg flex items-center justify-center text-outline hover:text-on-surface hover:bg-surface-container-low transition-colors" title="Close Preferences">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</div>
+<!-- Preferences Body: Asymmetrical Bento Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left 7-Col: Audio Devices & Acoustic Calibration -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<!-- Input Device Section -->
+<section class="bg-surface-container-lowest rounded-xl border border-surface-variant p-space-lg flex flex-col gap-5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[1.1rem]">mic</span>
+</div>
+<div>
+<h2 class="font-label-md text-label-md font-semibold text-on-surface">Input Device</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Selected primary recording microphone</p>
+</div>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-low text-primary">48.0 kHz • 24-Bit</span>
+</div>
+<!-- Input Select Box -->
+<div class="relative">
+<select class="w-full bg-surface-container-low border border-surface-variant hover:border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-2.5 px-3 font-body-md text-body-md text-on-surface appearance-none transition-colors cursor-pointer">
+<option selected="">Rode NT-USB Mini (Studio Precision)</option>
+<option>MacBook Pro Microphone Array (Internal)</option>
+<option>Aether Virtual Lossless Loopback</option>
+</select>
+<span class="material-symbols-outlined text-outline absolute right-3 top-3 pointer-events-none text-base">expand_more</span>
+</div>
+<!-- Input Volume Slider -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center font-body-sm text-body-sm">
+<span class="text-on-surface-variant font-label-md text-label-md">Input Sensitivity &amp; Gain</span>
+<span class="font-medium text-on-surface font-label-sm text-label-sm" id="mic-gain-val">82%</span>
+</div>
+<input class="w-full" id="mic-gain-slider" max="100" min="0" type="range" value="82"/>
+</div>
+<!-- Live Acoustic Level Meter -->
+<div class="flex flex-col gap-1.5 pt-1">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Live Input Level</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                      Real-time test
+                    </span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden flex gap-0.5 p-[1px]">
+<!-- Continuous segmented meter simulation -->
+<div class="h-full rounded-sm bg-primary transition-all duration-75" style="width: 14%;"></div>
+<div class="h-full rounded-sm bg-primary transition-all duration-75" style="width: 14%;"></div>
+<div class="h-full rounded-sm bg-primary transition-all duration-75" style="width: 14%;"></div>
+<div class="h-full rounded-sm bg-primary transition-all duration-75" style="width: 14%;"></div>
+<div class="h-full rounded-sm bg-primary transition-all duration-75" style="width: 14%;"></div>
+<div class="h-full rounded-sm bg-secondary transition-all duration-75" style="width: 14%;"></div>
+<div class="h-full rounded-sm bg-surface-variant transition-all duration-75" style="width: 14%;"></div>
+</div>
+<p class="font-body-sm text-body-sm text-outline pt-0.5">Speak naturally to test baseline capture headroom.</p>
+</div>
+</section>
+<!-- Output Device Section -->
+<section class="bg-surface-container-lowest rounded-xl border border-surface-variant p-space-lg flex flex-col gap-5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[1.1rem]">headphones</span>
+</div>
+<div>
+<h2 class="font-label-md text-label-md font-semibold text-on-surface">Output Device</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Default listening endpoint</p>
+</div>
+</div>
+<button class="font-label-sm text-label-sm px-3 py-1 rounded-lg border border-surface-variant hover:bg-surface-container-low text-on-surface transition-colors flex items-center gap-1.5" id="test-audio-btn">
+<span class="material-symbols-outlined text-[1rem]">play_arrow</span>
+<span>Test Sound</span>
+</button>
+</div>
+<!-- Output Select Box -->
+<div class="relative">
+<select class="w-full bg-surface-container-low border border-surface-variant hover:border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-2.5 px-3 font-body-md text-body-md text-on-surface appearance-none transition-colors cursor-pointer">
+<option selected="">Sennheiser HD 600 via DAC (Balanced)</option>
+<option>MacBook Pro Speakers (Spatial Audio)</option>
+<option>DisplayPort Audio Sink</option>
+</select>
+<span class="material-symbols-outlined text-outline absolute right-3 top-3 pointer-events-none text-base">expand_more</span>
+</div>
+<!-- Output Volume Slider -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center font-body-sm text-body-sm">
+<span class="text-on-surface-variant font-label-md text-label-md">Output Volume</span>
+<span class="font-medium text-on-surface font-label-sm text-label-sm" id="output-val">68%</span>
+</div>
+<input class="w-full" id="output-slider" max="100" min="0" type="range" value="68"/>
+</div>
+</section>
+<!-- Voice Input Mode (Voice Activity vs Push-to-Talk) -->
+<section class="bg-surface-container-lowest rounded-xl border border-surface-variant p-space-lg flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="font-label-md text-label-md font-semibold text-on-surface">Input Transmission Mode</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Manage voice transmission trigger logic</p>
+</div>
+</div>
+<!-- Segmented Control Button -->
+<div class="grid grid-cols-2 p-1 rounded-lg bg-surface-container-low border border-surface-variant gap-1">
+<button class="py-1.5 px-3 rounded-md font-label-md text-label-md font-medium text-primary bg-surface-container-lowest shadow-sm transition-all flex items-center justify-center gap-1.5" id="mode-va">
+<span class="material-symbols-outlined text-base">graphic_eq</span>
+<span>Voice Activity</span>
+</button>
+<button class="py-1.5 px-3 rounded-md font-label-md text-label-md font-normal text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1.5" id="mode-ptt">
+<span class="material-symbols-outlined text-base">touch_app</span>
+<span>Push to Talk</span>
+</button>
+</div>
+<!-- Dynamic Sub-setting for Selected Mode -->
+<div class="flex flex-col gap-2 pt-1" id="va-content">
+<div class="flex justify-between items-center font-body-sm text-body-sm">
+<span class="text-on-surface-variant">Gate Threshold Sensitivity</span>
+<span class="font-label-sm text-label-sm text-primary">-46 dB (Auto-calibrated)</span>
+</div>
+<div class="h-2 w-full bg-surface-container-low rounded-full relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 bg-primary-fixed-dim w-3/5 rounded-full"></div>
+<div class="absolute left-[60%] top-0 bottom-0 w-1 bg-primary"></div>
+</div>
+<p class="font-body-sm text-body-sm text-outline">Background noise below -46 dB will be suppressed automatically.</p>
+</div>
+<div class="hidden flex items-center justify-between pt-2 border-t border-surface-variant" id="ptt-content">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">PTT Key Assignment</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Press to transmit speech burst</span>
+</div>
+<kbd class="px-2.5 py-1 rounded bg-surface-container font-label-sm text-label-sm font-semibold text-on-surface border border-surface-variant">Right Ctrl</kbd>
+</div>
+</section>
+</div>
+<!-- Right 5-Col: Optical Camera Viewport & Real-time Modifiers -->
+<div class="lg:col-span-5 flex flex-col gap-6">
+<!-- Video Subsystem Card -->
+<section class="bg-surface-container-lowest rounded-xl border border-surface-variant p-space-lg flex flex-col gap-5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[1.1rem]">videocam</span>
+</div>
+<div>
+<h2 class="font-label-md text-label-md font-semibold text-on-surface">Camera Source</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Optical framing device</p>
+</div>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container text-primary font-medium">1080p60</span>
+</div>
+<!-- Camera Select Box -->
+<div class="relative">
+<select class="w-full bg-surface-container-low border border-surface-variant hover:border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg py-2.5 px-3 font-body-md text-body-md text-on-surface appearance-none transition-colors cursor-pointer">
+<option selected="">FaceTime HD Camera (Ultra-Wide Pro)</option>
+<option>Logitech Brio 4K Stream Edition</option>
+<option>Continuity Camera Wireless Device</option>
+</select>
+<span class="material-symbols-outlined text-outline absolute right-3 top-3 pointer-events-none text-base">expand_more</span>
+</div>
+<!-- Minimal Video Viewport Preview -->
+<div class="relative w-full aspect-video rounded-lg overflow-hidden bg-surface-dim border border-surface-variant group">
+<div class="w-full h-full bg-cover bg-center transition-all duration-300" data-alt="A refined Scandinavian architect working calmly in a sunlit minimalist creative studio with pale ash wood desks and soft ambient daylight. The shot is framed from a modern clean laptop camera perspective in high resolution light tones. Gentle natural depth of field and soft neutral linen textures give an atmosphere of deep serene focus." id="video-preview-canvas" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBdY3jU_JgFwn85YBecd3qYxSzh230B8b8Ipkrs5_0LpP213Nv6kSDUgkKbB5XIzTi3iSb7TafDPHTj-7uxlpF8uIrLwWnKgv0ixDh1jwFmG4-o7K-1D261z1uKIVBuFlqsJSYai3U2pbvfNJ8jCXctNr45499EZ8GLRCSArQ7N8NZRz0aEiqm0E5gp5f9LTiziI2kxCW1ViyjjuQdI0xwsCgMpytWT3gA5-pJh4N0')">
+</div>
+<!-- Live Stream Watermark & Status -->
+<div class="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surface-container-lowest/80 backdrop-blur-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-ping"></span>
+<span class="font-label-sm text-label-sm text-on-surface font-medium">Preview Active</span>
+</div>
+<!-- Resolution badge -->
+<div class="absolute bottom-2.5 right-2.5 px-2 py-0.5 rounded bg-inverse-surface/70 text-inverse-on-surface font-label-sm text-label-sm">
+                    1920 × 1080 • 60 FPS
+                  </div>
+</div>
+<!-- Viewport Modifiers (Mirror & Blur Modern Toggles) -->
+<div class="flex flex-col divide-y divide-surface-variant">
+<!-- Mirror Video Toggle -->
+<div class="flex items-center justify-between py-3">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Mirror My Video</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Invert horizontal axis for natural viewing</span>
+</div>
+<button class="w-11 h-6 bg-primary rounded-full relative p-0.5 transition-colors duration-200 focus:outline-none" id="toggle-mirror">
+<span class="block w-5 h-5 bg-surface-container-lowest rounded-full shadow-sm translate-x-5 transition-transform duration-200" id="dot-mirror"></span>
+</button>
+</div>
+<!-- Background Blur Toggle -->
+<div class="flex items-center justify-between py-3">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Portrait Depth &amp; Background Blur</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Isolate speaker with cinematic falloff</span>
+</div>
+<button class="w-11 h-6 bg-surface-variant rounded-full relative p-0.5 transition-colors duration-200 focus:outline-none" id="toggle-blur">
+<span class="block w-5 h-5 bg-surface-container-lowest rounded-full shadow-sm translate-x-0 transition-transform duration-200" id="dot-blur"></span>
+</button>
+</div>
+<!-- Hardware Acceleration Toggle -->
+<div class="flex items-center justify-between py-3">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Metal Neural Engine Processing</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Offload AI framing to low-power silicon</span>
+</div>
+<button class="w-11 h-6 bg-primary rounded-full relative p-0.5 transition-colors duration-200 focus:outline-none" id="toggle-neural">
+<span class="block w-5 h-5 bg-surface-container-lowest rounded-full shadow-sm translate-x-5 transition-transform duration-200" id="dot-neural"></span>
+</button>
+</div>
+</div>
+</section>
+<!-- Advanced Audio Processing (Echo & Noise) -->
+<section class="bg-surface-container-lowest rounded-xl border border-surface-variant p-space-lg flex flex-col gap-4">
+<h2 class="font-label-md text-label-md font-semibold text-on-surface">Acoustic Clarity Enhancements</h2>
+<div class="flex flex-col gap-3">
+<label class="flex items-start gap-3 cursor-pointer">
+<input checked="" class="mt-0.5 rounded text-primary focus:ring-primary border-surface-variant" type="checkbox"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Zero-Artifact Noise Suppression</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Eliminates mechanical keyboard clicks &amp; fan hum</span>
+</div>
+</label>
+<label class="flex items-start gap-3 cursor-pointer">
+<input checked="" class="mt-0.5 rounded text-primary focus:ring-primary border-surface-variant" type="checkbox"/>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Acoustic Echo Cancellation</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Prevents speaker feedback during open-mic discussions</span>
+</div>
+</label>
+</div>
+</section>
+</div>
+</div>
+<!-- Bottom Footer Action Summary -->
+<div class="flex items-center justify-between pt-4 border-t border-surface-variant">
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+              Changes are applied instantly to active calls and room sessions.
+            </span>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 rounded-lg border border-surface-variant font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors">
+                Restore Defaults
+              </button>
+<button class="px-4 py-2 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:opacity-90 transition-opacity">
+                Done
+              </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+<!-- Micro-Interactions Script for Sliders, Toggles, and Previews -->
+<script>
+    // Slider values synchronization
+    const micGainSlider = document.getElementById('mic-gain-slider');
+    const micGainVal = document.getElementById('mic-gain-val');
+    micGainSlider?.addEventListener('input', (e) => {
+      micGainVal.textContent = `${e.target.value}%`;
+    });
+
+    const outputSlider = document.getElementById('output-slider');
+    const outputVal = document.getElementById('output-val');
+    outputSlider?.addEventListener('input', (e) => {
+      outputVal.textContent = `${e.target.value}%`;
+    });
+
+    // Voice transmission mode toggle
+    const btnVA = document.getElementById('mode-va');
+    const btnPTT = document.getElementById('mode-ptt');
+    const vaContent = document.getElementById('va-content');
+    const pttContent = document.getElementById('ptt-content');
+
+    btnVA?.addEventListener('click', () => {
+      btnVA.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-medium');
+      btnVA.classList.remove('text-on-surface-variant', 'font-normal');
+      btnPTT.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-medium');
+      btnPTT.classList.add('text-on-surface-variant', 'font-normal');
+      vaContent.classList.remove('hidden');
+      pttContent.classList.add('hidden');
+    });
+
+    btnPTT?.addEventListener('click', () => {
+      btnPTT.classList.add('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-medium');
+      btnPTT.classList.remove('text-on-surface-variant', 'font-normal');
+      btnVA.classList.remove('bg-surface-container-lowest', 'text-primary', 'shadow-sm', 'font-medium');
+      btnVA.classList.add('text-on-surface-variant', 'font-normal');
+      pttContent.classList.remove('hidden');
+      vaContent.classList.add('hidden');
+    });
+
+    // Mirror video switch logic
+    const previewCanvas = document.getElementById('video-preview-canvas');
+    const toggleMirror = document.getElementById('toggle-mirror');
+    const dotMirror = document.getElementById('dot-mirror');
+    let isMirrored = true;
+    previewCanvas.style.transform = 'scaleX(-1)';
+
+    toggleMirror?.addEventListener('click', () => {
+      isMirrored = !isMirrored;
+      if (isMirrored) {
+        toggleMirror.classList.replace('bg-surface-variant', 'bg-primary');
+        dotMirror.classList.replace('translate-x-0', 'translate-x-5');
+        previewCanvas.style.transform = 'scaleX(-1)';
+      } else {
+        toggleMirror.classList.replace('bg-primary', 'bg-surface-variant');
+        dotMirror.classList.replace('translate-x-5', 'translate-x-0');
+        previewCanvas.style.transform = 'scaleX(1)';
+      }
+    });
+
+    // Background blur switch logic
+    const toggleBlur = document.getElementById('toggle-blur');
+    const dotBlur = document.getElementById('dot-blur');
+    let isBlurred = false;
+
+    toggleBlur?.addEventListener('click', () => {
+      isBlurred = !isBlurred;
+      if (isBlurred) {
+        toggleBlur.classList.replace('bg-surface-variant', 'bg-primary');
+        dotBlur.classList.replace('translate-x-0', 'translate-x-5');
+        previewCanvas.style.filter = 'blur(4px)';
+      } else {
+        toggleBlur.classList.replace('bg-primary', 'bg-surface-variant');
+        dotBlur.classList.replace('translate-x-5', 'translate-x-0');
+        previewCanvas.style.filter = 'none';
+      }
+    });
+
+    // Neural acceleration switch logic
+    const toggleNeural = document.getElementById('toggle-neural');
+    const dotNeural = document.getElementById('dot-neural');
+    let isNeural = true;
+
+    toggleNeural?.addEventListener('click', () => {
+      isNeural = !isNeural;
+      if (isNeural) {
+        toggleNeural.classList.replace('bg-surface-variant', 'bg-primary');
+        dotNeural.classList.replace('translate-x-0', 'translate-x-5');
+      } else {
+        toggleNeural.classList.replace('bg-primary', 'bg-surface-variant');
+        dotNeural.classList.replace('translate-x-5', 'translate-x-0');
+      }
+    });
+
+    // Audio test button feedback
+    const testAudioBtn = document.getElementById('test-audio-btn');
+    testAudioBtn?.addEventListener('click', () => {
+      testAudioBtn.classList.add('bg-surface-container', 'text-primary');
+      setTimeout(() => {
+        testAudioBtn.classList.remove('bg-surface-container', 'text-primary');
+      }, 800);
+    });
+  </script>
+</body></html>

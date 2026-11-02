@@ -1,0 +1,31 @@
+# Build artifacts
+build/
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+*.apk
+*.aab
+*.exe
+
+# Node/Bun
+node_modules/
+coverage.out
+*.tsbuildinfo
+
+# Env & secrets (never commit)
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs / misc
+*.log

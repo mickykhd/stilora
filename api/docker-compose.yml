@@ -1,0 +1,24 @@
+# Local development database for Hush.
+# Usage: docker compose up -d
+# Then:  cp .env.example .env && bun run db:migrate
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: hush-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: hush
+      POSTGRES_PASSWORD: hush
+      POSTGRES_DB: hush
+    ports:
+      - "5432:5432"
+    volumes:
+      - hush_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hush -d hush"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  hush_pgdata:

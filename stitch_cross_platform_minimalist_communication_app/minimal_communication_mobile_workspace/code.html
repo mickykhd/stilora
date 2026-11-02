@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hush — Workspace</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-surface-variant": "#464555",
+            "error": "#ba1a1a",
+            "background": "#f9f9ff",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#ffd2be",
+            "primary-fixed-dim": "#c3c0ff",
+            "primary-container": "#4f46e5",
+            "secondary-fixed-dim": "#b4c5ff",
+            "tertiary": "#7e3000",
+            "surface-container-low": "#f1f3ff",
+            "on-primary-container": "#dad7ff",
+            "surface-variant": "#dce2f7",
+            "on-tertiary-fixed-variant": "#7b2f00",
+            "inverse-primary": "#c3c0ff",
+            "on-secondary-fixed": "#00174b",
+            "surface-container-highest": "#dce2f7",
+            "on-secondary": "#ffffff",
+            "surface-tint": "#4d44e3",
+            "secondary-fixed": "#dbe1ff",
+            "outline": "#777587",
+            "on-secondary-container": "#fefcff",
+            "tertiary-container": "#a44100",
+            "on-tertiary": "#ffffff",
+            "on-primary": "#ffffff",
+            "on-background": "#141b2b",
+            "inverse-surface": "#293040",
+            "surface": "#f9f9ff",
+            "tertiary-fixed": "#ffdbcc",
+            "on-surface": "#141b2b",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#e1e8fd",
+            "surface-container": "#e9edff",
+            "secondary": "#0051d5",
+            "surface-dim": "#d3daef",
+            "inverse-on-surface": "#edf0ff",
+            "error-container": "#ffdad6",
+            "secondary-container": "#316bf3",
+            "on-primary-fixed-variant": "#3323cc",
+            "tertiary-fixed-dim": "#ffb695",
+            "on-tertiary-fixed": "#351000",
+            "primary": "#3525cd",
+            "on-error": "#ffffff",
+            "surface-bright": "#f9f9ff",
+            "on-primary-fixed": "#0f0069",
+            "on-secondary-fixed-variant": "#003ea8",
+            "primary-fixed": "#e2dfff",
+            "outline-variant": "#c7c4d8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "gutter": "1.25rem",
+            "margin-mobile": "1rem",
+            "margin": "2.5rem",
+            "space-xs": "0.25rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2.5rem",
+            "gutter-mobile": "0.75rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem"
+          },
+          "fontFamily": {
+            "label-md": ["Geist"],
+            "display-lg": ["Geist"],
+            "headline-lg": ["Geist"],
+            "label-sm": ["Geist"],
+            "body-md": ["Geist"],
+            "headline-sm": ["Geist"],
+            "body-lg": ["Geist"],
+            "headline-xl-mobile": ["Geist"],
+            "headline-xl": ["Geist"],
+            "body-sm": ["Geist"]
+          },
+          "fontSize": {
+            "label-md": ["0.875rem", { "lineHeight": "1.2", "letterSpacing": "0em", "fontWeight": "500" }],
+            "display-lg": ["3.5rem", { "lineHeight": "1.1", "letterSpacing": "-0.03em", "fontWeight": "400" }],
+            "headline-lg": ["1.75rem", { "lineHeight": "1.25", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "label-sm": ["0.6875rem", { "lineHeight": "1.1", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "body-md": ["0.9375rem", { "lineHeight": "1.55", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "headline-sm": ["1.25rem", { "lineHeight": "1.3", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-lg": ["1.125rem", { "lineHeight": "1.6", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "headline-xl-mobile": ["2rem", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "500" }],
+            "headline-xl": ["2.5rem", { "lineHeight": "1.15", "letterSpacing": "-0.025em", "fontWeight": "500" }],
+            "body-sm": ["0.8125rem", { "lineHeight": "1.45", "letterSpacing": "0em", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 350, 'GRAD' 0, 'opsz' 20;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @keyframes pulse-gentle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.92); }
+    }
+    .pulse-indicator {
+      animation: pulse-gentle 2.6s ease-in-out infinite;
+    }
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex justify-center selection:bg-surface-container selection:text-primary">
+<!-- Mobile Workspace Container -->
+<div class="w-full max-w-md min-h-screen bg-background flex flex-col relative pb-24 shadow-[0_0_50px_rgba(20,27,43,0.03)] border-x border-surface-variant/40">
+<!-- Top Workspace Anchor Bar (TopNavBar / SideNav Header synthesis) -->
+<header class="bg-surface-container-lowest sticky top-0 z-30 flex items-center justify-between px-space-md h-14 border-b border-surface-variant">
+<!-- Workspace Brand Switcher -->
+<button class="flex items-center gap-space-sm group text-left focus:outline-none focus:ring-1 focus:ring-primary-container rounded-lg p-1">
+<div class="w-8 h-8 rounded-lg bg-surface-container-low flex items-center justify-center text-primary font-headline-sm text-headline-sm border border-surface-variant/70">
+<span class="material-symbols-outlined text-primary text-[18px]">grain</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1">
+<span class="font-headline-sm text-body-md font-semibold text-on-surface tracking-tight">Studio Flow</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[16px] group-hover:text-primary transition-colors">unfold_more</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container pulse-indicator"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">6 online</span>
+</div>
+</div>
+</button>
+<!-- Trailing Action Icons -->
+<div class="flex items-center gap-1 text-on-surface-variant">
+<button aria-label="Search" class="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-surface-container-low transition-colors duration-150 active:opacity-80">
+<span class="material-symbols-outlined text-[19px]">search</span>
+</button>
+<button aria-label="New Thread" class="w-9 h-9 rounded-lg flex items-center justify-center bg-surface-container-low text-primary hover:bg-surface-container transition-colors duration-150 active:opacity-80">
+<span class="material-symbols-outlined text-[20px]">edit_square</span>
+</button>
+</div>
+</header>
+<!-- Persistent Subtle Audio Space Capsule -->
+<div class="px-space-md pt-3 pb-1">
+<div class="bg-surface-container-lowest rounded-xl border border-surface-variant/80 p-2.5 flex items-center justify-between transition-all hover:border-outline-variant/60">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-lg bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">mic</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md text-on-surface font-medium">Voice Design Room</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container pulse-indicator"></span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Connected • 3 in room</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button aria-label="Mute toggle" class="h-7 px-2.5 rounded-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low text-label-sm font-label-sm flex items-center gap-1 border border-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[15px]">mic_off</span>
+<span>Mute</span>
+</button>
+<button aria-label="Audio settings" class="w-7 h-7 rounded-md flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[17px]">tune</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Main Workspace Content -->
+<main class="flex-1 px-space-md py-2 space-y-6">
+<!-- Featured Focus: Active Thread in #design-sync -->
+<section class="space-y-2">
+<div class="flex items-center justify-between px-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Featured Thread</span>
+<span class="font-label-sm text-label-sm text-primary font-medium hover:underline cursor-pointer">View thread</span>
+</div>
+<div class="bg-surface-container-lowest border border-surface-variant/80 rounded-xl p-space-md relative overflow-hidden transition-all duration-200 hover:border-outline-variant">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-primary">tag</span>
+<span class="font-label-md text-label-md font-medium text-on-surface">design-sync</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline">14m ago</span>
+</div>
+<h3 class="font-headline-sm text-body-lg font-semibold text-on-surface mb-1.5 leading-snug">
+            Scandinavian Spacing Tokens &amp; Calm Architecture
+          </h3>
+<p class="font-body-md text-body-md text-on-surface-variant line-clamp-2 mb-3">
+            Sarah Chen: "Consolidated all margins to 1.25rem gutters. Eliminating colored badge alerts across threads improved focus scores significantly."
+          </p>
+<div class="flex items-center justify-between pt-2.5 border-t border-surface-variant/60">
+<div class="flex items-center -space-x-1.5">
+<div class="w-6 h-6 rounded-full border-2 border-surface-container-lowest bg-surface-container flex items-center justify-center text-[10px] font-medium text-primary font-label-sm">SC</div>
+<div class="w-6 h-6 rounded-full border-2 border-surface-container-lowest bg-surface-container-high flex items-center justify-center text-[10px] font-medium text-on-surface font-label-sm">MV</div>
+<div class="w-6 h-6 rounded-full border-2 border-surface-container-lowest bg-surface-variant flex items-center justify-center text-[10px] font-medium text-on-surface-variant font-label-sm">+4</div>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant font-body-sm text-body-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">mode_comment</span>
+                18 replies
+              </span>
+<span class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+                9
+              </span>
+</div>
+</div>
+</div>
+</section>
+<!-- Channel Architecture Section -->
+<section class="space-y-1.5">
+<div class="flex items-center justify-between px-1 mb-1">
+<div class="flex items-center gap-1.5">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Channels</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">4</span>
+</div>
+<button aria-label="Add Channel" class="text-on-surface-variant hover:text-on-surface p-1">
+<span class="material-symbols-outlined text-[16px]">add</span>
+</button>
+</div>
+<div class="space-y-0.5">
+<!-- Item 1: general -->
+<button class="w-full flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors duration-150 group text-left">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[18px] text-outline group-hover:text-on-surface">tag</span>
+<span class="font-body-md text-body-md">general</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline">Quiet</span>
+</button>
+<!-- Item 2: design-sync (Active Tab state mapped to JSON) -->
+<button class="w-full flex items-center justify-between px-space-sm py-2 rounded-lg bg-surface-container-highest text-primary font-medium transition-colors duration-150 text-left">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[18px] text-primary">tag</span>
+<span class="font-body-md text-body-md font-medium text-primary">design-sync</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="font-label-sm text-label-sm text-primary font-medium">3 unread</span>
+</div>
+</button>
+<!-- Item 3: product -->
+<button class="w-full flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors duration-150 group text-left">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[18px] text-outline group-hover:text-on-surface">tag</span>
+<span class="font-body-md text-body-md">product</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline">1h ago</span>
+</button>
+<!-- Item 4: eng-architecture -->
+<button class="w-full flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors duration-150 group text-left">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[18px] text-outline group-hover:text-on-surface">tag</span>
+<span class="font-body-md text-body-md">eng-architecture</span>
+</div>
+<span class="font-body-sm text-body-sm text-outline">3h ago</span>
+</button>
+</div>
+</section>
+<!-- Direct Messages Section -->
+<section class="space-y-1.5">
+<div class="flex items-center justify-between px-1 mb-1">
+<div class="flex items-center gap-1.5">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Direct Messages</span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-surface-container text-on-surface-variant">2</span>
+</div>
+<button aria-label="Direct message settings" class="text-on-surface-variant hover:text-on-surface p-1">
+<span class="material-symbols-outlined text-[16px]">more_horiz</span>
+</button>
+</div>
+<div class="space-y-0.5">
+<!-- Sarah Chen -->
+<button class="w-full flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors duration-150 group text-left">
+<div class="flex items-center gap-2.5">
+<div class="relative">
+<span class="material-symbols-outlined text-[20px] text-outline group-hover:text-on-surface">account_circle</span>
+<span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 border border-background"></span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface">Sarah Chen</span>
+<span class="font-body-sm text-body-sm text-outline truncate max-w-[170px]">Reviewed the Figma variables</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-outline">12m</span>
+</button>
+<!-- Marcus Vance -->
+<button class="w-full flex items-center justify-between px-space-sm py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors duration-150 group text-left">
+<div class="flex items-center gap-2.5">
+<div class="relative">
+<span class="material-symbols-outlined text-[20px] text-outline group-hover:text-on-surface">account_circle</span>
+<span class="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-outline-variant border border-background"></span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface">Marcus Vance</span>
+<span class="font-body-sm text-body-sm text-outline truncate max-w-[170px]">Flow state sync at 4pm</span>
+</div>
+</div>
+<span class="font-label-sm text-label-sm text-outline">2h</span>
+</button>
+</div>
+</section>
+<!-- Productivity Note Pill: Minimal Scandinavian Notice -->
+<div class="bg-surface-container-low/60 rounded-xl p-3 flex items-center gap-3 border border-surface-variant/40">
+<span class="material-symbols-outlined text-outline text-[18px]">self_improvement</span>
+<div class="text-on-surface-variant font-body-sm text-body-sm">
+          Deep work threshold active. Notifications held until next intentional break.
+        </div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile Destination Shell) -->
+<!-- Prohibits border lines per design instructions; uses clean tonal shift & ambient halo -->
+<nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40 bg-surface-container-lowest/95 backdrop-blur-md px-space-md py-2.5 flex items-center justify-around shadow-[0_-8px_24px_rgba(20,27,43,0.03)] border-t border-surface-variant/40">
+<!-- Threads Nav -->
+<button class="flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-on-surface transition-colors focus:outline-none">
+<span class="material-symbols-outlined text-[22px]">forum</span>
+<span class="font-label-sm text-label-sm font-medium">Threads</span>
+</button>
+<!-- Channels (Active Destination) -->
+<button class="flex flex-col items-center gap-1 py-1 px-3 text-primary font-medium transition-colors focus:outline-none">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">view_kanban</span>
+<span class="font-label-sm text-label-sm font-semibold text-primary">Channels</span>
+</button>
+<!-- Voice Space -->
+<button class="flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-on-surface transition-colors focus:outline-none relative">
+<div class="relative">
+<span class="material-symbols-outlined text-[22px]">graphic_eq</span>
+<span class="absolute top-0 right-0 w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+</div>
+<span class="font-label-sm text-label-sm font-medium">Voice</span>
+</button>
+<!-- Profile/Settings -->
+<button class="flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-on-surface transition-colors focus:outline-none">
+<span class="material-symbols-outlined text-[22px]">settings</span>
+<span class="font-label-sm text-label-sm font-medium">Settings</span>
+</button>
+</nav>
+</div>
+</body></html>
