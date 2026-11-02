@@ -178,7 +178,7 @@ describe("migrations", () => {
     const { tmpdir } = await import("node:os");
     const { join } = await import("node:path");
 
-    const dir = join(tmpdir(), `hush-mig-${Date.now()}`);
+    const dir = join(tmpdir(), `stilora-mig-${Date.now()}`);
     await mkdir(join(dir, "meta"), { recursive: true });
     await writeFile(
       join(dir, "meta", "_journal.json"),
@@ -187,7 +187,7 @@ describe("migrations", () => {
     await writeFile(join(dir, "9999_orphan.sql"), "SELECT 1;");
     // note: 9999_orphan.down.sql deliberately missing
 
-    await db.execute(sql`INSERT INTO hush_migrations (tag) VALUES ('9999_orphan')`);
+    await db.execute(sql`INSERT INTO stilora_migrations (tag) VALUES ('9999_orphan')`);
     try {
       let message = "";
       try {
@@ -198,7 +198,7 @@ describe("migrations", () => {
       expect(message).toContain("Missing down migration");
       expect(message).toContain("9999_orphan");
     } finally {
-      await db.execute(sql`DELETE FROM hush_migrations WHERE tag = '9999_orphan'`);
+      await db.execute(sql`DELETE FROM stilora_migrations WHERE tag = '9999_orphan'`);
       await rm(dir, { recursive: true, force: true });
     }
   });

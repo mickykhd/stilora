@@ -105,7 +105,7 @@ describe("S3 SigV4 presigner (pure computation, fixed clock)", () => {
     mode: "s3" as const,
     endpoint: "https://acct.r2.cloudflarestorage.com",
     region: "auto",
-    bucket: "hush-uploads",
+    bucket: "stilora-uploads",
     accessKeyId: "AKIDEXAMPLE",
     secretAccessKey: "wJalrXUtnFEMI/K7MDENG+bPxRfiCYEXAMPLEKEY",
     maxUploadBytes: 26_214_400,
@@ -122,7 +122,7 @@ describe("S3 SigV4 presigner (pure computation, fixed clock)", () => {
 
     const url = new URL(signed.uploadUrl);
     expect(url.origin).toBe("https://acct.r2.cloudflarestorage.com");
-    expect(url.pathname).toBe("/hush-uploads/uploads/u1/2026/06/file%20name.png");
+    expect(url.pathname).toBe("/stilora-uploads/uploads/u1/2026/06/file%20name.png");
 
     const q = url.searchParams;
     expect(q.get("X-Amz-Algorithm")).toBe("AWS4-HMAC-SHA256");

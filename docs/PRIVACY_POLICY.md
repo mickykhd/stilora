@@ -1,8 +1,8 @@
-# Privacy Policy — Hush
+# Privacy Policy — Stilora
 
 **Last updated:** 2026-11-02
 
-Hush is an open-source communication app. This policy explains what we
+Stilora is an open-source communication app. This policy explains what we
 collect, what we don't, and your choices. It is written to satisfy platform
 requirements — Android App Links verification and app-store reviews —
 while staying honest about a small, open project.
@@ -23,13 +23,13 @@ while staying honest about a small, open project.
   advertise against your content. Messages are processed to deliver them —
   nothing more.
 - **No voice recordings.** Voice/video streams are relayed, never recorded
-  or stored by Hush.
+  or stored by Stilora.
 - **No location, contacts, or advertising identifiers.**
 - **No tracking SDKs / analytics.** Crash reporting is opt-in per build.
 
 ## Encryption
 
-Hush encrypts data **in transit** (TLS) and **at rest** (database and
+Stilora encrypts data **in transit** (TLS) and **at rest** (database and
 storage encryption provided by our infrastructure). We do not claim
 end-to-end encryption for group channels in this version.
 
@@ -47,7 +47,7 @@ periodically). Backups age out on a rolling schedule.
 
 ## Children
 
-Hush is not directed at children under 13 (or the minimum age in your
+Stilora is not directed at children under 13 (or the minimum age in your
 region).
 
 ## Changes

@@ -23,7 +23,7 @@ import * as schema from "../src/db/schema";
 export const TEST_ENV: Record<string, string> = {
   NODE_ENV: "test",
   // Never dialled — createTestApp() injects a PGlite-backed drizzle instance.
-  DATABASE_URL: "postgres://hush@localhost:5432/hush",
+  DATABASE_URL: "postgres://stilora@localhost:5432/stilora",
   BETTER_AUTH_SECRET: "test-secret-must-be-at-least-32-chars!!",
   BETTER_AUTH_URL: "http://localhost:3000",
   ALLOWED_ORIGINS: "http://localhost:5173",

@@ -27,11 +27,11 @@ jobs:
           cache: true
 
       - name: Flutter pub get
-        working-directory: hush
+        working-directory: stilora
         run: flutter pub get
 
       - name: Build Windows release
-        working-directory: hush
+        working-directory: stilora
         run: flutter build windows --release
         env:
           # Some plugins build in separate vcxproj scopes — pass the
@@ -40,9 +40,9 @@ jobs:
 
       - name: Package as zip
         shell: pwsh
-        run: Compress-Archive -Path hush/build/windows/x64/runner/Release/* -DestinationPath hush-windows-x64.zip -Force
+        run: Compress-Archive -Path stilora/build/windows/x64/runner/Release/* -DestinationPath stilora-windows-x64.zip -Force
 
       - name: Upload to release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release upload "${{ inputs.tag }}" hush-windows-x64.zip --clobber
+        run: gh release upload "${{ inputs.tag }}" stilora-windows-x64.zip --clobber

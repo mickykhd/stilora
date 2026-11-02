@@ -1,5 +1,5 @@
 ---
-name: Hush
+name: Stilora
 colors:
   # ── Light theme (source of truth — matches all mockups) ──
   surface: '#f9f9ff'
@@ -189,7 +189,7 @@ breakpoints:
 
 ## Brand
 
-**Hush.** One name everywhere: window titles, app bars, footers, docs, store
+**Stilora.** One name everywhere: window titles, app bars, footers, docs, store
 listings. Workspace names (e.g. "Studio Flow") are *sample data*, never brand.
 Logo mark: the `grain` glyph on a primary chip — identical on every screen.
 Legal/security copy uses **"Encrypted in transit & at rest"** — we never claim
@@ -197,7 +197,7 @@ end-to-end encryption.
 
 ## Brand & Style
 
-Hush is an ultra-reductive, Scandinavian-inspired communication workspace
+Stilora is an ultra-reductive, Scandinavian-inspired communication workspace
 engineered for uninterrupted cognitive flow. Attention is a finite, precious
 resource. The visual voice is quiet, measured, deliberate — no notification
 clutter, no decorative embellishment, no skeuomorphic excess; breathable

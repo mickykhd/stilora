@@ -187,7 +187,7 @@ export function createApp(deps: CreateAppDeps = {}): Hono<AppEnv> {
   app.onError((err, c) => {
     const requestId = c.get("requestId") ?? "-";
     console.error(
-      `[hush-api] ${requestId} ${c.req.method} ${c.req.path} -> 500`,
+      `[stilora-api] ${requestId} ${c.req.method} ${c.req.path} -> 500`,
       err instanceof Error ? (err.stack ?? err.message) : err,
     );
     return fail(c, 500, "internal server error");

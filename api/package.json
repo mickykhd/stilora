@@ -1,7 +1,7 @@
 {
-  "name": "hush-api",
+  "name": "stilora-api",
   "version": "0.1.0",
-  "description": "Backend for Hush — an open-source calm communication workspace (workspaces, channels, threads, DMs, reactions, pins, voice rooms).",
+  "description": "Backend for Stilora — an open-source calm communication workspace (workspaces, channels, threads, DMs, reactions, pins, voice rooms).",
   "type": "module",
   "license": "MIT",
   "private": false,

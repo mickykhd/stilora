@@ -1,4 +1,4 @@
-# Hush — Release QA Checklist (the release gate)
+# Stilora — Release QA Checklist (the release gate)
 
 Nothing tags without every box checked. Automated parts run in CI; the
 manual parts are for a human on real hardware.

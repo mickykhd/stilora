@@ -2,7 +2,7 @@
  * Migration runner.
  *
  * - `up`    applies every drizzle/meta/_journal.json entry that has not been
- *            applied yet (tracked in `hush_migrations`).
+ *            applied yet (tracked in `stilora_migrations`).
  * - `down`  rolls back applied entries in reverse order using the hand-written
  *            `drizzle/<tag>.down.sql` files (drizzle-kit has no down
  *            migrations of its own — see README).
@@ -36,7 +36,7 @@ export interface MigrationFile {
 }
 
 const TRACKING_DDL = sql`
-  CREATE TABLE IF NOT EXISTS hush_migrations (
+  CREATE TABLE IF NOT EXISTS stilora_migrations (
     tag TEXT PRIMARY KEY,
     applied_at TIMESTAMPTZ NOT NULL DEFAULT now()
   )
@@ -61,7 +61,7 @@ export async function loadMigrations(dir: string = DEFAULT_DIR): Promise<Migrati
 
 async function appliedTags(db: DB): Promise<Set<string>> {
   await db.execute(TRACKING_DDL);
-  const rows = resultRows<{ tag: string }>(await db.execute(sql`SELECT tag FROM hush_migrations`));
+  const rows = resultRows<{ tag: string }>(await db.execute(sql`SELECT tag FROM stilora_migrations`));
   return new Set(rows.map((r) => r.tag));
 }
 
@@ -77,7 +77,7 @@ export async function applyMigrations(db: DB, dir: string = DEFAULT_DIR): Promis
       for (const statement of statements) {
         await tx.execute(sql.raw(statement));
       }
-      await tx.execute(sql`INSERT INTO hush_migrations (tag) VALUES (${file.tag})`);
+      await tx.execute(sql`INSERT INTO stilora_migrations (tag) VALUES (${file.tag})`);
     });
     ran.push(file.tag);
   }
@@ -107,7 +107,7 @@ export async function rollbackMigrations(db: DB, dir: string = DEFAULT_DIR): Pro
       for (const statement of statements) {
         await tx.execute(sql.raw(statement));
       }
-      await tx.execute(sql`DELETE FROM hush_migrations WHERE tag = ${file.tag}`);
+      await tx.execute(sql`DELETE FROM stilora_migrations WHERE tag = ${file.tag}`);
     });
     reverted.push(file.tag);
   }

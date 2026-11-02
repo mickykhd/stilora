@@ -4,7 +4,7 @@
  *  - POST /api/voice/token  {channelId} → room access token
  *  - GET  /api/voice/state  ?channelId=  → current participants
  *
- * A voice room is 1:1 with a channel (room name = `hush-channel-<id>`), so the
+ * A voice room is 1:1 with a channel (room name = `stilora-channel-<id>`), so the
  * channel ACL (requireChannelMember) governs access. The participant identity
  * is ALWAYS the session user id — clients cannot mint tokens for someone else.
  *
@@ -22,7 +22,7 @@ const tokenSchema = z.object({
 
 /** LiveKit room name for a channel. Shared by both endpoints. */
 export function roomForChannel(channelId: string): string {
-  return `hush-channel-${channelId}`;
+  return `stilora-channel-${channelId}`;
 }
 
 const TOKEN_TTL_SECONDS = 600;

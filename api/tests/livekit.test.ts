@@ -172,7 +172,7 @@ describe("real livekit-server-sdk minter (offline — pure JWT signing)", () => 
     const token = await minter.mint({
       identity: "user-abc",
       name: "Ada Lovelace",
-      room: "hush-channel-123",
+      room: "stilora-channel-123",
       ttlSeconds: 300,
     });
 
@@ -188,7 +188,7 @@ describe("real livekit-server-sdk minter (offline — pure JWT signing)", () => 
     };
     expect(payload.sub).toBe("user-abc");
     expect(payload.name).toBe("Ada Lovelace");
-    expect(payload.video?.room).toBe("hush-channel-123");
+    expect(payload.video?.room).toBe("stilora-channel-123");
     expect(payload.video?.roomJoin).toBe(true);
     expect(payload.video?.canPublish).toBe(true);
     expect(payload.video?.canSubscribe).toBe(true);
@@ -238,8 +238,8 @@ describe("participant mapping helpers", () => {
       },
     );
 
-    const state = await provider.getState("hush-channel-abc");
-    expect(state.room).toBe("hush-channel-abc");
+    const state = await provider.getState("stilora-channel-abc");
+    expect(state.room).toBe("stilora-channel-abc");
     expect(state.participants).toHaveLength(2);
     expect(state.startedAt).toBe("2026-01-01T00:00:00.000Z"); // earliest join
     expect(state.participants.find((p) => p.identity === "early")?.name).toBe("Early Bird");

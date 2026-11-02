@@ -1,11 +1,11 @@
-# Contributing to Hush
+# Contributing to Stilora
 
 Thanks for helping keep communication calm. 🕊
 
 ## Ground rules
 
 1. **DESIGN.md is law.** Visual changes start in `aura/DESIGN.md`; code
-   follows tokens in `hush/lib/src/theme/tokens.dart`. Never let them drift —
+   follows tokens in `stilora/lib/src/theme/tokens.dart`. Never let them drift —
    goldens will fail.
 2. **No gate, no merge.** CI blocks on: `flutter analyze` (zero issues),
    `flutter test` (all 80), golden diff, `bun run typecheck`,
@@ -20,7 +20,7 @@ Thanks for helping keep communication calm. 🕊
 
 ```bash
 # App
-cd hush && flutter pub get && flutter test
+cd stilora && flutter pub get && flutter test
 
 # API
 cd api && bun install && bun test
@@ -49,9 +49,9 @@ avatars`, `feat(threads): reply view`, `chore(ci): add gitleaks`.
 
 | Change | Files |
 |---|---|
-| Colors / type / spacing | `aura/DESIGN.md` → `hush/lib/src/theme/tokens.dart` |
-| Motion | `hush/lib/src/theme/motion.dart` |
-| Reusable widgets | `hush/lib/src/widgets/` |
-| Screens | `hush/lib/src/screens/` |
+| Colors / type / spacing | `aura/DESIGN.md` → `stilora/lib/src/theme/tokens.dart` |
+| Motion | `stilora/lib/src/theme/motion.dart` |
+| Reusable widgets | `stilora/lib/src/widgets/` |
+| Screens | `stilora/lib/src/screens/` |
 | API endpoints | `api/src/routes/*.routes.ts` (+ tests!) |
 | Security rules | `api/src/auth/middleware.ts` (touch carefully) |

@@ -15,7 +15,7 @@ jobs:
     name: Flutter (analyze · tests · goldens)
     runs-on: ubuntu-latest
     defaults:
-      run: { working-directory: hush }
+      run: { working-directory: stilora }
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -84,7 +84,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with: { channel: stable }
       - name: Flutter dependency audit
-        working-directory: hush
+        working-directory: stilora
         run: |
           flutter pub get
           dart pub audit --exit-code || true   # advisory tool; hard-fail reserved for API deps

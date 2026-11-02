@@ -1,6 +1,6 @@
-# Hush API
+# Stilora API
 
-Backend for **Hush** — an open-source, *calm* communication workspace.
+Backend for **Stilora** — an open-source, *calm* communication workspace.
 Slack-like primitives (workspaces, channels, threads, DMs, reactions, pins,
 voice rooms) behind a small, strict, fully self-hostable API.
 
@@ -25,7 +25,7 @@ Smoke test it:
 
 ```bash
 curl http://localhost:3000/api/health
-# {"data":{"status":"ok","service":"hush-api","database":"up",...}}
+# {"data":{"status":"ok","service":"stilora-api","database":"up",...}}
 
 # Create an account (email + password — our own DB) and get a session:
 curl -X POST http://localhost:3000/api/auth/sign-up/email \

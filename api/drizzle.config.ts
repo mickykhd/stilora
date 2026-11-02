@@ -10,7 +10,7 @@ export default defineConfig({
   dbCredentials: {
     url:
       process.env.DATABASE_URL ??
-      "postgres://hush:hush@localhost:5432/hush",
+      "postgres://stilora:stilora@localhost:5432/stilora",
   },
   strict: true,
   verbose: true,

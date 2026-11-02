@@ -21,7 +21,7 @@ export function startServer(port: number = config.port): ReturnType<typeof Bun.s
     hostname: "0.0.0.0",
     fetch: app.fetch,
   });
-  console.log(`[hush-api] listening on http://localhost:${server.port} (${config.nodeEnv})`);
+  console.log(`[stilora-api] listening on http://localhost:${server.port} (${config.nodeEnv})`);
   return server;
 }
 

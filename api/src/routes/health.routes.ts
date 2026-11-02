@@ -24,7 +24,7 @@ export function healthRoutes(ctx: AppContext): Hono<AppEnv> {
       c,
       {
         status: up ? "ok" : "degraded",
-        service: "hush-api",
+        service: "stilora-api",
         database,
         uptimeSeconds: Math.round(process.uptime()),
         time: new Date().toISOString(),

@@ -1,17 +1,17 @@
-# Terms of Service — Hush
+# Terms of Service — Stilora
 
 **Last updated:** 2026-11-02
 
-## 1. What Hush is
+## 1. What Stilora is
 
-Hush is an open-source communication workspace provided free of charge,
+Stilora is an open-source communication workspace provided free of charge,
 "As Is". It is maintained by contributors in their spare time.
 
 ## 2. Your account
 
 - Provide accurate sign-in details; you're responsible for activity under
   your account.
-- Don't use Hush for harassment, spam, malware, or anything illegal.
+- Don't use Stilora for harassment, spam, malware, or anything illegal.
 - Workspaces you create are yours — admins can remove members and content.
 
 ## 3. Your content
@@ -30,7 +30,7 @@ repository README).
 ## 5. Liability
 
 To the maximum extent permitted by law, contributors are not liable for
-damages arising from use of Hush.
+damages arising from use of Stilora.
 
 ## 6. Open source
 

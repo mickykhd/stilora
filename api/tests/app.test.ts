@@ -44,7 +44,7 @@ describe("GET /api/health", () => {
       time: string;
     }>(res);
     expect(d.status).toBe("ok");
-    expect(d.service).toBe("hush-api");
+    expect(d.service).toBe("stilora-api");
     expect(d.database).toBe("up");
     expect(d.uptimeSeconds).toBeGreaterThanOrEqual(0);
     expect(Number.isNaN(Date.parse(d.time))).toBe(false);

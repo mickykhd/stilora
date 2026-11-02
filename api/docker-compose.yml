@@ -1,24 +1,24 @@
-# Local development database for Hush.
+# Local development database for Stilora.
 # Usage: docker compose up -d
 # Then:  cp .env.example .env && bun run db:migrate
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: hush-postgres
+    container_name: stilora-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: hush
-      POSTGRES_PASSWORD: hush
-      POSTGRES_DB: hush
+      POSTGRES_USER: stilora
+      POSTGRES_PASSWORD: stilora
+      POSTGRES_DB: stilora
     ports:
       - "5432:5432"
     volumes:
-      - hush_pgdata:/var/lib/postgresql/data
+      - stilora_pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U hush -d hush"]
+      test: ["CMD-SHELL", "pg_isready -U stilora -d stilora"]
       interval: 5s
       timeout: 3s
       retries: 10
 
 volumes:
-  hush_pgdata:
+  stilora_pgdata:
