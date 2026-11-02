@@ -293,35 +293,59 @@ describe("POST /api/workspaces/:id/join (invite code)", () => {
   });
 });
 
-describe("magic link inbox", () => {
-  test("stays capped at 50 entries; unknown emails resolve to null", async () => {
-    const { magicLinkInboxSize, takeMagicLink } = await import("../src/auth/auth");
-
-    for (let i = 0; i < 55; i++) {
-      const email = uniqueEmail("flood");
-      const res = await req(t, "/api/auth/sign-in/magic-link", {
-        method: "POST",
-        body: { email, name: "Flood", callbackURL: "/" },
-      });
-      expect(res.status).toBe(200);
-    }
-    expect(magicLinkInboxSize()).toBeLessThanOrEqual(50);
-    expect(takeMagicLink("ghost@example.com")).toBeNull();
-  });
-});
-
-describe("Google provider is optional", () => {
-  test("app boots and serves sessions without GOOGLE_CLIENT_ID/SECRET", async () => {
-    const noGoogle = await createTestApp({
-      GOOGLE_CLIENT_ID: "",
-      GOOGLE_CLIENT_SECRET: "",
+describe("Email + password auth (our own database)", () => {
+  test("sign-up creates the account and returns a working session", async () => {
+    const email = uniqueEmail("signup");
+    const res = await req(t, "/api/auth/sign-up/email", {
+      method: "POST",
+      body: { email, password: "choose-a-good-password", name: "Sign Up" },
     });
-    try {
-      expect(noGoogle.config.google).toBeNull();
-      const res = await req(noGoogle, "/api/auth/get-session");
-      expect(res.status).toBe(200); // auth stack fully functional without Google
-    } finally {
-      await noGoogle.close();
-    }
+    expect(res.status).toBe(200);
+    const cookie = res.headers
+      .getSetCookie()
+      .find((c) => c.includes("session_token"))
+      ?.split(";")[0];
+    expect(cookie).toBeTruthy();
+
+    const session = await req(t, "/api/auth/get-session", { cookie: cookie ?? "" });
+    expect(session.status).toBe(200);
+    expect(((await session.json()) as { user?: { email: string } }).user?.email).toBe(email);
+  });
+
+  test("sign-in rejects a wrong password with 401", async () => {
+    const email = uniqueEmail("wrongpw");
+    await req(t, "/api/auth/sign-up/email", {
+      method: "POST",
+      body: { email, password: "correct-password-1", name: "P" },
+    });
+    const res = await req(t, "/api/auth/sign-in/email", {
+      method: "POST",
+      body: { email, password: "not-the-password" },
+    });
+    expect(res.status).toBe(401);
+  });
+
+  test("sign-in accepts the right password and issues a session", async () => {
+    const email = uniqueEmail("rightpw");
+    await req(t, "/api/auth/sign-up/email", {
+      method: "POST",
+      body: { email, password: "correct-password-1", name: "P" },
+    });
+    const res = await req(t, "/api/auth/sign-in/email", {
+      method: "POST",
+      body: { email, password: "correct-password-1" },
+    });
+    expect(res.status).toBe(200);
+    expect(
+      res.headers.getSetCookie().some((c) => c.includes("session_token")),
+    ).toBe(true);
+  });
+
+  test("passwords shorter than 8 characters are rejected", async () => {
+    const res = await req(t, "/api/auth/sign-up/email", {
+      method: "POST",
+      body: { email: uniqueEmail("short"), password: "short", name: "S" },
+    });
+    expect(res.status).toBeGreaterThanOrEqual(400);
   });
 });

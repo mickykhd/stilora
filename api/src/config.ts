@@ -21,8 +21,6 @@ export const LIMITS = {
   pageMax: 100,
   /** Session lifetime in seconds (7 days). */
   sessionTtl: 7 * 24 * 60 * 60,
-  /** Magic-link token validity in seconds. */
-  magicLinkTtl: 300,
   /** Invite validity in hours. */
   inviteDefaultTtlHours: 7 * 24,
 } as const;
@@ -55,9 +53,6 @@ const rawEnvSchema = z.object({
   BETTER_AUTH_SECRET: z.preprocess(emptyToUndefined, z.string().optional()),
   BETTER_AUTH_URL: z.preprocess(emptyToUndefined, z.string().optional()),
 
-  GOOGLE_CLIENT_ID: optionalString,
-  GOOGLE_CLIENT_SECRET: optionalString,
-
   ABLY_API_KEY: optionalString,
 
   LIVEKIT_URL: optionalString,
@@ -87,11 +82,6 @@ const rawEnvSchema = z.object({
   PORT: envInt(3000, 1, 65_535),
 });
 
-export interface GoogleConfig {
-  clientId: string;
-  clientSecret: string;
-}
-
 export interface LiveKitConfig {
   url: string;
   apiKey: string;
@@ -120,7 +110,6 @@ export interface Config {
   databaseUrl: string;
   betterAuthSecret: string;
   betterAuthUrl: string;
-  google: GoogleConfig | null;
   ablyApiKey: string | null;
   livekit: LiveKitConfig | null;
   storage: StorageConfig;
@@ -176,13 +165,6 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     }
   }
 
-  // Google OAuth: both or neither.
-  if (Boolean(e.GOOGLE_CLIENT_ID) !== Boolean(e.GOOGLE_CLIENT_SECRET)) {
-    problems.push(
-      "env.GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET: provide both to enable Google sign-in, or neither",
-    );
-  }
-
   // LiveKit: all three or none.
   const livekitParts = [e.LIVEKIT_URL, e.LIVEKIT_API_KEY, e.LIVEKIT_API_SECRET];
   const livekitCount = livekitParts.filter(Boolean).length;
@@ -233,10 +215,6 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     databaseUrl: e.DATABASE_URL as string,
     betterAuthSecret: e.BETTER_AUTH_SECRET as string,
     betterAuthUrl: (e.BETTER_AUTH_URL as string).replace(/\/+$/, ""),
-    google:
-      e.GOOGLE_CLIENT_ID && e.GOOGLE_CLIENT_SECRET
-        ? { clientId: e.GOOGLE_CLIENT_ID, clientSecret: e.GOOGLE_CLIENT_SECRET }
-        : null,
     ablyApiKey: e.ABLY_API_KEY ?? null,
     livekit:
       e.LIVEKIT_URL && e.LIVEKIT_API_KEY && e.LIVEKIT_API_SECRET

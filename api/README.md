@@ -27,17 +27,22 @@ Smoke test it:
 curl http://localhost:3000/api/health
 # {"data":{"status":"ok","service":"hush-api","database":"up",...}}
 
-# Magic-link sign-in (dev sender prints the link to the server console):
-curl -X POST http://localhost:3000/api/auth/sign-in/magic-link \
+# Create an account (email + password — our own DB) and get a session:
+curl -X POST http://localhost:3000/api/auth/sign-up/email \
   -H 'content-type: application/json' \
-  -d '{"email":"you@example.com","name":"You"}'
+  -d '{"email":"you@example.com","password":"choose-a-good-password","name":"You"}'
+
+# Sign back in:
+curl -X POST http://localhost:3000/api/auth/sign-in/email \
+  -H 'content-type: application/json' \
+  -d '{"email":"you@example.com","password":"choose-a-good-password"}'
 ```
 
 Run the test suite (zero external services — PGlite in-process Postgres,
 in-memory event bus, fakes for LiveKit/storage):
 
 ```bash
-bun test                  # 332 tests
+bun test                  # 334 tests
 bun run test:coverage     # + coverage report
 bun run typecheck         # tsc --noEmit, strict mode
 ```
@@ -54,7 +59,8 @@ src/
   http.ts           {data} / {error,status} envelopes, cursor + body helpers
   context.ts        AppContext dependency bundle + Hono context types
   db/               drizzle client factory, schema, migration runner (up AND down)
-  auth/             Better Auth config (magic link + Google) and THE security
+  auth/             Better Auth config (email + password only — no OAuth,
+                    no magic links) and THE security
                     boundary middlewares (requireAuth / requireWorkspaceMember /
                     requireChannelMember / requireMessageAccess / requireMessageAuthor)
   ratelimit/        in-process token buckets (auth / per-route / global, per IP)
@@ -99,7 +105,6 @@ Responses are always either `{"data": ...}` or `{"error": "...", "status": N}`
 | `DATABASE_URL` | ✅ | — | Postgres connection string (local docker-compose or Neon, `?sslmode=require`) |
 | `BETTER_AUTH_SECRET` | ✅ | — | ≥ 32 chars; `openssl rand -base64 32` |
 | `BETTER_AUTH_URL` | ✅ | — | Public base URL of the API, e.g. `https://api.example.com` (its origin is always CORS-allowed) |
-| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | — | — | Google OAuth (both or neither; magic link works without) |
 | `ABLY_API_KEY` | — | — | Enables the Ably REST event bus; without it realtime is a no-op |
 | `LIVEKIT_URL` / `LIVEKIT_API_KEY` / `LIVEKIT_API_SECRET` | — | — | Voice rooms; all three or none (else `/api/voice/*` → 503) |
 | `STORAGE_MODE` | — | `local` | `local` = no-op signer, `s3` = SigV4 presigned PUT URLs |
@@ -128,7 +133,7 @@ admin/owner role.
 | Method | Path | Auth | Description |
 |---|---|---|---|
 | GET | `/api/health` | 🔓 | Liveness + database status (exempt from rate limits) |
-| * | `/api/auth/*` | 🔓 | Better Auth: magic-link sign-in/verify, Google OAuth, get-session, sign-out |
+| * | `/api/auth/*` | 🔓 | Better Auth: sign-up/sign-in (email + password), get-session, sign-out |
 | GET | `/api/workspaces` | 🛂 | List my workspaces (+ `inviteCode` for admin+) |
 | POST | `/api/workspaces` | 🛂 | Create workspace (caller becomes owner) |
 | GET | `/api/workspaces/:workspaceId` | 🛂 | Workspace detail |
@@ -183,8 +188,8 @@ bun run test:coverage   # with coverage report
   WASM) via `drizzle-orm/pglite`. `tests/helpers.ts` applies the *real*
   migration SQL on every app instance, so the suite also proves migrations on
   a clean Postgres. No Docker needed for tests.
-* **Auth:** the real Better Auth magic-link flow over HTTP; the "email" is
-  captured in-process (`src/auth/auth.ts` inbox) — nothing is sent anywhere.
+* **Auth:** the real Better Auth email+password flow over HTTP — accounts
+  are created and verified against our own Postgres, nothing external.
 * **Realtime/Voice/Storage:** `MemoryBus`, injected LiveKit fakes, local
   no-op signer. The real `livekit-server-sdk` JWT signing and the SigV4
   presigner are pure computation and are unit-tested offline too.
@@ -193,7 +198,7 @@ bun run test:coverage   # with coverage report
   checked **in the database**, CORS deny), `migrations.test.ts`
   (up → assert indexes → down → up idempotent), plus one file per resource.
 
-Current numbers: **332 tests, ~98% line coverage overall,
+Current numbers: **334 tests, ~98% line coverage overall,
 `src/auth/middleware.ts` at 100%.**
 
 ---
@@ -212,9 +217,8 @@ Current numbers: **332 tests, ~98% line coverage overall,
    DATABASE_URL="postgres://…neondb…" bun run db:migrate
    ```
 
-5. Point `BETTER_AUTH_URL` at the deployed API origin and add
-   `https://<your-app>/api/auth/callback/google` to the Google OAuth
-   credentials.
+5. Point `BETTER_AUTH_URL` at the deployed API origin. No third-party
+   OAuth configuration exists — auth is email + password only.
 
 Note: rate limiting is per-instance (in-process). Serverless instances each
 keep their own buckets — fine as a abuse damper; put a shared limiter (e.g.
@@ -239,7 +243,7 @@ bun start                     # or: bun run dev (watch mode)
 * Backups = `pg_dump` of the single database; there is no other state
   (sessions included) besides your object storage bucket if you enable uploads.
 * Everything runs offline except the integrations you explicitly configure
-  (Google OAuth, Ably, LiveKit, S3).
+  (Ably, LiveKit, S3).
 
 ---
 

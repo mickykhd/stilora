@@ -2,6 +2,15 @@
 cmake_minimum_required(VERSION 3.13)
 project(runner LANGUAGES CXX)
 
+# Keep debug/profile installs inside the build tree — the default prefix
+# (/usr/local) isn't writable for normal users and `flutter run` performs
+# an install step before launching. Release builds pass an explicit
+# -DCMAKE_INSTALL_PREFIX (the bundle dir), which this guard never overrides.
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH
+      "Install path prefix" FORCE)
+endif()
+
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
 set(BINARY_NAME "hush")

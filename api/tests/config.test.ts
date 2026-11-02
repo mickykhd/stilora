@@ -25,7 +25,6 @@ describe("loadConfig", () => {
   test("valid env parses with sensible defaults", () => {
     const config = loadConfig(BASE);
     expect(config.nodeEnv).toBe("development");
-    expect(config.google).toBeNull();
     expect(config.ablyApiKey).toBeNull();
     expect(config.livekit).toBeNull();
     expect(config.storage.mode).toBe("local");
@@ -62,13 +61,10 @@ describe("loadConfig", () => {
     expectThrows({ ...BASE, BETTER_AUTH_URL: "ftp://api.example.com" }, "http(s) URL");
   });
 
-  test("empty strings are treated as unset (google half-config → error)", () => {
-    // both empty → feature simply off, no error
-    const config = loadConfig({ ...BASE, GOOGLE_CLIENT_ID: "", GOOGLE_CLIENT_SECRET: "" });
-    expect(config.google).toBeNull();
-
-    // only one set → fail fast with instructions
-    expectThrows({ ...BASE, GOOGLE_CLIENT_ID: "only-id" }, "provide both");
+  test("empty strings are treated as unset (optional toggles stay off)", () => {
+    const config = loadConfig({ ...BASE, ABLY_API_KEY: "", LIVEKIT_URL: "" });
+    expect(config.ablyApiKey).toBeNull();
+    expect(config.livekit).toBeNull();
   });
 
   test("partial LiveKit config → fail fast", () => {

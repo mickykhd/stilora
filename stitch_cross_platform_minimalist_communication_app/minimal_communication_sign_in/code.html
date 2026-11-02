@@ -141,129 +141,31 @@
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="grain">grain</span>
 </div>
 <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight font-medium">Welcome back</h1>
-<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">Enter your details to access your workspace</p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xs">Sign in with your email and password</p>
 </div>
-<!-- Sign In Method Tabs (Unified across desktop & mobile: Magic Link / Password / Scan QR) -->
-<div class="flex p-0.5 bg-surface-container-low rounded-lg subtle-border mb-space-lg">
-<button class="flex-1 py-1.5 px-space-sm rounded-md font-label-md text-label-md bg-surface-container-lowest text-on-surface shadow-xs transition-all flex items-center justify-center gap-1.5" id="tab-magic-btn" onclick="switchMode('magic')" type="button">
-<span class="material-symbols-outlined text-base" data-icon="mail">mail</span>
-          Magic Link
-        </button>
-<button class="flex-1 py-1.5 px-space-sm rounded-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1.5" id="tab-password-btn" onclick="switchMode('password')" type="button">
-<span class="material-symbols-outlined text-base" data-icon="key">key</span>
-          Password
-        </button>
-<button class="flex-1 py-1.5 px-space-sm rounded-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1.5" id="tab-qr-btn" onclick="switchMode('qr')" type="button">
-<span class="material-symbols-outlined text-base" data-icon="qr_code_2">qr_code_2</span>
-          Scan QR
-        </button>
-</div>
-<!-- Magic Link View -->
-<div class="space-y-space-md" id="view-magic">
-<button class="w-full flex items-center justify-center gap-2 py-2 px-space-sm rounded-lg subtle-border bg-surface-container-lowest hover:bg-surface-container-low font-label-md text-label-md text-on-surface transition-colors duration-150" type="button">
-<svg class="w-4 h-4" viewbox="0 0 24 24">
-<path d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" fill="#4285F4"></path>
-<path d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z" fill="#34A853"></path>
-<path d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z" fill="#FBBC05"></path>
-<path d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z" fill="#EA4335"></path>
-</svg>
-            Continue with Google
-          </button>
-<!-- Minimal Whisper Divider -->
-<div class="relative my-space-md flex items-center justify-center">
-<div class="w-full border-t border-surface-variant/70"></div>
-<span class="bg-surface-container-lowest px-space-sm font-label-sm text-label-sm text-outline uppercase tracking-wider">or email</span>
-</div>
+<!-- Single auth method: email + password (our own database — no third-party OAuth) -->
 <form class="space-y-space-md" onsubmit="event.preventDefault();">
 <!-- Input Field: Recessed Scandinavian aesthetic -->
 <div>
-<label class="block font-label-md text-label-md text-on-surface mb-1.5" for="work-email">Work email</label>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5" for="work-email">Email</label>
 <div class="relative">
-<input class="w-full rounded-lg bg-surface-container-low border border-transparent px-space-sm py-2 text-body-md font-body-md text-on-surface placeholder-outline focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all duration-150" id="work-email" placeholder="name@company.com" type="email"/>
+<input autocomplete="username" class="w-full rounded-lg bg-surface-container-low border border-transparent px-space-sm py-2 text-body-md font-body-md text-on-surface placeholder-outline focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all duration-150" id="work-email" placeholder="name@company.com" type="email"/>
 </div>
-</div>
-<!-- Primary Submit CTA -->
-<button class="w-full py-2.5 px-space-md rounded-lg bg-primary-container hover:opacity-95 text-on-primary font-label-md text-label-md flex items-center justify-center gap-space-xs transition-opacity duration-150" type="submit">
-<span id="btn-text">Send magic link</span>
-<span class="material-symbols-outlined text-base" data-icon="arrow_forward">arrow_forward</span>
-</button>
-</form>
-</div>
-<!-- Password View -->
-<div class="hidden space-y-space-md" id="view-password">
-<form class="space-y-space-md" onsubmit="event.preventDefault();">
-<div>
-<label class="block font-label-md text-label-md text-on-surface mb-1.5" for="pwd-email">Work email</label>
-<input class="w-full rounded-lg bg-surface-container-low border border-transparent px-space-sm py-2 text-body-md font-body-md text-on-surface placeholder-outline focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all duration-150" id="pwd-email" placeholder="name@company.com" type="email"/>
 </div>
 <div>
 <div class="flex items-center justify-between mb-1.5">
 <label class="block font-label-md text-label-md text-on-surface" for="password">Password</label>
 <a class="font-label-sm text-label-sm text-outline hover:text-primary transition-colors" href="#">Forgot?</a>
 </div>
-<input class="w-full rounded-lg bg-surface-container-low border border-transparent px-space-sm py-2 text-body-md font-body-md text-on-surface placeholder-outline focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all duration-150" id="password" placeholder="••••••••••••" type="password"/>
+<input autocomplete="current-password" class="w-full rounded-lg bg-surface-container-low border border-transparent px-space-sm py-2 text-body-md font-body-md text-on-surface placeholder-outline focus:bg-surface-container-lowest focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-all duration-150" id="password" placeholder="••••••••••••" type="password"/>
 </div>
+<!-- Primary Submit CTA -->
 <button class="w-full py-2.5 px-space-md rounded-lg bg-primary-container hover:opacity-95 text-on-primary font-label-md text-label-md flex items-center justify-center gap-space-xs transition-opacity duration-150" type="submit">
 <span>Sign in</span>
 <span class="material-symbols-outlined text-base" data-icon="arrow_forward">arrow_forward</span>
 </button>
+<p class="text-center font-body-sm text-body-sm text-outline">New here? Your account is created with your workspace.</p>
 </form>
-</div>
-<!-- QR Fast Sign-in View -->
-<div class="hidden flex flex-col items-center text-center pt-space-xs space-y-space-md animate-in fade-in duration-200" id="view-qr">
-<div class="p-4 bg-surface-container-lowest subtle-border rounded-xl flex items-center justify-center relative group">
-<!-- Pristine Scalable Minimal QR Pattern -->
-<div class="w-48 h-48 bg-surface-container-low rounded-lg p-2.5 flex flex-col justify-between">
-<div class="flex justify-between">
-<div class="w-12 h-12 border-4 border-on-surface rounded-md p-1.5 flex items-center justify-center">
-<div class="w-5 h-5 bg-on-surface rounded-xs"></div>
-</div>
-<div class="flex gap-1">
-<div class="w-3 h-3 bg-on-surface rounded-xs"></div>
-<div class="w-3 h-3 bg-on-surface rounded-xs"></div>
-</div>
-<div class="w-12 h-12 border-4 border-on-surface rounded-md p-1.5 flex items-center justify-center">
-<div class="w-5 h-5 bg-on-surface rounded-xs"></div>
-</div>
-</div>
-<div class="flex justify-between items-center px-1">
-<div class="grid grid-cols-3 gap-1">
-<div class="w-2.5 h-2.5 bg-on-surface rounded-xs"></div>
-<div class="w-2.5 h-2.5 bg-transparent"></div>
-<div class="w-2.5 h-2.5 bg-on-surface rounded-xs"></div>
-</div>
-<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-<span class="material-symbols-outlined text-primary text-base" data-icon="bolt">bolt</span>
-</div>
-<div class="grid grid-cols-2 gap-1">
-<div class="w-2.5 h-2.5 bg-on-surface rounded-xs"></div>
-<div class="w-2.5 h-2.5 bg-on-surface rounded-xs"></div>
-</div>
-</div>
-<div class="flex justify-between items-end">
-<div class="w-12 h-12 border-4 border-on-surface rounded-md p-1.5 flex items-center justify-center">
-<div class="w-5 h-5 bg-on-surface rounded-xs"></div>
-</div>
-<div class="flex gap-1.5 pb-1">
-<div class="w-3 h-3 bg-on-surface rounded-xs"></div>
-<div class="w-3 h-3 bg-on-surface rounded-xs"></div>
-<div class="w-3 h-3 bg-on-surface rounded-xs"></div>
-</div>
-<div class="w-8 h-8 bg-surface-container-high rounded-md flex items-center justify-center">
-<div class="w-3.5 h-3.5 bg-on-surface rounded-xs"></div>
-</div>
-</div>
-</div>
-</div>
-<div class="space-y-1">
-<p class="font-body-sm text-body-sm text-on-surface font-medium">Scan with your mobile app</p>
-<p class="font-label-sm text-label-sm text-on-surface-variant">Open Hush &gt; Settings &gt; Quick Link</p>
-</div>
-<div class="flex items-center gap-1.5 px-space-sm py-1 rounded-full bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">
-<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-          Expiring in 01:58
-        </div>
-</div>
 <!-- Trust Footer within Card -->
 <div class="mt-space-lg pt-space-md border-t border-surface-variant/50 flex items-center justify-between text-on-surface-variant">
 <div class="flex items-center gap-1.5 font-label-sm text-label-sm">
@@ -288,24 +190,4 @@
 <span>Hush · v1.0</span>
 </div>
 </footer>
-<script>
-    function switchMode(mode) {
-      const modes = ['magic', 'password', 'qr'];
-      const baseInactive = "flex-1 py-1.5 px-space-sm rounded-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all flex items-center justify-center gap-1.5";
-      const baseActive = "flex-1 py-1.5 px-space-sm rounded-md font-label-md text-label-md bg-surface-container-lowest text-on-surface shadow-xs transition-all flex items-center justify-center gap-1.5";
-
-      modes.forEach(m => {
-        const btn = document.getElementById('tab-' + m + '-btn');
-        const view = document.getElementById('view-' + m);
-        if (!btn || !view) return;
-        if (m === mode) {
-          btn.className = baseActive;
-          view.classList.remove('hidden');
-        } else {
-          btn.className = baseInactive;
-          view.classList.add('hidden');
-        }
-      });
-    }
-  </script>
 </body></html>

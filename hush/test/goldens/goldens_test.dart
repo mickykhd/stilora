@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_toolkit/golden_toolkit.dart';
 import 'package:hush/src/data/mock_data.dart';
 import 'package:hush/src/data/repositories.dart';
-import 'package:hush/src/screens/otp_screen.dart';
 import 'package:hush/src/screens/secondary_screens.dart';
 import 'package:hush/src/screens/settings_screens.dart';
 import 'package:hush/src/screens/sign_in_screen.dart';
@@ -87,24 +86,6 @@ void main() {
           );
         });
       }
-    }
-  });
-
-  group('OTP', () {
-    for (final dark in [false, true]) {
-      testWidgets('renders ${dark ? 'dark' : 'light'}', (tester) async {
-        await pumpScreen(tester,
-            child: const OtpScreen(),
-            width: mobile.$1,
-            height: mobile.$2,
-            dark: dark);
-        await expectLater(
-          find.byType(OtpScreen),
-          matchesGoldenFile('goldens/otp_${dark ? 'dark' : 'light'}.png'),
-        );
-        // Dispose cancels the resend timer before teardown checks.
-        await tester.pumpWidget(const SizedBox());
-      });
     }
   });
 

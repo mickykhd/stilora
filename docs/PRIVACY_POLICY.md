@@ -3,15 +3,15 @@
 **Last updated:** 2026-11-02
 
 Hush is an open-source communication app. This policy explains what we
-collect, what we don't, and your choices. It is written to satisfy Google
-OAuth verification, Android App Links verification, and app-store
-requirements — while staying honest about a small, open project.
+collect, what we don't, and your choices. It is written to satisfy platform
+requirements — Android App Links verification and app-store reviews —
+while staying honest about a small, open project.
 
 ## What we collect
 
 | Data | Why | Where |
 |---|---|---|
-| Email address | Sign you in (magic link / Google) | Auth database (Neon Postgres) |
+| Email address + password | Sign you in (stored hashed in our own database) | Auth database (Neon Postgres) |
 | Display name, workspace membership | Show you in workspaces and messages | App database |
 | Messages, files you send | The core service | App database + object storage |
 | Mic/camera audio & video | Only while you are in a voice/video room; transmitted live to other participants | Peer-to-peer / LiveKit media servers — **not stored** |
