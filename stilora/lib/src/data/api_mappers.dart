@@ -62,6 +62,7 @@ abstract final class ApiMappers {
         name: '${m['name']}',
         initials: initials('${m['name']}'),
         onlineCount: 0, // presence is realtime-layer; API has no presence yet
+        inviteCode: m['inviteCode'] as String?, // admin-only field
       );
 
   // ── Channels ──────────────────────────────────────────────────

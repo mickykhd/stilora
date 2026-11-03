@@ -1,4 +1,7 @@
+import 'dart:io';
 import 'dart:math';
+
+import 'package:path_provider/path_provider.dart';
 
 import '../models/models.dart';
 import 'api_mappers.dart';
@@ -27,6 +30,7 @@ abstract class WorkspaceRepository {
   Future<String?> signUp(String email, String password, String name);
   /// Restores a persisted session (false → show sign-in).
   Future<bool> restoreSession();
+  Future<UserProfile> myProfile();
   Future<void> signOut();
 
   // ── Data ──────────────────────────────────────────────────────
@@ -65,23 +69,52 @@ class MockWorkspaceRepository implements WorkspaceRepository {
     return body();
   }
 
+  Future<File> _mockSessionFile() async {
+    final dir = await getApplicationSupportDirectory();
+    return File('${dir.path}/stilora_mock_session');
+  }
+
+  Future<void> _mockPersist() async {
+    try {
+      await (await _mockSessionFile()).writeAsString('signed-in', flush: true);
+    } catch (_) {/* best effort */}
+  }
+
   @override
   Future<String?> signIn(String email, String password) async {
     await Future<void>.delayed(latency);
     if (!email.contains('@')) return 'Enter a valid email address.';
     if (password.length < 8) return 'Password must be at least 8 characters.';
+    await _mockPersist();
     return null;
   }
+
+  @override
+  Future<UserProfile> myProfile() => _gate(() => MockData.you);
 
   @override
   Future<String?> signUp(String email, String password, String name) async =>
       signIn(email, password);
 
   @override
-  Future<bool> restoreSession() async => false;
+  Future<bool> restoreSession() async {
+    try {
+      // Local IO only — must never stall the boot splash.
+      final f = await _mockSessionFile()
+          .timeout(const Duration(seconds: 2));
+      return await f.exists();
+    } catch (_) {
+      return false;
+    }
+  }
 
   @override
-  Future<void> signOut() async {}
+  Future<void> signOut() async {
+    try {
+      final f = await _mockSessionFile();
+      if (await f.exists()) await f.delete();
+    } catch (_) {/* best effort */}
+  }
 
   @override
   Future<Workspace> currentWorkspace() => _gate(() => MockData.workspace);

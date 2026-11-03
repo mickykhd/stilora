@@ -74,6 +74,7 @@ class _WorkspaceShellState extends ConsumerState<WorkspaceShell> {
                   AuraTopBar(
                     onSearch: () => CommandPalette.show(context),
                     onToggleSettings: () => SettingsScreen.push(context),
+                    onCall: () => VoiceStageScreen.push(context),
                   ),
                   Expanded(
                     child: Row(children: [
@@ -465,6 +466,13 @@ class _ContextPane extends ConsumerWidget {
                 style: Aura.labelMd.copyWith(fontWeight: FontWeight.w600)),
           ]),
         ),
+        if (room.participants.isEmpty)
+          Padding(
+            padding: const EdgeInsets.all(Aura.spaceSm),
+            child: Text('Nobody here yet — press the call button to start.',
+                style: Aura.bodySm
+                    .copyWith(color: scheme.onSurfaceVariant)),
+          ),
         AuraEntrance.staggered(
           step: const Duration(milliseconds: 45),
           children: [

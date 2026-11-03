@@ -295,11 +295,11 @@ class _Toggle extends StatelessWidget {
 
 // ── Profile ──────────────────────────────────────────────────────
 
-class _ProfileSection extends StatelessWidget {
+class _ProfileSection extends ConsumerWidget {
   const _ProfileSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final scheme = ColorScheme.of(context);
     return AuraEntrance.staggered(
       step: const Duration(milliseconds: 60),
@@ -310,26 +310,31 @@ class _ProfileSection extends StatelessWidget {
           subtitle: 'How you appear across your workspace.',
         ),
         AuraCard(
-          child: Row(children: [
-            AuraAvatar(
-                initials: MockData.you.initials,
-                size: 64,
-                presence: MockData.you.presence.index),
-            const SizedBox(width: Aura.spaceLg),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(MockData.you.name, style: Aura.headlineSm),
-                  Text(
-                      '@${MockData.you.handle} • ${MockData.you.roleLabel}',
-                      style: Aura.bodySm
-                          .copyWith(color: scheme.onSurfaceVariant)),
-                ],
-              ),
-            ),
-            OutlinedButton(onPressed: () {}, child: const Text('Edit')),
-          ]),
+          child: FutureBuilder<UserProfile>(
+            future: ref.watch(myProfileProvider.future),
+            builder: (context, snap) {
+              final me = snap.data;
+              return Row(children: [
+                AuraAvatar(
+                    initials: me?.initials ?? '…',
+                    imageUrl: me?.avatarUrl,
+                    size: 64),
+                const SizedBox(width: Aura.spaceLg),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(me?.name ?? '…', style: Aura.headlineSm),
+                      Text('@${me?.handle ?? '…'}',
+                          style: Aura.bodySm
+                              .copyWith(color: scheme.onSurfaceVariant)),
+                    ],
+                  ),
+                ),
+                OutlinedButton(onPressed: () {}, child: const Text('Edit')),
+              ]);
+            },
+          ),
         ),
         const SizedBox(height: Aura.spaceMd),
         _SettingCard(
@@ -485,11 +490,12 @@ class _ToggleRow extends StatelessWidget {
 
 // ── Workspace & Members ──────────────────────────────────────────
 
-class _WorkspaceSection extends StatelessWidget {
+class _WorkspaceSection extends ConsumerWidget {
   const _WorkspaceSection({super.key});
 
   @override
-  Widget build(BuildContext context) => AuraEntrance.staggered(
+  Widget build(BuildContext context, WidgetRef ref) =>
+      AuraEntrance.staggered(
         step: const Duration(milliseconds: 60),
         children: [
           const _SectionHeader(
@@ -507,7 +513,9 @@ class _WorkspaceSection extends StatelessWidget {
             title: 'Invite code',
             trailing: OutlinedButton(
                 onPressed: () {}, child: const Text('Regenerate')),
-            child: SelectableText('stilora-quiet-flow-24',
+            child: SelectableText(
+                ref.watch(workspaceProvider).valueOrNull?.inviteCode ??
+                    'Ask a workspace admin for an invite',
                 style: Aura.bodyMd.copyWith(
                     fontFamily: 'Geist',
                     fontWeight: FontWeight.w600,
@@ -528,10 +536,11 @@ class _MembersSection extends ConsumerWidget {
     return AuraEntrance.staggered(
       step: const Duration(milliseconds: 55),
       children: [
-        const _SectionHeader(
+        _SectionHeader(
           eyebrow: 'Preferences',
           title: 'Members',
-          subtitle: '5 people in Studio Flow.',
+          subtitle:
+              '${members.valueOrNull?.length ?? 0} ${members.valueOrNull?.length == 1 ? 'person' : 'people'} in ${ref.watch(workspaceProvider).valueOrNull?.name ?? 'your workspace'}.',
         ),
         AuraCard(
           padding: EdgeInsets.zero,
@@ -1085,6 +1094,7 @@ class _SecuritySection extends ConsumerWidget {
                 // and return to sign-in.
                 await ref.read(workspaceRepositoryProvider).signOut();
                 ref.read(signedInProvider.notifier).state = false;
+                ref.invalidate(sessionRestoreProvider);
                 if (context.mounted) {
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 }
@@ -1412,6 +1422,10 @@ class MobileListTab extends ConsumerWidget {
                     Icon(Icons.more_horiz, size: 17, color: scheme.outline),
                   ]),
                   const SizedBox(height: Aura.spaceSm),
+                  if (list.isEmpty)
+                    Text('No conversations yet',
+                        style: Aura.bodySm
+                            .copyWith(color: scheme.outline)),
                   AuraEntrance.staggered(
                     step: const Duration(milliseconds: 40),
                     children: [

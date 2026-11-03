@@ -49,9 +49,16 @@ abstract final class MockData {
   );
 
   static final workspace =
-      Workspace(id: 'w_1', name: 'Studio Flow', initials: 'SF', onlineCount: 6);
+      Workspace(
+          id: 'w_1',
+          name: 'Studio Flow',
+          initials: 'SF',
+          onlineCount: 6,
+          inviteCode: 'stilora-quiet-flow-24');
 
-  static final members = [sarah, marcus, priya, you, tomas];
+  /// Workspace people: only YOU. No pre-added contacts/friends — new
+  /// members arrive through real sign-ups (live) or invites.
+  static final members = [you];
 
   static final channels = [
     Channel(
@@ -87,21 +94,8 @@ abstract final class MockData {
     ),
   ];
 
-  static final dms = [
-    DmConversation(
-      id: 'dm_sarah',
-      peer: sarah,
-      preview: 'Reviewed the Figma variab…',
-      timeLabel: '12m',
-      unread: true,
-    ),
-    DmConversation(
-      id: 'dm_marcus',
-      peer: marcus,
-      preview: 'Flow state sync at 4pm',
-      timeLabel: '2h',
-    ),
-  ];
+  /// No pre-seeded direct messages — conversations start when you do.
+  static final dms = <DmConversation>[];
 
   /// Messages for #design-sync (the mockup thread).
   static final designSyncMessages = [
@@ -218,11 +212,15 @@ abstract final class MockData {
     ),
   ];
 
+  /// Voice rooms start empty — no seeded participants, ever. Joining a
+  /// room adds exactly one person: you. (Presence for others arrives via
+  /// the realtime layer when wired.)
   static final voiceRoom = VoiceRoom(
     roomName: 'Voice: Design Room',
-    stateLabel: 'Connected • 3 in room',
-    participants: [sarah, marcus, you],
-    speakingIds: {'u_sarah'},
+    stateLabel: 'Not connected',
+    participants: const [],
+    connected: false,
+    speakingIds: const {},
   );
 
   /// ⌘K search fixtures.
@@ -233,8 +231,7 @@ abstract final class MockData {
     ('message', 'general', 'Welcome to Stilora. Deep work, held until you return.'),
     ('channel', 'design-sync', 'Iterating on spatial hierarchy, typography scales'),
     ('channel', 'eng-architecture', 'Systems, APIs, and structural decisions'),
-    ('person', 'Sarah Chen', 'Owner • online'),
-    ('person', 'Marcus Vance', 'Member • idle'),
-    ('person', 'Priya Raman', 'Member • online'),
+    // People: only real workspace members (no seeded contacts).
+    ('person', you.name, '${you.roleLabel} • online'),
   ];
 }

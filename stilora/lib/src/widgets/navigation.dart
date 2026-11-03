@@ -11,10 +11,16 @@ import 'primitives.dart';
 
 /// ── Top navigation bar (desktop) ────────────────────────────────
 class AuraTopBar extends ConsumerWidget {
-  const AuraTopBar({super.key, this.onSearch, this.onToggleSettings});
+  const AuraTopBar(
+      {super.key, this.onSearch, this.onToggleSettings, this.onCall});
 
   final VoidCallback? onSearch;
   final VoidCallback? onToggleSettings;
+
+  /// Desktop's primary voice entry: opens the stage (which auto-joins
+  /// a disconnected room — adding only you). The sidebar capsule only
+  /// exists while a room is connected.
+  final VoidCallback? onCall;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,7 +63,8 @@ class AuraTopBar extends ConsumerWidget {
             _AnimatedSearchField(onTap: onSearch!),
           const SizedBox(width: Aura.spaceSm),
           // Utilities
-          _HoverIconButton(icon: Icons.call, tooltip: 'Audio Call', onTap: () {}),
+          _HoverIconButton(
+              icon: Icons.call, tooltip: 'Audio Call', onTap: onCall ?? () {}),
           _HoverIconButton(
               icon: Icons.notifications_off, tooltip: 'Notifications', onTap: () {}),
           _HoverIconButton(
@@ -344,7 +351,16 @@ class AuraSideNav extends ConsumerWidget {
                           child: Icon(Icons.add, size: 15,
                               color: scheme.outline))),
                   dms.when(
-                    data: (list) => AuraEntrance.staggered(
+                    data: (list) => list.isEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: Aura.spaceSm,
+                                vertical: Aura.spaceXs),
+                            child: Text('No conversations yet',
+                                style: Aura.labelSm
+                                    .copyWith(color: scheme.outline)),
+                          )
+                        : AuraEntrance.staggered(
                       step: const Duration(milliseconds: 30),
                       children: [
                         for (final dm in list) _DmRow(dm: dm, onTap: () => onDmSelected(dm)),
@@ -365,7 +381,8 @@ class AuraSideNav extends ConsumerWidget {
               border: Border(top: BorderSide(color: scheme.surfaceContainerHighest)),
             ),
             child: Column(children: [
-              AuraPressable(
+              if (voice.connected)
+                AuraPressable(
                 onTap: onOpenVoice,
                 child: AnimatedContainer(
                   duration: Aura.durationNormal,
@@ -399,7 +416,7 @@ class AuraSideNav extends ConsumerWidget {
                         barCount: 3),
                   ]),
                 ),
-              ),
+                ),
               _NavRow(
                   icon: Icons.settings,
                   label: 'Settings',
@@ -801,7 +818,8 @@ class VoiceCapsule extends ConsumerWidget {
                       user: members[i], speaking: room.speakingIds
                           .contains(members[i].id)),
                 const SizedBox(width: 6),
-                Text('${room.participants.length} people',
+                Text('${room.participants.length} '
+                    '${room.participants.length == 1 ? 'person' : 'people'}',
                     style: Aura.labelSm
                         .copyWith(color: scheme.onSurfaceVariant)),
                 const SizedBox(width: Aura.spaceSm),
@@ -890,7 +908,7 @@ class _ParticipantPillState extends State<_ParticipantPill> {
 }
 
 /// ── Command palette (⌘K) ────────────────────────────────────────
-class CommandPalette extends StatefulWidget {
+class CommandPalette extends ConsumerStatefulWidget {
   const CommandPalette({super.key, required this.onClose});
 
   final VoidCallback onClose;
@@ -923,10 +941,10 @@ class CommandPalette extends StatefulWidget {
   }
 
   @override
-  State<CommandPalette> createState() => _CommandPaletteState();
+  ConsumerState<CommandPalette> createState() => _CommandPaletteState();
 }
 
-class _CommandPaletteState extends State<CommandPalette> {
+class _CommandPaletteState extends ConsumerState<CommandPalette> {
   final _controller = TextEditingController();
   final _focus = FocusNode();
   String _query = '';
@@ -946,13 +964,9 @@ class _CommandPaletteState extends State<CommandPalette> {
   }
 
   List<(String, String, String)> get _results {
-    final all = PaletteData.results;
-    if (_query.trim().isEmpty) return all.take(5).toList();
-    final q = _query.toLowerCase();
-    return all
-        .where((e) =>
-            e.$2.toLowerCase().contains(q) || e.$3.toLowerCase().contains(q))
-        .toList();
+    if (_query.trim().isEmpty) return const [];
+    return ref.watch(searchResultsProvider(_query)).valueOrNull ??
+        const [];
   }
 
   @override
@@ -1033,7 +1047,10 @@ class _CommandPaletteState extends State<CommandPalette> {
               child: results.isEmpty
                   ? Padding(
                       padding: const EdgeInsets.all(Aura.spaceLg),
-                      child: Text('No results for “$_query”',
+                      child: Text(
+                          _query.trim().isEmpty
+                              ? 'Type to search messages, channels, people'
+                              : 'No results for “$_query”',
                           style: Aura.bodyMd
                               .copyWith(color: scheme.onSurfaceVariant)),
                     )
@@ -1172,13 +1189,3 @@ class _ResultRowState extends State<_ResultRow> {
   }
 }
 
-abstract final class PaletteData {
-  static const results = <(String, String, String)>[
-    ('message', 'design-sync', 'I’ve uploaded the revised spatial system…'),
-    ('message', 'product', 'Launch checklist for v1.0 — stores, policy…'),
-    ('channel', 'design-sync', 'Iterating on spatial hierarchy'),
-    ('channel', 'eng-architecture', 'Systems, APIs, and structural decisions'),
-    ('person', 'Sarah Chen', 'Owner • online'),
-    ('person', 'Marcus Vance', 'Member • idle'),
-  ];
-}

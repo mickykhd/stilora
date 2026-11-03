@@ -37,6 +37,7 @@ class HttpWorkspaceRepository implements WorkspaceRepository {
 
   String? _cookie;
   String? _userId;
+  UserProfile? _me;
   Workspace? _workspace;
   Map<String, UserProfile> _users = {};
 
@@ -49,7 +50,8 @@ class HttpWorkspaceRepository implements WorkspaceRepository {
   Future<String?> _loadCookie() async {
     if (_cookie != null) return _cookie;
     try {
-      final f = await _cookieFile();
+      // Guard: a stalled platform channel must never hang boot/requests.
+      final f = await _cookieFile().timeout(const Duration(seconds: 2));
       if (await f.exists()) _cookie = (await f.readAsString()).trim();
     } catch (_) {/* no stored session */}
     return _cookie;
@@ -173,14 +175,31 @@ class HttpWorkspaceRepository implements WorkspaceRepository {
 
   Future<void> _whoAmI(Map<String, dynamic> authBody) async {
     try {
-      final user = authBody['user'];
-      if (user is Map) _userId = '${user['id']}';
-      if (_userId == null) {
+      var user = authBody['user'];
+      if (user is! Map) {
         final session = await _get('/api/auth/get-session');
-        final u = session['user'];
-        if (u is Map) _userId = '${u['id']}';
+        user = session['user'];
+      }
+      if (user is Map) {
+        _userId = '${user['id']}';
+        final email = '${user['email'] ?? ''}';
+        _me = UserProfile(
+          id: _userId!,
+          name: '${user['name'] ?? (email.isNotEmpty ? email.split('@').first : 'You')}',
+          handle: ApiMappers.handle(email.isNotEmpty ? email : '${user['name'] ?? 'you'}'),
+          avatarUrl: user['image'] as String?,
+          initials: ApiMappers.initials('${user['name'] ?? email}'),
+        );
       }
     } catch (_) {/* session id is an optimization only */}
+  }
+
+  @override
+  Future<UserProfile> myProfile() async {
+    if (_me != null) return _me!;
+    await restoreSession();
+    return _me ??
+        const UserProfile(id: 'self', name: 'You', handle: 'you');
   }
 
   @override

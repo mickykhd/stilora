@@ -70,11 +70,26 @@ class _AuthGate extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Boot-time session restore: resolves the persisted cookie (live)
+    // or flag file (mock) so a restart lands straight in the workspace.
+    final restore = ref.watch(sessionRestoreProvider);
+    ref.listen(sessionRestoreProvider, (prev, next) {
+      if (next.hasValue) {
+        ref.read(signedInProvider.notifier).state = next.value!;
+      }
+    });
     final signedIn = ref.watch(signedInProvider);
 
-    final child = signedIn
-        ? const WorkspaceShell(key: ValueKey('shell'))
-        : const SignInScreen(key: ValueKey('signin'));
+    final Widget child;
+    if (restore.isLoading && !restore.hasValue) {
+      // Still restoring — show the brand splash instead of flashing
+      // the sign-in screen for a frame.
+      child = const _BootSplash(key: ValueKey('boot'));
+    } else {
+      child = signedIn
+          ? const WorkspaceShell(key: ValueKey('shell'))
+          : const SignInScreen(key: ValueKey('signin'));
+    }
 
     // Global auth crossfade lives in AnimatedSwitcher below.
     return AnimatedSwitcher(
@@ -89,6 +104,39 @@ class _AuthGate extends ConsumerWidget {
         ),
       ),
       child: child,
+    );
+  }
+}
+
+/// Momentary brand splash shown while the persisted session restores.
+class _BootSplash extends StatelessWidget {
+  const _BootSplash({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = ColorScheme.of(context);
+    return Scaffold(
+      backgroundColor: scheme.surface,
+      body: Center(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: scheme.primary,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(Icons.graphic_eq, color: scheme.onPrimary),
+          ),
+          const SizedBox(height: Aura.spaceMd),
+          SizedBox(
+            width: 22,
+            height: 22,
+            child: CircularProgressIndicator(
+                strokeWidth: 2, color: scheme.outline),
+          ),
+        ]),
+      ),
     );
   }
 }

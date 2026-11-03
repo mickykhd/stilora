@@ -199,6 +199,13 @@ void main() {
       await _settle(tester);
 
       expect(find.byType(CommandPalette), findsOneWidget);
+      // Empty query: honest prompt, no fake fixture results.
+      expect(find.text('Type to search messages, channels, people'),
+          findsOneWidget);
+
+      // Typing queries the REAL search provider (mock repo index here).
+      await tester.enterText(find.byType(TextField), 'design-sync');
+      await tester.pump(const Duration(milliseconds: 300));
       expect(find.textContaining('design-sync'), findsWidgets);
 
       await tester.enterText(find.byType(TextField), 'zzzz-no-match');

@@ -9,6 +9,7 @@ import '../data/mock_data.dart';
 import '../data/repositories.dart';
 import '../models/models.dart';
 import '../state/providers.dart';
+import '../theme/aura_theme.dart';
 import '../theme/motion.dart';
 import '../theme/tokens.dart';
 import '../widgets/messages.dart';
@@ -107,7 +108,20 @@ class _VoiceStageScreenState extends ConsumerState<VoiceStageScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _ensureJoined());
     _requestPermissions();
+  }
+
+  void _ensureJoined() {
+    final room = ref.read(voiceRoomProvider);
+    if (!room.connected) {
+      ref.read(voiceRoomProvider.notifier).update((r) => r.copyWith(
+            connected: true,
+            participants: [MockData.you],
+            stateLabel: 'Connected • 1 in room',
+            speakingIds: const {},
+          ));
+    }
   }
 
   Future<void> _requestPermissions() async {
@@ -196,8 +210,13 @@ class _VoiceStageScreenState extends ConsumerState<VoiceStageScreen> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: Aura.surface,
+    // The stage is always a dark video environment — mirrors the
+    // category norm (calls read badly on white) while every derived
+    // color (cards, dividers, tiles, text) comes from the dark scheme.
+    return Theme(
+      data: AuraTheme.dark(),
+      child: Scaffold(
+      backgroundColor: Aura.dSurface,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(Aura.spaceMd),
@@ -232,7 +251,8 @@ class _VoiceStageScreenState extends ConsumerState<VoiceStageScreen> {
                         child: Text(
                           _connecting
                               ? 'Connecting…'
-                              : '$_timeLabel • ${room.participants.length} participants',
+                              : '$_timeLabel • ${room.participants.length} '
+                              'participant${room.participants.length == 1 ? '' : 's'}',
                           key: ValueKey(_connecting),
                           style: Aura.bodySm
                               .copyWith(color: scheme.onSurfaceVariant),
@@ -262,7 +282,7 @@ class _VoiceStageScreenState extends ConsumerState<VoiceStageScreen> {
                         style: Aura.labelMd
                             .copyWith(fontWeight: FontWeight.w600)),
                     const SizedBox(width: 8),
-                    AuraChip('Shared by Sarah', active: true),
+                    AuraChip('Live sync', active: true),
                     const Spacer(),
                     IconButton(
                         visualDensity: VisualDensity.compact,
@@ -334,8 +354,11 @@ class _VoiceStageScreenState extends ConsumerState<VoiceStageScreen> {
                 },
                 onToggleShare: () => setState(() => _sharing = !_sharing),
                 onLeave: () {
-                  ref.read(voiceRoomProvider.notifier).update((r) =>
-                      r.copyWith(connected: false, stateLabel: 'Left'));
+                  ref.read(voiceRoomProvider.notifier).update((r) => r.copyWith(
+                      connected: false,
+                      stateLabel: 'Not connected',
+                      participants: const [],
+                      speakingIds: const {}));
                   Navigator.of(context).maybePop();
                 },
                 onRetryMic: _requestPermissions,
@@ -344,7 +367,7 @@ class _VoiceStageScreenState extends ConsumerState<VoiceStageScreen> {
           ]),
         ),
       ),
-    );
+    ));
   }
 }
 
@@ -1188,6 +1211,7 @@ class _NewThreadSheetState extends ConsumerState<NewThreadSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final members = ref.watch(membersProvider);
     final scheme = ColorScheme.of(context);
     return Padding(
       padding: EdgeInsets.only(
@@ -1250,16 +1274,44 @@ class _NewThreadSheetState extends ConsumerState<NewThreadSheet> {
                             hintText:
                                 'Start a thread — pick a message to reply to'),
                       )
-                    : ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: AuraAvatar(
-                            initials: 'SC',
-                            size: 36),
-                        title: const Text('Sarah Chen'),
-                        subtitle: Text('Start a direct conversation',
-                            style: Aura.bodySm.copyWith(
-                                color: scheme.onSurfaceVariant)),
-                        onTap: () {},
+                    : members.when(
+                        loading: () => const ListTile(
+                            leading: CircularProgressIndicator(strokeWidth: 2)),
+                        error: (_, __) => ListTile(
+                            title: Text("Couldn't load people",
+                                style: Aura.bodySm)),
+                        data: (list) {
+                          final others = list
+                              .where((u) => u.handle != 'you')
+                              .toList();
+                          if (others.isEmpty) {
+                            return ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: Icon(Icons.person_add_alt,
+                                  color: scheme.outline),
+                              title: const Text('No one else here yet'),
+                              subtitle: Text('Invite people to your workspace.',
+                                  style: Aura.bodySm.copyWith(
+                                      color: scheme.onSurfaceVariant)),
+                            );
+                          }
+                          return Column(children: [
+                            for (final u in others.take(4))
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: AuraAvatar(
+                                    initials: u.initials,
+                                    imageUrl: u.avatarUrl,
+                                    size: 36,
+                                    presence: u.presence.index),
+                                title: Text(u.name),
+                                subtitle: Text('Start a direct conversation',
+                                    style: Aura.bodySm.copyWith(
+                                        color: scheme.onSurfaceVariant)),
+                                onTap: () {},
+                              ),
+                          ]);
+                        },
                       ),
           ),
           const SizedBox(height: Aura.spaceLg),

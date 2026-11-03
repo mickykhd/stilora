@@ -48,12 +48,16 @@ class Workspace extends Equatable {
     required this.name,
     required this.initials,
     required this.onlineCount,
+    this.inviteCode,
   });
 
   final String id;
   final String name;
   final String initials;
   final int onlineCount;
+
+  /// Shareable invite (admins only — null when the API omits it).
+  final String? inviteCode;
 
   @override
   List<Object?> get props => [id, name, onlineCount];

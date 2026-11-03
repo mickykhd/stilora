@@ -22,9 +22,21 @@ final workspaceRepositoryProvider = Provider<WorkspaceRepository>(
 final connectionProvider =
     StateProvider<AppConnection>((ref) => AppConnection.online);
 
-/// Auth session — Phase 4 swaps this for the Better Auth session lookup
-/// (POST /api/auth/sign-in/email against our own API).
+/// Auth session — set to true after a successful sign-in (or a
+/// successful [sessionRestoreProvider] boot restore).
 final signedInProvider = StateProvider<bool>((ref) => false);
+
+/// Restores any persisted session on app start:
+///  - live builds replay the stored Better Auth cookie,
+///  - mock builds check the `stilora_mock_session` flag file.
+/// Without this the app asked for a login on every launch.
+final sessionRestoreProvider = FutureProvider<bool>((ref) async {
+  try {
+    return await ref.watch(workspaceRepositoryProvider).restoreSession();
+  } catch (_) {
+    return false;
+  }
+});
 
 /// Onboarding: workspace created during signup flow.
 final onboardedWorkspaceProvider = StateProvider<String?>((ref) => null);
@@ -33,6 +45,11 @@ final onboardedWorkspaceProvider = StateProvider<String?>((ref) => null);
 final themeModeProvider = StateProvider<String>((ref) => 'system');
 
 /// ── Async data (each failure here renders the error state) ──────
+/// The signed-in user's own profile (from the session — no hardcoding).
+final myProfileProvider = FutureProvider<UserProfile>(
+  (ref) => ref.watch(workspaceRepositoryProvider).myProfile(),
+);
+
 final workspaceProvider = FutureProvider<Workspace>(
   (ref) => ref.watch(workspaceRepositoryProvider).currentWorkspace(),
 );

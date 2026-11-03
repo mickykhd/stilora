@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +9,7 @@ import 'package:stilora/src/screens/secondary_screens.dart';
 import 'package:stilora/src/screens/sign_in_screen.dart';
 import 'package:stilora/src/widgets/messages.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:path_provider/path_provider.dart';
 
 /// Full on-device functional suite — runs on the Android emulator against
 /// the REAL widget tree with mock repositories (250 ms simulated latency).
@@ -64,6 +67,16 @@ void main() {
     await wait(t, 900); // entrance animations
   }
 
+  /// Delete the persisted mock session flag so each flow starts signed
+  /// out (boot restore would otherwise land straight in the shell).
+  Future<void> clearMockSession() async {
+    try {
+      final dir = await getApplicationSupportDirectory();
+      final f = File('${dir.path}/stilora_mock_session');
+      if (await f.exists()) await f.delete();
+    } catch (_) {/* best effort */}
+  }
+
   /// Mobile shell has a bottom nav with exact label 'Channels';
   /// the desktop shell instead shows the uppercase sidebar section
   /// ('CHANNELS') — exact-match case sensitivity distinguishes them.
@@ -78,8 +91,9 @@ void main() {
       expect(find.byIcon(Icons.search), findsOneWidget);
     } else {
       expect(find.text('New Thread'), findsOneWidget); // sidebar CTA
-      // Sidebar DIRECT section proves shell content on desktop at any width.
-      expect(find.text('Sarah Chen'), findsWidgets);
+      // Sidebar DIRECT section proves shell content on desktop at any width
+      // — and shows the honest empty state (no pre-seeded contacts).
+      expect(find.text('No conversations yet'), findsWidgets);
     }
   }
 
@@ -95,6 +109,7 @@ void main() {
   }
 
   Future<void> signIn(WidgetTester t) async {
+    await clearMockSession();
     await launch(t);
     await expectVisible(t, find.text('Welcome back'));
     await enterTextAt(t, 0, email);
@@ -126,6 +141,7 @@ void main() {
 
   group('E2E: authentication', () {
     testWidgets('validation errors then successful sign-in', (tester) async {
+      await clearMockSession();
       await launch(tester);
       await expectVisible(tester, find.text('Welcome back'));
 
@@ -166,8 +182,8 @@ void main() {
       await expectVisible(tester, find.text('Sarah Chen'));
       await wait(tester, 500);
 
-      // Voice capsule present (room connected).
-      expect(find.text('Voice: Design Room'), findsWidgets);
+      // Room starts disconnected → NO floating capsule, no fake people.
+      expect(find.text('Voice: Design Room'), findsNothing);
 
       // Send a message → appears in the feed as sent.
       await tester.enterText(find.byType(TextField).last, 'Integration hello');
@@ -264,21 +280,29 @@ void main() {
       await expectVisible(
           tester, find.textContaining('Reply to #design-sync'));
 
-      // Members → open a profile (layout-aware entry).
+      // Members → open a profile (layout-aware entry). The workspace has
+      // no pre-added people: YOU are the only member until others join.
       if (hasBottomNav(tester)) {
         await tester.tap(find.byIcon(Icons.more_vert).last);
         await expectVisible(tester, find.text('Members'));
-        await expectVisible(tester, find.text('Priya Raman')); // list data
-        await ensureVisibleSafe(tester, find.text('Priya Raman'));
-        await tester.tap(find.text('Priya Raman'));
+        final sheet = find.byType(MembersSheet);
+        await expectVisible(
+            tester, find.descendant(of: sheet, matching: find.text('You')));
+        await ensureVisibleSafe(
+            tester, find.descendant(of: sheet, matching: find.text('You')));
+        await tester.tap(
+            find.descendant(of: sheet, matching: find.text('You')));
       } else {
-        // Desktop 3-pane shows members in the right context pane.
-        await expectVisible(tester, find.text('Priya Raman'));
-        await ensureVisibleSafe(tester, find.text('Priya Raman'));
-        await tester.tap(find.text('Priya Raman'));
+        // Desktop 3-pane: members live in the right context pane. The
+        // message feed also renders a "You" author label — the role chip
+        // on the member row disambiguates it.
+        await expectVisible(tester, find.text('MEMBERS'));
+        await expectVisible(tester, find.text('Admin'));
+        await ensureVisibleSafe(tester, find.text('Admin'));
+        await tester.tap(find.text('Admin'));
       }
-      await expectVisible(tester, find.text('@priya'));
-      expect(find.text('Member'), findsWidgets);
+      await expectVisible(tester, find.text('@you'));
+      expect(find.text('Admin'), findsWidgets);
       await tester.tap(find.byIcon(Icons.arrow_back).last);
       await wait(tester, 600); // let the pop transition settle // leave profile
       await wait(tester, 500);
@@ -289,20 +313,14 @@ void main() {
     testWidgets('navigation and secondary flows', (tester) async {
       await signIn(tester);
 
-      // Threads tab → DM list → open Sarah → conversation view.
+      // Threads tab → DIRECT section shows the honest empty state:
+      // there are NO pre-added friends or conversations.
       await openTab(tester, 'Threads');
       await expectVisible(tester,
           hasBottomNav(tester) ? find.text('DIRECT MESSAGES') : find.text('DIRECT'));
-      // Desktop: right-pane lists Sarah too — .first is the sidebar DM row.
-      await tester.tap(hasBottomNav(tester)
-          ? find.text('Sarah Chen').last
-          : find.text('Sarah Chen').first);
-      await expectVisible(tester, find.textContaining('Reply to Sarah Chen'));
-      if (hasBottomNav(tester)) {
-        await tester.tap(find.byIcon(Icons.arrow_back).last);
-        await wait(tester, 600); // let the pop transition settle
-        await wait(tester, 500);
-      }
+      await expectVisible(tester, find.text('No conversations yet'));
+      expect(find.text('Sarah Chen'), findsNothing);
+      expect(find.text('Marcus Vance'), findsNothing);
 
       // Search: mobile pushes a screen; desktop opens the ⌘K palette.
       await openTab(tester, 'Channels');
@@ -359,16 +377,17 @@ void main() {
     testWidgets('stage controls work end to end', (tester) async {
       await signIn(tester);
 
-      // Voice entry: bottom-nav tab (mobile) or floating capsule (desktop).
+      // Rooms start DISCONNECTED and EMPTY — verify before joining.
       await openTab(tester, 'Voice');
       if (hasBottomNav(tester)) {
-        await expectVisible(tester, find.text('Open stage'));
-        await tester.tap(find.text('Open stage'));
+        await expectVisible(tester, find.text('Not connected'));
+        await expectVisible(tester, find.text('Nobody here yet'));
+        await tester.tap(find.text('Join room'));
       } else {
-        // Capsule lives inside the channel pane — before a channel is open
-        // the always-present desktop entry is the sidebar audio card.
-        await expectVisible(tester, find.text('Audio Space Active'));
-        await tester.tap(find.text('Audio Space Active'));
+        // Desktop entry: the top-bar call button (the sidebar audio card
+        // only exists while a room is connected — it must be absent now).
+        expect(find.text('Audio Space Active'), findsNothing);
+        await tester.tap(find.byTooltip('Audio Call'));
       }
 
       // Staged diagnosis: did the stage route open at all?
@@ -379,7 +398,7 @@ void main() {
         stageOpen = find.byType(VoiceStageScreen).evaluate().isNotEmpty;
       }
       if (!stageOpen) {
-        fail('VOICE DIAG: stage route never opened after tapping Open stage');
+        fail('VOICE DIAG: stage route never opened after the join entry');
       }
 
       // Connecting → connected (permission pre-granted via adb grant).
@@ -388,16 +407,20 @@ void main() {
         await Future<void>.delayed(const Duration(milliseconds: 100));
         await tester.pump();
         connected =
-            find.textContaining('participants').evaluate().isNotEmpty;
+            find.textContaining('participant').evaluate().isNotEmpty;
       }
       if (!connected) {
         fail('VOICE DIAG: stage open but never connected; '
             'connecting=${find.textContaining('Connecting').evaluate().isNotEmpty} '
             'deniedCard=${find.textContaining('microphone to speak').evaluate().isNotEmpty} '
             'spinner=${find.byType(CircularProgressIndicator).evaluate().isNotEmpty} '
-            'tiles=${find.text('Sarah').evaluate().isNotEmpty}');
+            'tiles=${find.text('You').evaluate().isNotEmpty}');
       }
-      await expectVisible(tester, find.text('Sarah'));
+      // Exactly ONE tile: you. No seeded participants, ever.
+      await expectVisible(tester, find.text('You'));
+      expect(find.textContaining('1 participant'), findsWidgets);
+      expect(find.text('Sarah'), findsNothing);
+      expect(find.text('Marcus'), findsNothing);
 
       // Mute toggle via control tooltip (state flips Mute ↔ Unmute).
       await expectVisible(tester, find.byTooltip('Mute'));
@@ -446,7 +469,9 @@ void main() {
       await wait(tester, 400);
       await openTab(tester, 'Settings');
       await tester.tap(find.text('Members'));
-      await expectVisible(tester, find.text('Tomás Herrera'));
+      // Real, dynamic data — not the old hardcoded "5 people" line.
+      await expectVisible(tester, find.text('1 person in Studio Flow.'));
+      await expectVisible(tester, find.text('You'));
       await tester.tap(find.byIcon(Icons.close));
       await wait(tester, 400);
 
@@ -514,6 +539,26 @@ void main() {
       }
       // Workspace created in onboarding is reflected in the shell.
       expect(find.text('Studio Flow'), findsOneWidget);
+    });
+  });
+
+  group('E2E: session persistence', () {
+    testWidgets('login survives an app restart', (tester) async {
+      await signIn(tester);
+      expect(find.byKey(const ValueKey('shell')), findsOneWidget);
+
+      // Simulate the user closing the app: tear the whole tree down…
+      await tester.pumpWidget(const SizedBox());
+      await wait(tester, 400);
+
+      // …and launching it again. The persisted session must restore
+      // straight into the workspace — no re-entering credentials.
+      await tester.pumpWidget(const ProviderScope(child: StiloraApp()));
+      await wait(tester, 900);
+      await expectShellReady(tester);
+      expect(find.text('Welcome back'), findsNothing,
+          reason: 'a signed-in user must never be asked to log in again');
+      expect(find.byKey(const ValueKey('shell')), findsOneWidget);
     });
   });
 }

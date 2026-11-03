@@ -113,8 +113,8 @@ void main() {
     });
 
     test('search is case-insensitive', () async {
-      final upper = await repo.search('SARAH');
-      final lower = await repo.search('sarah');
+      final upper = await repo.search('DESIGN-SYNC');
+      final lower = await repo.search('design-sync');
       expect(upper.length, lower.length);
       expect(upper, isNotEmpty);
     });

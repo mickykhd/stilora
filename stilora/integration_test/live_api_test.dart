@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -5,6 +7,7 @@ import 'package:stilora/main.dart';
 import 'package:stilora/src/screens/sign_in_screen.dart';
 import 'package:stilora/src/state/providers.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:path_provider/path_provider.dart';
 
 /// LIVE end-to-end suite — drives the real UI against the deployed API.
 ///
@@ -69,6 +72,14 @@ void main() {
     // "live" pass.
     expect(kLiveBackend, isTrue,
         reason: 'pass --dart-define=API_BASE_URL=https://example.vercel.app to run this suite');
+
+    // Start signed OUT: a persisted cookie from a previous run would
+    // restore straight into the shell (boot restore is real now).
+    try {
+      final dir = await getApplicationSupportDirectory();
+      final f = File('${dir.path}/stilora_session.cookie');
+      if (await f.exists()) await f.delete();
+    } catch (_) {/* best effort */}
 
     // ── 1. Create account (sign-up + workspace, real DB writes) ─
     await tester.pumpWidget(const ProviderScope(child: StiloraApp()));
@@ -198,7 +209,37 @@ void main() {
     // ── 6. Persistence: the channel we created still exists ─────
     await expectVisible(tester, find.text(channelName));
 
+    // ── 7. Restart persistence: the cookie survives an app kill ─
+    await tester.pumpWidget(const SizedBox());
+    await wait(tester, 400);
+    await tester.pumpWidget(const ProviderScope(child: StiloraApp()));
+    final deadline3 = DateTime.now().add(const Duration(milliseconds: 20000));
+    var restored = false;
+    while (DateTime.now().isBefore(deadline3)) {
+      restored = (bottomNav(tester) ||
+              find.text('New Thread').evaluate().isNotEmpty ||
+              find.byIcon(Icons.edit).evaluate().isNotEmpty) &&
+          find.text('Welcome back').evaluate().isEmpty;
+      if (restored) break;
+      await Future<void>.delayed(const Duration(milliseconds: 150));
+      await tester.pump();
+    }
+    if (!restored) {
+      final visible = find
+          .byType(Text)
+          .evaluate()
+          .map((e) => (e.widget as Text).data ?? '')
+          .where((d) => d.trim().isNotEmpty)
+          .take(40)
+          .join(' | ');
+      fail('RESTART PERSISTENCE FAILED — after remount the screen shows: '
+          '$visible');
+    }
+    // The workspace/channel data is there without logging in again.
+    await expectVisible(tester, find.text(channelName));
+
     debugPrint(
-        'LIVE E2E OK: account=$email workspace="$workspace" channel=$channelName');
+        'LIVE E2E OK: account=$email workspace="$workspace" channel=$channelName '
+        'restart-persistence=PASS');
   });
 }
